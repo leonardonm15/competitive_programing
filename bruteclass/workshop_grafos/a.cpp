@@ -2,16 +2,16 @@
 
 using namespace std;
 //#define int long long
-
 const int maxn = 1e5 + 5;
-bool vis[maxn];
 vector<int> adj[maxn];
+vector<bool> vis(maxn);
+vector<int> out;
 
 void dfs(int n) {
     vis[n] = true;
-    for (auto ver: adj[n]) {
-        if (vis[ver]) continue;
-        dfs(ver);
+    for (auto vert: adj[n]) { 
+        if (vis[vert] == true) continue;
+        dfs(vert);
     }
 }
 
@@ -22,9 +22,17 @@ void solve () {
         adj[a].push_back(b);
         adj[b].push_back(a);
     }
-    int busca; cin >> busca;
-    dfs(busca);
-    cout << (vis[1] ? "YES" : "NO") << endl;
+    for (int i=1; i <= n; i++) {
+        if (vis[i] == false) {
+            dfs(i);
+            out.push_back(i);
+        }
+    }
+    int sz = out.size();
+    cout << sz - 1 << endl;
+    for (int i=1; i < sz; i++) {
+        cout << out[0] << " " << out[i] << endl;
+    }
 }
 
 signed main() {
