@@ -7,12 +7,17 @@ vector<int> adj[maxn];
 vector<bool> vis(maxn);
 vector<int> dp(maxn);
 
-void dfs(int n) {
+int dfs(int n) {
     vis[n] = true;
-    for (auto cara: adj[n]) {
-        dfs(cara);
-        dp[n] += dp[cara]
+    if (adj[n].size() == 0) {
+        return 0;
     }
+    for (auto cara: adj[n]) {
+        if (vis[cara]) continue;
+        dfs(cara);
+        dp[n] += dp[cara] + 1;
+    }
+    return 0;
 }
 
 void solve () {
@@ -21,7 +26,11 @@ void solve () {
         int a; cin >> a;
         adj[a].push_back(i);
     }
-
+    dfs(1);
+    for (int i=1; i <= n; i++) {
+        cout << dp[i] << " ";
+    }
+    cout << endl;
 }
 
 signed main() {
