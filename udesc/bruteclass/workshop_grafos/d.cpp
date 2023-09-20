@@ -4,7 +4,7 @@ using namespace std;
 //#define int long long
 const int maxn = 2e5 + 5;
 
-vector<pair<int, int>> inp[maxn];
+vector<pair<int, int>> inp(maxn);
 vector<int> pai(maxn);
 vector<int> adj[maxn];
 vector<bool> vis(maxn);
@@ -19,54 +19,55 @@ void inicializa_dsu(int n) {
 
 int find(int n) {
     if (pai[n] == n) return n;
-    return find(pai[filho]);
+    return find(pai[n]);
 }
 
-int dfs(int n, int num) { // retorna o tamanho componente
-    num++;
-    vis[n] = true;
-    for (auto v: adj[n]) {
-        if (vis[v]) continue;
-        dfs(v);
-    }
-    return num;
+void uniao(int a, int b) {
+    int ra = find(a);
+    int rb = find(b);
+    if (ra == rb) return;
+    if (tamanho[rb] > tamanho[ra]) swap(ra, rb);
+    pai[rb] = ra;
+    tamanho[ra] += tamanho[rb];
 }
 
 void solve () {
-    int n, m; cin >> a >> b;
+    int n, m; cin >> n >> m;
+    int res = n;
     for (int i=1; i <= m; i++) {
         int a, b; cin >> a >> b;
-        inp[i] = {a, b};
+        inp[i] = make_pair(a, b);
     }
-    // pega as quries sorta e pra poder montar o grafo sem fuder tudo, dps vai juntando na ordem certa
     int q; cin >> q;
     for (int i=0; i < q; i++) {
         int num; cin >> num;
         queries.push_back(num);
         sorted_q.insert(num);
     }
-    // monta o grafo pulando as arestas "proibidas"
+    inicializa_dsu(n + 1);
     for (int i=1; i <= m; i++) {
-        if (i == *sorted_q.begin()) {
+        if (sorted_q.size() > 0 && i == *sorted_q.begin()) {
             sorted_q.erase(sorted_q.begin());
             continue;
         }
-        int a = inp[i].first;
-        int b = inp[i].second;
-        adj[a].push_back(b);
-        adj[b].push_back(a);
+        int a = find(inp[i].first);
+        int b = find(inp[i].second);
+        if (a != b) res--;
+        uniao(a, b);
     }
-    // dfs pros caras pra achar a quantidade de componentes conexos, e tamanho dos componentes 
-    int numero_componentes_conexos = 0;
-    for (int i=1; i <= n; i++) {
-        int num;
-        if (vis[i] == false) {
-            numero_componentes_conexos++;
-            int size_comp = dfs(i, 0);
-        }
+    vector<int> output;
+    for (int i= q-1; i >= 0; i--){
+        int a = find(inp[queries[i]].first);
+        int b = find(inp[queries[i]].second);
+        output.push_back(res);
+        if (a != b) res--;
+        uniao(a, b);
     }
-    // com as informações do dfs monta o dsu
-    // como faz pra setar os filhos de cada nodo
+    reverse(output.begin(), output.end());
+    for (auto i: output) {
+        cout << i << " ";
+    }
+    cout << endl;
 }
 
 signed main() {
