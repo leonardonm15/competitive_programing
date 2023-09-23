@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-//#define int long long
+# define int long long
 
 void solve () {
     int n, h; cin >> n >> h;
@@ -11,20 +11,43 @@ void solve () {
         arr.push_back(num);
     }
     sort(arr.begin(), arr.end());
-    int q0 = 1; // square multiplier
-    int qq = 1; // curent squares
-    int nw = arr[0];
-    int resp = arr[0];
-    arr[0] = 0;
+    int qq = 0;
+    int q0 = 0;
+    int nw = 0;
     for (int i=0; i < n; i++) {
-        int a = arr[i];
-        int qr = 1;
-        for (int j=i + 1; j < n; j++) {
-            if (arr[j] == a) qr++;
-            else break;
+        cout << i << endl;
+        cout << "n  -> " << n << endl;
+        int j = i + 1;
+        while (arr[i] == arr[j] && j < n) j++;
+        j -= i;
+        if (i == 0) {
+            nw = arr[0];
+            q0 = j + i;
+            arr[0] = 0;
+            if (j > 1) i += j;
+            continue;
         }
-        int diff = a - resp;
+        /* cout << "i -----> " << i << endl; */
+        /* cout << "j -----> " << j << endl; */
+        /* cout << "q0 -----> " << q0 << endl; */
+        int diff = max(1ll, arr[i] - nw);
+        /* cout << "diff -----> " << diff << endl; */
+        int nr = diff * q0 * j;
+        /* cout << " new resp -> " << nr << endl; */
+        if (qq + nr > h) {
+            cout << "--------> " <<  nw << endl;
+            return;
+        } else {
+            qq += nr;
+            nw += diff;
+            q0 += j;
+        }
+        if (j > 1) i += j;
     }
+    while (qq < h) {
+        if ((qq + n) <= h) qq += n;
+    }
+    cout << "qq ----------> " << qq << endl;
 }
 
 signed main() {
@@ -38,3 +61,4 @@ signed main() {
     }
     return 0;
 }
+
