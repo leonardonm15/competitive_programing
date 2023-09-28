@@ -3,25 +3,24 @@
 # define int long long
 using namespace std;
 const int maxn = 1e5 + 5;
-const int inf = 1e17;
+const int inf = 2e9;
 vector<pair<int, int>> adj[maxn];
 vector<int> dist(maxn, inf);
 
 void djks(int n) {
-    priority_queue<pair<int, int>, 
-                   vector<pair<int, int>>, 
-                   greater<pair<int, int>>
-                    > pq;
+    priority_queue< pair<int, int>, 
+                    vector<pair<int, int>>, 
+                    greater<pair<int, int>> > pq;
     dist[n] = 0;
     pq.emplace(0, n);
-    while(pq.size()) {
-        int u = pq.top().second;
-        int w = pq.top().first;
+    while(!pq.empty()) {
+        int peso = pq.top().first;
+        int nodo = pq.top().second;
         pq.pop();
-        for (auto [peso, nodo]: adj[w]) {
-            if (dist[nodo] + peso < dist[u]) {
-                dist[nodo] = dist[u] + peso;
-                pq.emplace(dist[nodo], nodo);
+        for (auto [w, cara]: adj[nodo]) {
+            if (dist[nodo] + w < dist[cara]) {
+                dist[cara] = dist[nodo] + w;
+                pq.emplace(make_pair(dist[cara], cara));
             }
         }
     }
