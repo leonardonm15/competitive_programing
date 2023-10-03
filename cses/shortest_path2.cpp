@@ -21,7 +21,6 @@ void solve () {
             for (int j=1; j <= n; j++) {
                 if (dp[i][k] + dp[k][j] < dp[i][j]) {
                     dp[i][j] = dp[i][k] + dp[k][j];
-                    dp[j][i] = dp[i][k] + dp[k][j];
                 }
             }
         }
