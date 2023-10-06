@@ -4,29 +4,54 @@ using namespace std;
 //#define int long long
 const int maxn = 1e5 + 5;
 
-
 void solve () {
     vector<int> adj[maxn];
-    vector<int> p(maxn);
+    priority_queue< pair<int, int>, 
+                    vector<pair<int, int>>, 
+                    greater<pair<int, int>> > pq;
     int n;
     vector<pair<int, int>> top(n, pair<int, int>{0, 0});
+    vector<int> freq(maxn);
+    vector<int> resp;
+    vector<int> vis(maxn);
+    // recebe o adj
     for (int i=1;i <= n; i++) {
         int num; cin >> num;
         adj[i].push_back(num);
-        top[num].first++;
-        top[num].second = num;
-    }
-    sort(top.first(), top.end());
-    // recebe no adj, sorta o topological, ve os caras que são solitarios;
-    for (i=0; i <= n; i++) {
-        if (top[i].second == 0) continue;
-        if (!top[i].first&1) {
-            
-        }
+        freq[num]++;
     }
     for (int i=1; i < n; i++) {
         int num; cin >> num;
-        p[i] = num;
+        pq.push({num, i});
+    }
+
+    for (int i=1; i <= n; i++) top[i] = {freq[i], i};
+
+    sort(top.begin() + 1, top.end());
+
+    for (int i=1; i <= n; i++) {
+        int idx = pq.top().second;
+        int val = pq.top().first;
+        while (vis[val]) {
+            idx = pq.top().second;
+            val = pq.top().first;
+            pq.pop();
+        }
+        if (top[i].first == 0) {
+            // enquanto o top[num].first do meu cara for == 0 
+            int num = i;
+            while (top[num].first == 0 && vis[num] == 0) {
+                vis[num]++;
+                resp.push_back(i);
+                top[top[num].second].first--;
+                num = top[top[num].second].second;
+            }   
+        }
+    }
+    for (int i=1; i < n; i++) {
+        if (top[i].first != 0 && vis[i] == 0) {
+        
+        }
     }
 }
 
