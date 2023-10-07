@@ -24,5 +24,5 @@ int main() {
         if (n == 1 && soma > 1) flag_no = true;
         if (flag_no) cout << "NO" << endl;
         else cout << "YES" << endl;
-    }
+        }
 }
