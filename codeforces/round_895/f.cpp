@@ -5,73 +5,59 @@ using namespace std;
 const int maxn = 1e5 + 5;
 
 void solve () {
-    vector<int> adj[maxn]; priority_queue<pair<int, int>> pq;
     int n; cin >> n;
-    vector<pair<int, int>> top(n + 1, pair<int, int>{0, 0});
-    vector<int> freq(maxn);
+    vector<int> adj(n + 1); 
+    priority_queue< pair<int, int>, 
+                    vector<pair<int, int>>, 
+                    greater<pair<int, int>> > pq;
+    vector<int> freq(n + 1);
     vector<int> resp;
-    vector<int> vis(maxn);
+    vector<int> vis(n + 1);
+    vis[0]++;
     // recebe o adj
     for (int i=1;i <= n; i++) {
         int num; cin >> num;
-        adj[i].push_back(num);
+        adj[i] = num;
         freq[num]++;
     }
-    for (int i=1; i < n; i++) {
+    for (int i=1; i <= n; i++) {
         int num; cin >> num;
         pq.push({num, i});
     }
 
-    for (int i=1; i <= n; i++) top[i] = {freq[i], i};
-    
-    /* cout << "freq" << endl; */
-    /* for(int i=1; i <= n; i++) cout << freq[i] << " - "; */
-    /* cout << endl; */
-
     sort(top.begin() + 1, top.end());
     
+    // poda as bordas soltas do grado direcionado
     for (int i=1; i <= n; i++) {
-        if (top[i].first == 0 && vis[i] == 0) {
-            // enquanto o top[num].first do meu cara for == 0 
-            int num = i;
-            while (!top[num].first)  {
-                vis[num]++;
-                resp.push_back(num);
-                top[top[num].second].first--;
-                num = top[top[num].second].second;
-                adj[num].clear();
-            }   
-        }
+        // vê a freq do nodo, se for 0 visita ele bota na resposta 
+        // + vai no adj dele tira um de freq e diz que o nodo agora é adj[nodo]
+        // + para quando a freq do adj[nodo] > 1
+        int nodo = i;
+        int f = freq[nodo]; 
+        while (!f && !vis[nodo])  {
+            vis[nodo]++;
+            resp.push_back(nodo);
+            freq[adj[nodo]]--;
+            f = freq[adj[nodo]]; 
+            nodo = adj[nodo]; 
+        }   
     }
-    /* cout << "visitados " << endl; */
-    /* for (int i=1; i <= n; i++) cout << vis[i] << " - "; */
-    /* cout << endl; */
-
-    /* for (int i=1; i <= n; i++) { */
-    /*     cout << adj[i][0] << " - "; */
-    /* } */
-    /* cout << endl; */
-
-    for (int i=1; i <= n; i++) {
-        // se o meu preço ja tiver sido visitado
-        while (vis[pq.top().second] && !pq.empty()) pq.pop();
-        /* cout << " i -> " << i << endl; */
-        int num = pq.top().first;
-        int idx = pq.top().second;
-        resp.push_back(idx);
-        vis[idx]++;
-        int nidx = adj[idx][0];
-        /* cout << "nidx - idx " << nidx << " - " << idx << endl; */
-        /* cout << " vis nidx -> " << vis[nidx] << endl; */
-        if (vis[nidx]) {
-            /* cout << "dando coninue" << endl; */
-            continue;
-        }
-        while (true) {
-            vis[nidx]++;
-            resp.push_back(nidx);
-            nidx = adj[nidx][0];
-            if (nidx == idx) break;
+    // pega o menor preço de nodo, ve quem ele ta olhando
+    // + começa a cortar o ciclo por esse cara
+    for (int i=1; i <= n + 1; i++) {
+        // pula os visitados
+        while (vis[pq.top().second] == 1 && !pq.empty()) pq.pop();
+        if (pq.empty()) continue;
+        // pega o proximo do menor
+        int nodo = adj[pq.top().second];
+        resp.push_back(nodo);
+        vis[nodo]++;
+        int p_nodo = adj[nodo];
+        // vai cortando o ciclo
+        while (!vis[p_nodo]) {
+            vis[p_nodo]++;
+            resp.push_back(p_nodo);
+            p_nodo = adj[p_nodo];
         }
     }
     for (int i=0; i < n; i++) cout << resp[i] << " ";
