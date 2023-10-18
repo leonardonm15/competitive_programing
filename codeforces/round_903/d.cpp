@@ -5,20 +5,26 @@ using namespace std;
 
 void solve () {
     int n; cin >> n;
-    int resp = 1; cin >> resp;
-    int k = 0;
-    for (int i=0; i < n - 1; i++) {
+    map<int, int> map;
+    for (int i=0; i < n; i++) {
         int num; cin >> num;
-        resp *= num;
+        for (int i=2; i * i <= num; i++) {
+            while (num % i == 0) {
+                map[i]++;
+                num /= i;
+            }
+        }
+        if (num != 1) map[num]++;
     }
-    k = resp;
-    k = pow(k, (1.0/n));
-    k = pow(k, n);
-    /* cout << k << endl; */
-    /* cout << num << endl; */
-    /* cout << resp << endl; */
-    if (resp == k) cout << "YES" << endl;
-    else cout << "NO" << endl;
+    for (auto [p, f]: map) {
+        /* cout << "p -> " <<  p << endl; */
+        /* cout << "f -> " << f << endl; */
+        if (f % n != 0) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    cout << "YES" << endl;
 }
 
 signed main() {
