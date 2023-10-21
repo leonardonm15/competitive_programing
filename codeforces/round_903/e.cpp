@@ -3,23 +3,28 @@
 using namespace std;
 //#define int long long
 const int inf = 1e6 + 5;
-const int maxn = 1e5 + 5;
+const int maxn = 2e5 + 5;
 vector<int> arr(maxn, inf);
+vector<int> acc(maxn);
 
-int dp(vector<int> arr, int num, int c) {
-    if (num == arr.size()) return c;
-    if (num > arr.size()) return inf;
+int dp(int num, int n) {
+    /* cout << "num -> " << num << endl; */
+    if (num > n) return inf;
+    else if (num == n) return 0;
+    if (acc[num] != -1) return acc[num];
     else {
-        return min(dp(arr, arr[num + arr[num]], c), dp(arr, arr[num + 1], c++));
+        acc[num] = min(dp(num + arr[num] + 1, n), dp(num + 1, n) + 1);
+        return acc[num];
     }
 }
-
 void solve () {
     int n; cin >> n;
-    arr.resize(maxn, inf);
-    for (int i=0; i < n; i++) cin >> arr[i];
-    int resp = min(dp(arr, arr[0 + arr[0]], 0), dp(arr, arr[1], 1));
-    cout << n - resp << endl;
+    for (int i=0; i < n; i++) {
+        cin >> arr[i];
+        acc[i] = -1;
+    }
+    int resp = dp(0, n);
+    cout << resp << endl;
 }
 
 signed main() {
