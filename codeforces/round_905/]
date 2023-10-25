@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+//#define int long long
+
+void solve () {
+    int n, k; cin >> n >> k;
+    map<int, int> pr;
+    while(k != 1) {
+        int i=2;
+        while (k % i != 0) i++;
+        k /= i;
+        pr[i]--;
+    }
+    for (int i=0; i < n; i++) {
+        int num; cin >> num;
+        while (num != 1) {
+            int i=2;
+            while (num % i != 0) i++;
+            num /= i;
+            pr[i]++;
+        }
+    }
+    int resp = 0;
+    for (auto [n, f]: pr) if (f < 0) resp += f;
+    resp = abs(resp);
+    cout << resp << endl;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0);cin.tie(0);
+    int TC = 1;
+    if (TC){
+        cin >> TC;
+        while (TC--) solve();
+    } else {
+        solve();
+    }
+    return 0;
+}

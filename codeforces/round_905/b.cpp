@@ -21,13 +21,10 @@ void solve () {
         if (arr[i] % 2 == 1) imp++;
         else par++;
     }
-    if ((n - k) % 2 == 0) {
-        if ((k - imp) % 2 == 0 && k >= imp) cout << "YES" << endl;
-        else cout << "NO" << endl;
-    } else {
-        if (abs((k - imp)) == 1) cout << "YES" << endl;
-        else cout << "NO" << endl;
-    }
+    // diminuir da quantidade de impares
+    // se k for >= -1 da certo
+    if (k - imp >= -1) cout << "YES" << endl;
+    else cout << "NO" << endl;
     // || (imp == 0 && k % 2 == 1)
 }
 
