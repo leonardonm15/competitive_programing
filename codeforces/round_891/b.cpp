@@ -2,12 +2,9 @@
 
 using namespace std;
 //#define int long long
+const int maxn = 1e5 + 5;
 
 void solve () {
-    int n, k, a, b; cin >> n >> k >> a >> b;
-    
-    dp (cara que eu to pro cara mais perto dele, cara que eu to pro big c mais perto dele, dele pro b);
-    
 }
 
 signed main() {
