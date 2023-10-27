@@ -12,8 +12,7 @@ signed main() {
         for (int i=1; i < n; i++) {
             cin >> x >> y;
             if (x >= a && y >= b) {
-                cout << -1 << endl;
-                return;
+                a = -1;
             }
         }
         cout << a << endl;
