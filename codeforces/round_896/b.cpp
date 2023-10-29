@@ -5,6 +5,12 @@ using namespace std;
 
 void solve () {
     int n, k, a, b; cin >> n >> k >> a >> b;
+    //ordena os indices do arr original
+    // receber os nodos como <pair<pair<x, y>, int>> de x e de y
+    // sorta em x e em y
+    // [
+    for (int i=0; i < n; i++) {
+    }
     
     dp (cara que eu to pro cara mais perto dele, cara que eu to pro big c mais perto dele, dele pro b);
     

@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define endl '\n' 
+//#define int long long
+
+void solve () {
+    string sa, sb; cin >> sa >> sb;
+    int n = sa.size();
+    vector<int> a(n, -1);
+    vector<int> b(n, -1);
+    for (int i=0; i < n; i++) {
+        if (sa[i] - '0' == 0 || sb[i] - '0' == 0) b[i]++;
+        if (sa[i] - '0' == 1 || sb[i] - '0' == 1) a[i]++;
+    }
+    int ra = 0;
+    int rb = 0;
+    for (int i=0; i < n; i++) {
+        ra += a[i];
+        rb += b[i];
+    } 
+    cout << ra << " " << rb << endl;
+    if (ra == n || rb == 0) cout << "YES" << endl;
+    else cout << "NO" << endl;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0);cin.tie(0);
+    int TC = 1;
+    if (TC){
+        cin >> TC;
+        while (TC--) solve();
+    } else {
+        solve();
+    }
+    return 0;
+}
