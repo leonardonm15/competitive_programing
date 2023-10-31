@@ -25,14 +25,7 @@ void solve (int i) {
             if (num >= 2) d1 += (num - 1);
         }
     }
-    if (i == 10000 - 36) {
-        for (auto cara: arr) {
-            cout << cara << " - ";
-        } 
-        cout << endl;
-        return;
-    }
-    if (d1 - n1 > 0) cout << "YES" << endl;
+    if (d1 - n1 >= 0) cout << "YES" << endl;
     else cout << "NO" << endl;
 }
  
