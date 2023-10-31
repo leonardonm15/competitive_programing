@@ -6,17 +6,11 @@ using namespace std;
 void solve () {
     string s; cin >> s;
     int n = s.size();
-    for (int k = 1; k < n; k++) {
-        string num;
-        // ao inves de fazer de fazer isso pega o primeiro numero
-        // vai até o final vendo se tem primo com o segundo
-        // se nao tiver, pega 2 numeros e vai fazendo isso
-        for (int j = 0; j < k; j++) num.push_back(s[j]);
-        // iterar primeiro 
+    for (int k = 0; k < n; k++) {
+        string num; num[0] = s[0];
+        bool flag = true;
         for (int i=k + 1; i < n; i++) {
-            string resp = num;
-            num.push_back(s[i]);
-            bool flag = true;
+            num[1] = s[i];
             int r = stoll(num);
             for (int l = 2; l * l <= r; l++) {
                 if (r % l == 0) {
