@@ -5,6 +5,10 @@ using namespace std;
 #define endl '\n' 
 //#define int long long
 
+// ----------    GRIND MENTALITY    ---------     
+// /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
+// ----------    GRIND MENTALITY    ---------     
+
 void solve () {
 }
 
