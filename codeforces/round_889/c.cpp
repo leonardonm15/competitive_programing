@@ -9,7 +9,11 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-// varios caras negativos enfileirados 
+// varios caras negativos enfileirados, itera
+/* trata primeiro todos os caras negativos */
+
+/* dps vai fazendo arr[i + 1] += arr[i] while < arr[i]; */
+/* caso o cara da frente seja positivo, é so somar vc nele que ele ja vai ser maior que vc, */
 
 void solve () {
     int n; cin >> n;
