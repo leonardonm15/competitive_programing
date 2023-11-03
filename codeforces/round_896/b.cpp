@@ -1,19 +1,31 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-//#define int long long
+#define int long long
 
 void solve () {
     int n, k, a, b; cin >> n >> k >> a >> b;
-    //ordena os indices do arr original
-    // receber os nodos como <pair<pair<x, y>, int>> de x e de y
-    // sorta em x e em y
-    // [
+    vector<pair<int, int>> arr;
     for (int i=0; i < n; i++) {
+        int j, k; cin >> j >> k;
+        arr.push_back({j, k});
     }
-    
-    dp (cara que eu to pro cara mais perto dele, cara que eu to pro big c mais perto dele, dele pro b);
-    
+    int ak = 1e13 + 5;
+    int kb = 1e13 + 5;
+    for (int i=0; i < k; i++) {
+        int num = abs(arr[a - 1].first - arr[i].first) + abs(arr[a - 1].second - arr[i].second);
+        int num2 = abs(arr[b - 1].first - arr[i].first) + abs(arr[b - 1].second - arr[i].second);
+        ak = min(ak, num);
+        kb = min(kb, num2);
+    }
+
+    int resp = abs(arr[a - 1].first - arr[b - 1].first) + abs(arr[a - 1].second - arr[b - 1].second);
+    if (ak == 1e13 + 5 || kb == 1e13 + 5) {
+        cout << resp << endl;
+        return;
+    }
+    resp = min(resp, ak + kb);
+    cout << resp << endl;
 }
 
 signed main() {
