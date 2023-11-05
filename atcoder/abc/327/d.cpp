@@ -3,7 +3,7 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 const int maxn = 2e5 + 5;
 vector<string> arr(1);
 vector<int> vis(maxn);
@@ -22,7 +22,7 @@ void dfs(int n, int p, int nvl) {
         if (cara == n || (vis[cara] > 0 && cara != p && ciclo % 2 == 1 && ciclo >= 2)) {
             arr[0] = "No";
             return;
-        }
+        } else if (vis[cara] > 0) return;
         dfs(cara, n, nvl + 1);
     }
 }
