@@ -12,19 +12,23 @@ using namespace std;
 void solve () {
     int n, s, r; cin >> n >> s >> r;
     int mx = s - r;
-    if (s == n) {
-        for (int i=0; i < n; i++) {
-            cout << 1 << " ";
-        }
-        cout << endl;
-        return;
+    vector<int> arr;
+    arr.push_back(mx);
+    if (r % mx != 0) arr.push_back(r % mx);
+    for (int i=0; i < r / mx; i++) arr.push_back(mx);
+    int i = 1;
+    while (arr.size() < n) {
+        if (arr[i] > 1){
+            arr[i]--;
+            arr.push_back(1);
+        } else i++;
     }
-    cout << mx << " ";
-    int inteiro = r / mx;
-    int resto = r % mx;
-    while (inteiro--) cout << mx << " ";
-
+    for (auto cara: arr) {
+        cout << cara << " ";
+    }
+    cout << endl;
 }
+
 
 signed main() {
     ios_base::sync_with_stdio(0);cin.tie(0);
