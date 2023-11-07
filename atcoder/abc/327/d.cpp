@@ -22,7 +22,7 @@ void dfs(int n, int p, int nvl) {
         if (cara == n || (vis[cara] > 0 && cara != p && ciclo % 2 == 1 && ciclo >= 2)) {
             arr[0] = "No";
             return;
-        } else if (vis[cara] > 0) return;
+        } else if (vis[cara] > 0) continue;
         dfs(cara, n, nvl + 1);
     }
 }
