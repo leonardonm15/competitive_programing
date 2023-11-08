@@ -10,30 +10,22 @@ void solve () {
     string s;
     int resp = 0;
     for (int i=0; i < n; i++) {
-        resp += s[i] - '0';
+        resp += x[i] - '0';
     }
-    if (resp % k == 0) {
-        cout << x << endl;
-        return;
-    }
-
-    if (stoll(x) < k) {
-        int q = k - stoll(x);
-        while (q >= 9) {
-            s.push_back(9);
-            q -= 9;
+    int q = abs(k - resp);
+    int y = stoll(x);
+    while (resp % k != 0) {
+        y++;
+        /* cout << "resp -> " << resp << endl; */
+        int aux = y;
+        int m = 0;
+        while (aux > 0) {
+            m += aux % 10;
+            aux /= 10;
         }
-        if (q > 0) s.push_back(q);
-        reverse(s.begin(), s.end());
-        cout << s << endl;
-    } else {
-        int i = 0;
-        int y = stoll(x);
-        while (y % k != 0) {
-            i++;
-            y++;
-        }
+        resp = m;
     }
+    cout << y << endl;
 }
 
 signed main() {

@@ -10,6 +10,12 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 //
 
+// enquanto b nao foi todo shitftado
+// ve se o menor bit do numero é 1
+// se for add na resp *= iézima² potencia de a
+// de qquer forma a vai receber ele ao quadrado
+// da bitshift pra frente do b;
+
 int bpow(int a, int b) {
     int res = 1;
     while (b > 0) {
