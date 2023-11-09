@@ -31,12 +31,12 @@ void solve () {
     int resp = a;
     for (int i=1; i <= n; i++) {
         int j = i + 1;
-        cout << "j -> " << j << endl;
         if (i == n) {
             cout << -1 << " ";
             continue;
         }
         while (s[j] != '1' && s[i] == '1' && j < n) j++;
+        cout << "j -> " << j << endl;
         cout << "sj -> " << s[j] << " - si -> " << s[i] << endl;
         if (s[j] == '0' && s[i] == '1') {
             swap(s[j], s[i]);
