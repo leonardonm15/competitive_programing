@@ -8,17 +8,19 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
-
+//
+//
+//
 void solve () {
     int n, k; cin >> n >> k;
+    int resp = k;
     int num = k/n;
-    int num2 = k - num;
-    int i = num2;
-    while (i != k) {
-        if (num2 % n == 1) i++;
-        num2++;
+    int old = 0;
+    while (num != 0) {
+        resp += num;
+        num = num/n;
     }
-    cout << num2  + num<< endl;
+    cout << resp << endl;
 }
 
 signed main() {
