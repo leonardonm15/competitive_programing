@@ -1,49 +1,46 @@
 #include <bits/stdc++.h>
-
+ 
 using namespace std;
 #define int long long
-
+ 
 void solve () {
     int n, m; cin >> n >> m;
-    int l = 0;
-    int maxi = 0;
-    int o = 10;
-    if (m <= 5) {
-        cout << n * m << endl;
-        return;
-    }
-    if (m <= 10) o = 5;
-    for (int i=0; i <= o; i++) {
-        int k = m - i;
-        int p = n * k;
-        int v = 0;
-        if (i == 0) {
-            string q = to_string(m);
-            p = n * ((long long) pow(10, q.size() -1));
-            /* cout << "p -> " << p << endl; */
+    int c = n;
+    int k = 1;
+    vector<int> arr(2);
+    while (n % 2 == 0 || n % 5 == 0) {
+        if (n % 2 == 0) {
+            n /= 2;
+            arr[0]++;
         }
-        while (p % 10 == 0) {
-            v++;
-            p /= 10;
-        }
-        if (v > l) {
-            maxi = n * k;
-            l = v;
+        if (n % 5 == 0) {
+            n /= 5;
+            arr[1]++;
         }
     }
-    
-    cout << maxi << endl;
 
-    /* int p = 0; */
-    /* string s; cin >> s; */
-    /* int k = s[0] - '0'; */
-    /* if (k > 5) k = 5; */
-    /* if (s.size() > 1) p = s.size() - 1; */
-    /* p = pow(10, p); */
-    /* cout << n * k * p << endl; */
-    /* for (int i=0; i < n; */ 
+    while (arr[1] != arr[0]) {
+        if (arr[1] > arr[0]) {
+            if (k * 2 > m) break;
+            k *= 2;
+            arr[0]++;
+        } else if (arr[0] > arr[1]) {
+            if (k * 5 > m) break;
+            k *= 5;
+            arr[1]++;
+        }
+    }
+ 
+    while (k * 10 < m) {
+        arr[0]++;
+        arr[1]++;
+        k *= 10;
+    }
+
+    if (m / k > 0) cout << k * c * (m / k) << endl;
+    else cout << c * n << endl;
 }
-
+ 
 signed main() {
     ios_base::sync_with_stdio(0);cin.tie(0);
     int TC = 1;
