@@ -1,20 +1,25 @@
-import * from random
-import subprocess
+from random import sample
+from ctypes import CDLL
 import time
 
-while __name__ == __main__:
-    avl = [] # lista de lista dos resultados
-    rb = [] 
-    b1 = []
-    b5 = []
-    b10 = []
-    # 20 pontos em cada frafico com x  = chave chaves = sample(range(1, 10000 + 1), 20)
-    resultado = subprocess.run(["./inserir", nome], stdout=subprocess.PIPE, text=True)
+while __name__ == "__main__":
+    time_insert_avl = []
+    time_delete_avl = []
+    avl = r"/home/leo/competitive_programing/udesc/eda2/trabalho_final/avl.so"
+    favl = CDLL(avl)
+    termo = 10
+    while termo <= 10000:
+        insert_time_avl = []
+        delete_time_avl = []
+        for _ in range(10):
+            insert_time_avl.append(favl.multinsert(termo))
+            delete_time_avl.append(favl.multidelete(termo))
+            # print(f"Insert Time for {termo}: {insert_time}")
+            # print(f"Delete Time for {termo}: {delete_time}")
+        time_insert_avl.append(insert_time_avl)
+        time_delete_avl.append(delete_time_avl)
+        termo *= 10
 
-
-    for chave in chaves:
-        pass
-
-
-    fill_trees
-
+    print("Insert Times:", time_insert_avl)
+    print("Delete Times:", time_delete_avl)
+    break

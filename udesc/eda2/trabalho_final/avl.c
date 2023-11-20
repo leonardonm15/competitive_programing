@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "avl.h"
+#include <time.h>
 
 Arvore* criar() {
     Arvore *arvore = malloc(sizeof(Arvore));
@@ -16,6 +17,38 @@ int max(int a, int b) {
 int vazia(Arvore* arvore) {
     return arvore->raiz == NULL;
 }
+
+clock_t multinsert(int termo) {
+    Arvore* a = criar();
+    clock_t before = clock();
+    for (int i = 1; i <= termo; i++) {
+        int k = rand() % 2147483643;
+        adicionar(a, k);
+    }
+    clock_t after = clock();
+    return after - before;
+}
+
+clock_t multidelete(int termo) {
+    Arvore* a = criar();
+    int arr[10000];
+
+    for (int i = 1; i <= 10000; i++){
+        arr[i - 1] = 0;
+        adicionar(a, i);
+    }
+
+    clock_t before = clock();
+    for (int i=0; i < termo; i++) {
+        int k = rand() % (10000 + 1);
+        if (k == 0) k++;
+        remove_nodo(a, a->raiz, k);
+    }
+    clock_t after = clock();
+
+    return after - before;
+}
+
 
 No* rse(Arvore* arvore, No* no) {
     No* pai = no->pai;
@@ -93,7 +126,7 @@ No* criarNo(int valor) {
 No* adicionarNo(No* no, int valor) {
     if (valor > no->valor) {
         if (no->direita == NULL) {
-            printf("Adicionando %d\n",valor);
+            /* printf("Adicionando %d\n",valor); */
             No* novo = criarNo(valor);
             novo->pai = no;
             no->direita = novo;
@@ -104,7 +137,7 @@ No* adicionarNo(No* no, int valor) {
         }
     } else {
         if (no->esquerda == NULL) {
-            printf("Adicionando %d\n",valor);
+            /* printf("Adicionando %d\n",valor); */
             No* novo = criarNo(valor);
             novo->pai = no;
             no->esquerda = novo;
@@ -123,19 +156,19 @@ void balanceamento(Arvore* a, No* no) {
         if (fator > 1) { //arvore mais profunda a esquerda
             //rotacao a direita
             if (fb(no->esquerda) > 0) {
-                printf("RSD(%d)\n", no->valor);
+                /* printf("RSD(%d)\n", no->valor); */
                 rsd(a, no);
             } else {
-                printf("RDD(%d)\n", no->valor);
+                /* printf("RDD(%d)\n", no->valor); */
                 rdd(a, no);
             }
         } else if (fator < -1) {
             //rotacao a esquerda
             if (fb(no->direita) < 0) {
-                printf("RSE(%d)\n", no->valor);
+                /* printf("RSE(%d)\n", no->valor); */
                 rse(a, no);
             } else {
-                printf("RDE(%d)\n", no->valor);
+                /* printf("RDE(%d)\n", no->valor); */
                 rde(a, no);
             }
         }
@@ -145,7 +178,7 @@ void balanceamento(Arvore* a, No* no) {
 
 No* adicionar(Arvore* arvore, int valor) {
     if (arvore->raiz == NULL) {
-        printf("Adicionando %d\n",valor);
+        /* printf("Adicionando %d\n",valor); */
         No* novo = criarNo(valor);
         arvore->raiz = novo;
 
@@ -267,19 +300,20 @@ int fb(No* no) {
 
 
 int main() {
-    Arvore* a = criar();
-    int i;
-    for (i = 1; i <= 20; i++) {
-        adicionar(a, i);
-    }
+    /* float res1 = multinsert(1000); */
+    /* printf("resultado -> %f \n", res1); */
+    /* float res2 = multidelete(1000); */
+    /* printf("resultado -> %f \n", res2); */
+    /* float res1 = */ 
+    /* percorrer(b->raiz, visitar); */
 
-    printf("Altura: %d\n", altura(a->raiz) + 1);
-    printf("In-order: ");
-    percorrer(a->raiz, visitar);
-    printf("\n");
+    /* printf("Altura: %d\n", altura(a->raiz) + 1); */  
+    /* printf("In-order: "); */
+    /* percorrer(a->raiz, visitar); */
+    /* printf("\n"); */
     
-    remove_nodo(a, a->raiz, 1);
-    remove_nodo(a, a->raiz, 12);
-    percorrer(a->raiz, visitar);
-    printf("\n");
+    /* remove_nodo(a, a->raiz, 1); */
+    /* remove_nodo(a, a->raiz, 12); */
+    /* percorrer(a->raiz, visitar); */
+    /* printf("\n"); */
 }
