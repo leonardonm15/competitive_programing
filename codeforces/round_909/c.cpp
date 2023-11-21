@@ -3,7 +3,7 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
@@ -11,30 +11,18 @@ using namespace std;
 
 void solve () {
     int n; cin >> n;
-    int resp = -1e4;
     vector<int> arr(n);
     for (int i=0; i < n; i++) cin >> arr[i];
-
-    int curr = 0;
-    for (int i=1; i < n; i++) {
-        if (abs(arr[i] % 2) != abs(arr[i - 1] % 2))  {
-            if (resp == -1e4) resp = 0;
-            curr += arr[i - 1];
-            if (i == n - 1) {
-                curr += arr[i];
-                resp = max(resp, curr);
-                break;
-            }
-        }
-        else {
-            curr += arr[i];
-            resp = max(resp, curr);
-            curr = 0;
-        }
-        cout << curr << endl;
+    int acc = 0;
+    int resp = -1e18;
+    for (int i=0; i < n; i++) {
+        acc += arr[i];
+        resp = max(resp, acc);
+        /* cout << "acc -> " << acc << endl; */
+        if (acc < 0 || abs(arr[i + 1] % 2) == abs(arr[i] % 2)) acc = 0;
     }
-
-    cout << max(resp, *max_element(arr.begin(), arr.end())) << endl;
+    resp = max(resp, *max_element(arr.begin(), arr.end()));
+    cout << resp << endl;
 }
 
 signed main() {
