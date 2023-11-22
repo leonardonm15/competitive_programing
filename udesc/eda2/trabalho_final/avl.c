@@ -43,12 +43,9 @@ int multinsert(int termo) {
 int multidelete(int termo) {
     Arvore* a = criar();
     int arr[10001];
-    
-    int it = 0;
     for (int i = 1; i <= 10000; i++){
         arr[i - 1] = 0;
-        int k = abs(randll() % 10000);
-        arr[it++] = k;
+        int k = abs(randll() % 10001);
         adicionar(a, k);
     }
     comp = 0;
@@ -57,11 +54,16 @@ int multidelete(int termo) {
         comp++;
         int k = abs(rand() % 10001);
         if (k == 0) k++;
-        if (arr[k]) remove_nodo(a, a->raiz, k);
-        else continue;
-        i--:
+        if (!arr[k]) {
+            remove_nodo(a, a->raiz, k);
+            arr[k]++;
+        }
+        else {
+            continue;
+            i--;
+        }
     }
-
+    comp -= 2*termo;
     return comp;
 }
 
