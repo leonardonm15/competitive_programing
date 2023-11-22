@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define int long long
+
 typedef struct no {
     struct no* pai;
     struct no* esquerda;

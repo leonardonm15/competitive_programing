@@ -1,16 +1,27 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "avl.h"
 #include <time.h>
 
+#include "avl.h"
+
+int comp = 0;
+
+#define if comp++;if
+
 Arvore* criar() {
+    srand(time(NULL));
     Arvore *arvore = malloc(sizeof(Arvore));
     arvore->raiz = NULL;
 
     return arvore;
 }
 
+int randll() {
+    return (int) rand() * (int) 1e9 + rand();
+}
+
 int max(int a, int b) {
+    comp++;
     return a > b ? a : b;
 }
 
@@ -18,35 +29,40 @@ int vazia(Arvore* arvore) {
     return arvore->raiz == NULL;
 }
 
-clock_t multinsert(int termo) {
+int multinsert(int termo) {
     Arvore* a = criar();
-    clock_t before = clock();
+    comp++;
     for (int i = 1; i <= termo; i++) {
-        int k = rand() % 2147483643;
+        comp++;
+        int k = randll();
         adicionar(a, k);
     }
-    clock_t after = clock();
-    return after - before;
+    return comp;
 }
 
-clock_t multidelete(int termo) {
+int multidelete(int termo) {
     Arvore* a = criar();
-    int arr[10000];
-
+    int arr[10001];
+    
+    int it = 0;
     for (int i = 1; i <= 10000; i++){
         arr[i - 1] = 0;
-        adicionar(a, i);
+        int k = abs(randll() % 10000);
+        arr[it++] = k;
+        adicionar(a, k);
     }
-
-    clock_t before = clock();
+    comp = 0;
+    comp++;
     for (int i=0; i < termo; i++) {
-        int k = rand() % (10000 + 1);
+        comp++;
+        int k = abs(rand() % 10001);
         if (k == 0) k++;
-        remove_nodo(a, a->raiz, k);
+        if (arr[k]) remove_nodo(a, a->raiz, k);
+        else continue;
+        i--:
     }
-    clock_t after = clock();
 
-    return after - before;
+    return comp;
 }
 
 
@@ -151,9 +167,11 @@ No* adicionarNo(No* no, int valor) {
 
 void balanceamento(Arvore* a, No* no) {
     while (no != NULL) {
+        comp++;
         int fator = fb(no);
 
-        if (fator > 1) { //arvore mais profunda a esquerda
+        if (fator > 1) { 
+            //arvore mais profunda a esquerda
             //rotacao a direita
             if (fb(no->esquerda) > 0) {
                 /* printf("RSD(%d)\n", no->valor); */
@@ -269,9 +287,9 @@ void percorrer(No* no, void (*callback)(int)) {
     }
 }
 
-void visitar(int valor){
-    printf("%d ", valor);
-}
+/* void visitar(int valor){ */
+/*     printf("%d ", valor); */
+/* } */
 
 int altura(No* no){
     int esquerda = 0,direita = 0;
@@ -299,21 +317,23 @@ int fb(No* no) {
 
 
 
-int main() {
-    /* float res1 = multinsert(1000); */
-    /* printf("resultado -> %f \n", res1); */
-    /* float res2 = multidelete(1000); */
-    /* printf("resultado -> %f \n", res2); */
-    /* float res1 = */ 
-    /* percorrer(b->raiz, visitar); */
+signed main() {
+    /* int res1 = multinsert(10); */
+    /* printf("resultado -> %lld \n", res1); */
+    /* int res2 = multinsert(100); */
+    /* printf("resultado -> %lld \n", res2); */
+    /* int res3 = multinsert(1000); */
+    /* printf("resultado -> %lld \n", res3); */
+    /* int res4 = multinsert(10000); */
+    /* printf("resultado -> %lld \n", res4); */
 
-    /* printf("Altura: %d\n", altura(a->raiz) + 1); */  
-    /* printf("In-order: "); */
-    /* percorrer(a->raiz, visitar); */
-    /* printf("\n"); */
-    
-    /* remove_nodo(a, a->raiz, 1); */
-    /* remove_nodo(a, a->raiz, 12); */
-    /* percorrer(a->raiz, visitar); */
-    /* printf("\n"); */
+    int res2 = multidelete(10);
+    printf("resultado -> %lld \n", res2);
+    res2 = multidelete(100);
+    printf("resultado -> %lld \n", res2);
+    res2 = multidelete(1000);
+    printf("resultado -> %lld \n", res2);
+    res2 = multidelete(10000);
+    printf("resultado -> %lld \n", res2);
+
 }
