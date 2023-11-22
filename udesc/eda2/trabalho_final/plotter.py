@@ -1,20 +1,31 @@
-import asciinet
+import matplotlib.pyplot as plt
 import numpy as np
 
 # Dados
-n_values = [10, 100, 1000, 10000]
-insert_times = [[3, 3, 2, 3, 2, 2, 2, 2, 2, 2],
-                [65, 61, 61, 62, 60, 62, 64, 56, 60, 72],
-                [3593, 4172, 6086, 4203, 4252, 4410, 4120, 4310, 4143, 4156],
-                [620103, 664836, 677451, 658803, 673380, 642833, 655939, 666237, 656584, 651717]]
+n_values = [10, 100, 1000, 10000, 100000]
+insert_times = [[424, 848, 1272, 1696, 2120, 2544, 2968, 3392, 3816, 4240],
+                [29688, 55136, 80584, 106032, 131480, 156928, 182376, 207824, 233272, 258720],
+                [2421251, 4583782, 6746313, 8908844, 11071375, 13233906, 15396437, 17558968, 19721499, 21884030],
+                [230481225, 433652397, 638534824, 843417251, 1047212509, 1254252228, 1464334807, 1668770179, 1870739735, 2073177420]]
+insert_times = [48, 1076, 17376, 242970, 3102794]
 
 # Calcula as médias
-insert_means = np.mean(insert_times, axis=1)
+insert_means = insert_times
 
-# Criação do gráfico ASCII
-chart = asciinet.LineChart()
-chart.add_line("Insert Times", n_values, insert_means)
-ascii_plot = chart.render()
+# Calcula os valores das funções n log(n) e n^2
+n_values_fit = np.logspace(1, 5, 100)  # Gera 100 pontos logaritmicamente espaçados entre 10^1 e 10^5
+n_log_n_values = n_values_fit * np.log(n_values_fit)
+n_squared_values = n_values_fit**2
 
-# Exibição no terminal
-print(ascii_plot)
+# Plotagem
+plt.plot(n_values, insert_means, marker='o', label='Insert Times (Data)')
+plt.plot(n_values_fit, n_log_n_values, label='$n \log(n)$')
+plt.plot(n_values_fit, n_squared_values, label='$n^2$')
+plt.xscale('log')  # Escala logarítmica no eixo x
+plt.yscale('log')  # Escala logarítmica no eixo y
+plt.xlabel('Tamanho do N')
+plt.ylabel('Número de Operações')
+plt.title('Tempo Médio de Inserção com $n \log(n)$ e $n^2$')
+plt.legend()
+plt.show()
+
