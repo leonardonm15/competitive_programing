@@ -1,26 +1,31 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-//#define int long long
+#define int long long
 
 void solve () {
     int n; cin >> n;
     vector<int> arr(n);
     map<int, int> map;
+
     for (int i=0; i < n; i++) {
         cin >> arr[i];
         map[arr[i]]++;
     }
 
     int resp = 0;
-    if (map[1] > 1) resp += map[1];
-    if (map[2] > 1) resp += map[2];
-
     for (int i=0; i < n; i++) {
+        map[arr[i]]--;
+        resp += map[arr[i]];
+    }
+
+    for (int i=0; i < n; i++) map[arr[i]]++;
+    for (int i=0; i < n; i++) {
+        map[arr[i]]--;
         if (arr[i] == 1 && map[2] > 0) resp += map[2];
         else if (arr[i] == 2 && map[1] > 0) resp += map[1];
-        else if (map[arr[i]] > 0 && arr[i] != 1 && arr[i] != 2) resp += map[arr[i]];
     }
+
     cout << resp << endl;
 }
 
