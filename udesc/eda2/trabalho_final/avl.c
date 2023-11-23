@@ -37,17 +37,16 @@ int multinsert(int termo) {
 }
 
 int multidelete(int termo) {
-    printf("askdjhaskdjhaskjdhaksjd /n");
     Arvore* a = criar();
-    int arr[10001];
+    int arr[100000];
     for (int i = 1; i <= 10000; i++){
         arr[i - 1] = 0;
         adicionar(a, i);
     }
+
     comp = 0;
     for (int i=0; i < termo; i++) {
         int k = abs(rand() % 10001);
-        if (k == 0) k++;
         if (!arr[k]) {
             remove_nodo(a, a->raiz, k);
             arr[k]++;
@@ -57,7 +56,6 @@ int multidelete(int termo) {
             continue;
         }
     }
-    printf("acabou");
     return comp;
 }
 
@@ -340,8 +338,6 @@ signed main() {
     /* printf("resultado -> %lld \n", res2); */
     /* res2 = multidelete(1000); */
     /* printf("resultado -> %lld \n", res2); */
-    for (int i=0; i < 10; i++) {
-        int res2 = multidelete(10000);
-        printf("resultado -> %lld \n", res2);
-    }
+    /* res2 = multidelete(10000); */
+    /* printf("resultado -> %lld \n", res2); */
 }
