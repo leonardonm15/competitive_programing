@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "rb.h"
+#include <stdbool.h>
 
 int comp = 0;
 
@@ -48,6 +49,7 @@ int multinsert(int termo) {
     return comp;
 }
 
+
 int multidelete(int termo) {
     Arvore* a = criar();
     int arr[100000];
@@ -71,21 +73,92 @@ int multidelete(int termo) {
     return comp;
 }
 
+void remove_nodo(No *v) {
+    No *u = BSTreplace(v);
+ 
+    // True when u and v are both black
+    bool uvBlack = ((u == NULL || u->cor == Preto) && (v->cor == Preto));
+    No *parent = v->pai;
+ 
+    if (u == NULL) {
+      // u is NULL therefore v is leaf
+      if (v == root) {
+        // v is root, making root null
+        root = NULL;
+      } else {
+        if (uvBlack) {
+          // u and v both black
+          // v is leaf, fix double black at v
+          fixDoubleBlack(v);
+        } else {
+          // u or v is red
+          if (v->sibling() != NULL)
+            // sibling is not null, make it red"
+            v->sibling()->cor = Vermelho;
+        }
+ 
+        // delete v from the tree
+        if (v->isOnLeft()) {
+          parent->esquerda = NULL;
+        } else {
+          parent->direita = NULL;
+        }
+      }
+      delete v;
+      return;
+    }
+ 
+    if (v->esquerda == NULL or v->direita == NULL) {
+      // v has 1 child
+      if (v == root) {
+        // v is root, assign the value of u to v, and delete u
+        v->val = u->val;
+        v->esquerda = v->direita = NULL;
+        delete u;
+      } else {
+        // Detach v from tree and move u up
+        if (v->isOnLeft()) {
+          parent->esquerda = u;
+        } else {
+          parent->direita = u;
+        }
+        delete v;
+        u->parent = parent;
+        if (uvBlack) {
+          // u and v both black, fix double black at u
+          fixDoubleBlack(u);
+        } else {
+          // u or v red, cor u black
+          u->cor = Preto;
+        }
+      }
+      return;
+    }
+ 
+    // v has 2 children, swap values with successor and recurse
+    swapValues(u, v);
+    deleteNo(u);
+}
+
+
 No* adicionarNo(Arvore* arvore, No* no, int valor) {
+    comp++;
     if (valor > no->valor) {
+        comp++;
         if (no->direita == arvore->nulo) {
             no->direita = criarNo(arvore, no, valor);     
             no->direita->cor = Vermelho;       
-        		
+
             return no->direita;
         } else {
             return adicionarNo(arvore, no->direita, valor);
         }
     } else {
+        comp++;
         if (no->esquerda == arvore->nulo) {
             no->esquerda = criarNo(arvore, no, valor);
             no->esquerda->cor = Vermelho;
-            
+
             return no->esquerda;
         } else {
             return adicionarNo(arvore, no->esquerda, valor);
@@ -94,17 +167,43 @@ No* adicionarNo(Arvore* arvore, No* no, int valor) {
 }
 
 No* adicionar(Arvore* arvore, int valor) {
+    comp++;
     if (vazia(arvore)) {
         arvore->raiz = criarNo(arvore, arvore->nulo, valor);
         arvore->raiz->cor = Preto;
-        	
+
         return arvore->raiz;
     } else {
         No* no = adicionarNo(arvore, arvore->raiz, valor);
         balancear(arvore, no);
-        
+
         return no;
     }
+}
+
+No *successor(No *x) {
+    No *temp = x;
+
+    while (temp->esquerda != NULL)
+        temp = temp->esquerda;
+
+    return temp;
+}
+
+No* BSTreplace(No *x) {
+    // when node have 2 children
+    if (x->esquerda != NULL && x->esquerda != NULL)
+        return successor(x->direita);
+
+    // when leaf
+    if (x->esquerda == NULL && x->direita == NULL)
+        return NULL;
+
+    // when single child
+    if (x->esquerda != NULL)
+        return x->esquerda;
+    else
+        return x->direita;
 }
 
 No* localizar(Arvore* arvore, int valor) {
@@ -123,32 +222,6 @@ No* localizar(Arvore* arvore, int valor) {
     return NULL;
 }
 
-void percorrerProfundidadeInOrder(Arvore* arvore, No* no, void (*callback)(int)) {
-    if (no != arvore->nulo) {
-        
-        
-        percorrerProfundidadeInOrder(arvore, no->esquerda,callback);
-        callback(no->valor);
-        percorrerProfundidadeInOrder(arvore, no->direita,callback);
-    }
-}
-
-void percorrerProfundidadePreOrder(Arvore* arvore, No* no, void (*callback)(int)) {
-    if (no != arvore->nulo) {
-        callback(no->valor);
-        percorrerProfundidadePreOrder(arvore, no->esquerda,callback);
-        percorrerProfundidadePreOrder(arvore, no->direita,callback);
-    }
-}
-
-void percorrerProfundidadePosOrder(Arvore* arvore, No* no, void (callback)(int)) {
-    if (no != arvore->nulo) {
-        percorrerProfundidadePosOrder(arvore, no->esquerda,callback);
-        percorrerProfundidadePosOrder(arvore, no->direita,callback);
-        callback(no->valor);
-    }
-}
-
 void visitar(int valor){
     printf("%lld ", valor);
 }
@@ -157,7 +230,7 @@ void balancear(Arvore* arvore, No* no) {
     while (no->pai->cor == Vermelho) {
         if (no->pai == no->pai->pai->esquerda) {
             No *tio = no->pai->pai->direita;
-            
+
             if (tio->cor == Vermelho) {
                 tio->cor = Preto; //Caso 1
                 no->pai->cor = Preto; 
@@ -176,7 +249,7 @@ void balancear(Arvore* arvore, No* no) {
             }
         } else {
             No *tio = no->pai->pai->esquerda;
-            
+
             if (tio->cor == Vermelho) {
                 tio->cor = Preto; //Caso 1
                 no->pai->cor = Preto; 
@@ -207,7 +280,7 @@ void rotacionarEsquerda(Arvore* arvore, No* no) {
     }
 
     direita->pai = no->pai;
-    
+
     if (no->pai == arvore->nulo) {
         arvore->raiz = direita;
     } else if (no == no->pai->esquerda) {
@@ -223,13 +296,13 @@ void rotacionarEsquerda(Arvore* arvore, No* no) {
 void rotacionarDireita(Arvore* arvore, No* no) {
     No* esquerda = no->esquerda;
     no->esquerda = esquerda->direita;
-    
+
     if (esquerda->direita != arvore->nulo) {
         esquerda->direita->pai = no;
     }
-    
+
     esquerda->pai = no->pai;
-    
+
     if (no->pai == arvore->nulo) {
         arvore->raiz = esquerda;
     } else if (no == no->pai->esquerda) {
@@ -237,23 +310,24 @@ void rotacionarDireita(Arvore* arvore, No* no) {
     } else {
         no->pai->direita = esquerda;
     }
-    
+
     esquerda->direita = no;
     no->pai = esquerda;
 }
 
 int main() {
-    /* Arvore* a = criar(); */
+    srand(time(NULL));
 
-    /* adicionar(a,7); */
-    /* adicionar(a,6); */
-    /* adicionar(a,5); */
-    /* adicionar(a,4); */
-    /* adicionar(a,3); */
-    /* adicionar(a,2); */
-    /* adicionar(a,1); */
+    int res1 = multinsert(10);
+    printf("resultado -> %lld \n", res1);
+    int res2 = multinsert(100);
+    printf("resultado -> %lld \n", res2);
+    int res3 = multinsert(1000);
+    printf("resultado -> %lld \n", res3);
+    int res4 = multinsert(10000);
+    printf("resultado -> %lld \n", res4);
+    /* int res5 = multinsert(100000); */
+    /* printf("resultado -> %lld \n", res5); */
 
-    /* printf("In-order: "); */
-    /* percorrerProfundidadeInOrder(a, a->raiz,visitar); */
-    /* printf("\n"); */
+
 }
