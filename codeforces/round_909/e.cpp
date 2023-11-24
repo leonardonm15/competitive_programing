@@ -1,11 +1,12 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-//#define int long long
+#define int long long
+const int maxn = 2e5 + 5;
 
-bool is_sorted(vector<int> arr) {
+bool is_sorted(vector<int> arr, int k) {
     int n = arr.size(); 
-    for (int i=0; i < n - 1; i++) {
+    for (int i=k; i < n - 1; i++) {
         if (arr[i + 1] < arr[i]) return false;
     }
     return true;
@@ -13,25 +14,18 @@ bool is_sorted(vector<int> arr) {
 
 void solve () {
     int n; cin >> n;
-    multiset<int> s;
     vector<int> arr(n);
-    int m = 0;
-    int nm = 0;
-
+    int m = 1e10;
+    int im = 0;
     for (int i=0; i < n; i++) {
         int num; cin >> num;
-        if (num == m) nm++;
+        arr[i] = num;
         if (num < m) {
             m = num;
-            nm = 1;
+            im = i;
         }
     }
-    if (nm > 1 && is_sorted(arr)) {
-        cout << 0 << endl;
-        return;
-    }
-    
-
+    cout << (is_sorted(arr, index_menor) ? im : -1) << endl;
 }
 
 signed main() {
