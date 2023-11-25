@@ -28,16 +28,13 @@ void solve () {
             arr[b].push_back(a);
     }
     dfs(-1, 1);
-    /* for (int i=1; i <= n; i++) { */
-    /*     cout << valls[i] << " "; */
-    /* } */
-    /* cout << endl; */
     int q; cin >> q;
     while (q--) {
         int a, b; cin >> a >> b;
         cout << (long long) valls[a] * valls[b] << endl;
     }
-    for (int i=0; i < n; i++) {
+    
+    for (int i=0; i <= n; i++) {
         arr[i].clear();
         valls[i] = 0;
     }
