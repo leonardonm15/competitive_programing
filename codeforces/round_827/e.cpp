@@ -3,7 +3,7 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
@@ -11,9 +11,6 @@ using namespace std;
 
 void solve () {
     // sorta o de baixo e guarda os indices e e vai colocando a resp no array 
-    //
-    //
-    //
     int n, q; cin >> n >> q;
     vector<int> resp(q, -1);
     vector<int> arr(n);
@@ -29,15 +26,22 @@ void solve () {
     int altura = 0;
     int query = 0;
 
+
     for (int i=0; i < n; i++) {
-        if (qs[query].first >= arr[i] && query < q) {
+        if (query >= q) break;
+        if (i < n && qs[query].first >= arr[i]) {
+            /* cout << "qs[query].first -> " << qs[query].first << endl; */
+            /* cout << "arr[i] -> " << arr[i] << endl; */
             altura += arr[i];
             continue;
         } else {
+            /* cout << "qs[query].second -> " << qs[query].second << endl; */
             resp[qs[query].second] = altura; 
+            i--;
             query++;
         }
     }
+
     for (auto cara: resp) {
         if (cara == -1) cout << altura << " ";
         else cout << cara << " ";
