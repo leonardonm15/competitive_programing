@@ -22,25 +22,51 @@ typedef struct arvore {
 } Arvore;
 
 int randll();
+
 int max(int a, int b);
-int multinsert(int termo);
-int multidelete(int termo);
+
+void trocar_valores(No* a, No* b);
+
+Arvore* criar();
+
 int vazia(Arvore* arvore);
 
-bool isOnLeft(No* a);
+No* criarNo(Arvore* arvore, No* pai, int valor);
 
-void remove_nodo(Arvore* arvore, No *v);
-void trocar_valores(No* a, No* b);
-void balancear(Arvore* arvore, No* no);
-void rotacionarEsquerda(Arvore* arvore, No* no);
-void rotacionarDireita(Arvore* arvore, No* no);
+int multinsert(int termo);
+
 void deleteByVal(Arvore* a, int n);
 
-No* criarNo(Arvore* arvore, No* pai, int valor);
-No* sibling(No* a);
+int multidelete(int termo);
+
+// returns pointer to sibling
+
+void remove_nodo(Arvore* arvore, No *v);
+
 No* adicionarNo(Arvore* arvore, No* no, int valor);
+
 No* adicionar(Arvore* arvore, int valor);
+// parte nova
+
+No* deletar(Arvore* arvore, int valor);
+
+No* deletarNo(Arvore* arvore, No* no, int valor);
+
+No* minimo(Arvore* arvore, No* no);
+
+void balancearRemocao(Arvore* arvore, No* no);
+
 No *successor(No *x);
+
 No* BSTreplace(No* x);
+
 No* localizar(Arvore* arvore, int valor);
-Arvore* criar();
+
+void visitar(int valor);
+
+void balancear(Arvore* arvore, No* no);
+
+void rotacionarEsquerda(Arvore* arvore, No* no);
+
+void rotacionarDireita(Arvore* arvore, No* no);
+

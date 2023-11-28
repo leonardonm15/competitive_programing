@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "rb.h"
 int comp = 0;
+int rec = 0;
 
 int randll() {
     return (int) rand() * (int) 1e9 + rand();
@@ -54,19 +55,6 @@ int multinsert(int termo) {
     return comp;
 }
 
-
-void deleteByVal(Arvore* a, int n) {
-    if (a->raiz == NULL)
-        return;
-
-    No *v = localizar(a, n);
-    if (v->valor != n) {
-        printf("No node found to delete with value: %lld\n", v->valor);
-        return;
-    }
-    remove_nodo(a, v);
-}
-
 int multidelete(int termo) {
     Arvore* a = criar();
     int arr[100000];
@@ -76,106 +64,22 @@ int multidelete(int termo) {
     }
     comp = 0;
     for (int i=0; i < termo; i++) {
+        int dm = comp;
         int k = abs(rand() % 10001);
+        if (k == 0) k++;
         if (!arr[k]) {
-            deleteByVal(a, k);
+            deletar(a, k);
             /* remove_nodo(a, a->raiz, k); */
             arr[k]++;
         }
         else {
+            /* printf("i -> %lld\n", i); */
             i--;
+            comp -= (comp - dm);
             continue;
         }
     }
     return comp;
-}
-
-bool isOnLeft(No* a) {a->esquerda == NULL? false : true;}
-
-// returns pointer to sibling
-No* sibling(No* a) {
-    // sibling null if no parent
-    if (a->pai == NULL)
-        return NULL;
-
-    if (isOnLeft(a))
-        return a->pai->direita;
-
-    return a->pai->esquerda;
-}
-
-void remove_nodo(Arvore* arvore, No *v) {
-    /* printf("recursão\n"); */
-    No *u = BSTreplace(v); // True when u and v are both black
-    bool uvBlack = ((u == NULL || u->cor == Preto) && (v->cor == Preto));
-    No *parent = v->pai;
-    comp++;
-    if (u == NULL) {
-        comp++;
-        if (v == arvore->raiz) { // v is root, making root null
-            arvore->raiz = NULL;
-        } else {
-            comp++;
-            if (uvBlack) {
-                // u and v both black
-                // v is leaf, fix double black at v
-                balancear(arvore, v);
-            } else {
-                // u or v is red
-                comp++;
-                printf("caiu aqui red\n");
-                if (sibling(v) != NULL)
-                    // sibling is not null, make it red"
-                    sibling(v)->cor = Vermelho;
-            }
-
-            // delete v from the tree
-            comp++;
-            if (isOnLeft(v)) {
-                parent->esquerda = NULL;
-            } else {
-                parent->direita = NULL;
-            }
-        }
-        free(v);
-        return;
-    }
-
-    comp++;
-    if (v->esquerda == NULL || v->direita == NULL) {
-        printf("caiu aqui v tem 1 filho\n");
-        // v has 1 child
-        comp++;
-        if (v->valor == arvore->raiz->valor) {
-            // v is root, assign the value of u to v, and delete u
-            v->valor= u->valor;
-            v->esquerda = v->direita = NULL;
-            free(u);
-        } else {
-            // Detach v from tree and move u up
-            comp++;
-            if (isOnLeft(v)) {
-                parent->esquerda = u;
-            } else {
-                parent->direita = u;
-            }
-            free(v);
-            u->pai = parent;
-            comp++;
-            if (uvBlack) {
-                // u and v both black, fix double black at u
-                balancear(arvore, u);
-            } else {
-                // u or v red, cor u black
-                u->cor = Preto;
-            }
-        }
-        return;
-    }
-
-    // v has 2 children, swap values with successor and recurse
-    trocar_valores(u, v); 
-    remove_nodo(arvore, u);
 }
 
 No* adicionarNo(Arvore* arvore, No* no, int valor) {
@@ -212,10 +116,130 @@ No* adicionar(Arvore* arvore, int valor) {
         return arvore->raiz;
     } else {
         No* no = adicionarNo(arvore, arvore->raiz, valor);
-        balancear(arvore, no);
-
+        balancearRemocao(arvore, no);
         return no;
     }
+}
+// parte nova
+
+No* deletar(Arvore* arvore, int valor) {
+    comp++;
+    if (!vazia(arvore)) {
+        arvore->raiz = deletarNo(arvore, arvore->raiz, valor);
+        rec = 0;
+        arvore->raiz->cor = Preto;
+    }
+}
+
+No* deletarNo(Arvore* arvore, No* no, int valor) {
+    rec++;
+    /* printf("recursão infinita ? - %lld\n", rec); */
+    comp++;
+    if (no == arvore->nulo) {
+        printf("1\n");
+        return no;
+    }
+
+    comp++;
+    if (valor < no->valor) {
+        printf("2\n");
+        no->esquerda = deletarNo(arvore, no->esquerda, valor);
+    } else if (valor > no->valor) {
+        printf("3\n");
+        comp++;
+        no->direita = deletarNo(arvore, no->direita, valor);
+    } else {
+        comp++;
+        if (no->esquerda == arvore->nulo || no->direita == arvore->nulo) {
+            printf("5\n");
+            No* filho = (no->esquerda == arvore->nulo) ? no->direita : no->esquerda;
+            comp++;
+            if (no->cor == Preto && filho->cor == Preto) {
+                printf("6\n");
+                balancear(arvore, no);
+            }
+
+            free(no);
+            /* printf("vai printar o fiho\n"); */
+            /* printf("vai retornar o filho %lld\n", filho->valor); */
+            return filho;
+        }
+        printf("4\n");
+        comp++;
+        No* sucessor = minimo(arvore, no->direita);
+        no->valor = sucessor->valor;
+        no->direita = deletarNo(arvore, no->direita, sucessor->valor);
+    }
+
+    return no;
+}
+
+No* minimo(Arvore* arvore, No* no) {
+    while (no->esquerda != arvore->nulo) {
+        no = no->esquerda;
+    }
+    return no;
+}
+
+void balancearRemocao(Arvore* arvore, No* no) {
+    while (no != arvore->raiz && no->cor == Preto) {
+        if (no == no->pai->esquerda) {
+            No* irmao = no->pai->direita;
+
+            if (irmao->cor == Vermelho) {
+                irmao->cor = Preto;
+                no->pai->cor = Vermelho;
+                rotacionarEsquerda(arvore, no->pai);
+                irmao = no->pai->direita;
+            }
+
+            if (irmao->esquerda->cor == Preto && irmao->direita->cor == Preto) {
+                irmao->cor = Vermelho;
+                no = no->pai;
+            } else {
+                if (irmao->direita->cor == Preto) {
+                    irmao->esquerda->cor = Preto;
+                    irmao->cor = Vermelho;
+                    rotacionarDireita(arvore, irmao);
+                    irmao = no->pai->direita;
+                }
+
+                irmao->cor = no->pai->cor;
+                no->pai->cor = Preto;
+                irmao->direita->cor = Preto;
+                rotacionarEsquerda(arvore, no->pai);
+                no = arvore->raiz;
+            }
+        } else {
+            No* irmao = no->pai->esquerda;
+
+            if (irmao->cor == Vermelho) {
+                irmao->cor = Preto;
+                no->pai->cor = Vermelho;
+                rotacionarDireita(arvore, no->pai);
+                irmao = no->pai->esquerda;
+            }
+
+            if (irmao->direita->cor == Preto && irmao->esquerda->cor == Preto) {
+                irmao->cor = Vermelho;
+                no = no->pai;
+            } else {
+                if (irmao->esquerda->cor == Preto) {
+                    irmao->direita->cor = Preto;
+                    irmao->cor = Vermelho;
+                    rotacionarEsquerda(arvore, irmao);
+                    irmao = no->pai->esquerda;
+                }
+
+                irmao->cor = no->pai->cor;
+                no->pai->cor = Preto;
+                irmao->esquerda->cor = Preto;
+                rotacionarDireita(arvore, no->pai);
+                no = arvore->raiz;
+            }
+        }
+    }
+    no->cor = Preto;
 }
 
 No *successor(No *x) {
@@ -257,7 +281,6 @@ No* localizar(Arvore* arvore, int valor) {
             }
         }
     }
-
     return NULL;
 }
 
@@ -266,10 +289,10 @@ void visitar(int valor){
 }
 
 void balancear(Arvore* arvore, No* no) {
-    printf("consegui entrar no balanceamento\n");
-    printf("quero balancear o nodo de valor %lld\n", no->valor);
+    /* printf("consegui entrar no balanceamento\n"); */
+    /* printf("quero balancear o nodo de valor %lld\n", no->valor); */
     while (no->pai->cor == Vermelho) {
-        printf("nodo é vermelho\n");
+        /* printf("nodo é vermelho\n"); */
         if (no->pai == no->pai->pai->esquerda) {
             No *tio = no->pai->pai->direita;
 
@@ -291,7 +314,7 @@ void balancear(Arvore* arvore, No* no) {
             }
         } else {
             No *tio = no->pai->pai->esquerda;
-        
+
             if (tio->cor == Vermelho) {
                 tio->cor = Preto; //Caso 1
                 no->pai->cor = Preto; 
@@ -370,7 +393,19 @@ signed main() {
     /* printf("resultado -> %lld \n", res4); */
     /* int res5 = multinsert(100000); */
     /* printf("resultado -> %lld \n", res5); */
-
-    int res1 = multidelete(1);
+    /* { */
+    /*     int res1 = multidelete(1); */
+    /*     printf("resultado -> %lld \n", res1); */
+    /* } */
+    /* { */
+    /*     int res1 = multidelete(10); */
+    /*     printf("resultado -> %lld \n", res1); */
+    /* } */
+    {
+        /* int res1 = multidelete(1000); */
+        /* printf("resultado -> %lld \n", res1); */
+    }
+    /* int res1 = multidelete(2000); */
+    int res1 = multidelete(100);
     printf("resultado -> %lld \n", res1);
 }
