@@ -7,6 +7,8 @@
 #define RED 0
 #define BLACK 1
 
+#define int long long
+
 enum rbtraversal {
 	PREORDER,
 	INORDER,
@@ -50,6 +52,9 @@ rbnode *rb_successor(rbtree *rbt, rbnode *node);
 
 int rb_apply_node(rbtree *rbt, rbnode *node, int (*func)(void *, void *), void *cookie, enum rbtraversal order);
 void rb_print(rbtree *rbt, void (*print_func)(void *));
+
+void multinsert(int );
+void multidelete();
 
 rbnode *rb_insert(rbtree *rbt, void *data);
 void *rb_delete(rbtree *rbt, rbnode *node, int keep);
