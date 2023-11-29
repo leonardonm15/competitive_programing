@@ -3,7 +3,7 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
@@ -13,38 +13,37 @@ void solve () {
     int n; cin >> n;
     // After each operation, determine if it is possible to rearrange the characters of s and t 
     // s < t
-    map<char, int> ms;
-    map<char, int> mt;
-    ms['a']++;
-    mt['a']++;
-    int sl = 1;
-    int tl = 1;
+    /* cout << "que porra que ta acontecendo" << endl; */
+    vector<long long> ls (26);
+    vector<long long> lt (26);
+    int mlt = 0; // max idx letra t
+    int mls = // max idx letra s;
+    ls[0]++;
+    lt[0]++;
     while (n--) {
-        int op, t; cin >> op >> t;
+        int q, t; cin >> q >> t;
         string s; cin >> s;
-        for (auto cara: s) {
-            if (op == 1) {
-                ms[cara] += t;
-                sl += t;
-            } else {
-                mt[cara] += t;
-                tl += t;
+        if (q == 1) {
+            for (auto cara: s) {
+                ls[cara - 'a'] += t;
+                mls = max(mls, (long long ) cara - 'a');
+            }
+        } 
+        if (q == 2) {
+            for (auto cara: s) {
+                mlt = max(mlt, (long long) cara - 'a');
+                lt[cara - 'a'] += t;
             }
         }
-        cout << "letras s -> " << sl << endl;
-        cout << "letras t -> " << tl << endl;
-        for (auto [letra, f]: ms) {
-            // aaab s 
-            // aabb
-            if (mt[letra] < f) {
+        if (mlt > 0) {
+            cout << "YES" << endl;
+        } else {
+            if (ls[0] < lt[0] && mls <= mlt) {
                 cout << "YES" << endl;
-                break;
-            } else if (mt[letra] > f) {
+            } else {
                 cout << "NO" << endl;
-                break;
-            } 
+            }
         }
-        if (ms == mt) cout << "NO" << endl;
     }
 }
 
