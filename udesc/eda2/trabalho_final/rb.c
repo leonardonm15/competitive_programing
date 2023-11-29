@@ -1,411 +1,414 @@
+// Implementing Red-Black Tree in C
+#include <stdio.h>
 #include <stdlib.h>
-#include "rb.h"
+#include <time.h>
+
+#define int long long
+
 int comp = 0;
-int rec = 0;
+
+enum nodeColor {
+    RED,
+    BLACK
+};
+
+struct rbNode {
+    int data, color;
+    struct rbNode *link[2];
+};
+
+struct rbNode *root = NULL;
+
+// Create a red-black tree
+struct rbNode *createNode(int data) {
+    struct rbNode *newnode;
+    newnode = (struct rbNode *)malloc(sizeof(struct rbNode));
+    newnode->data = data;
+    newnode->color = RED;
+    newnode->link[0] = newnode->link[1] = NULL;
+    return newnode;
+}
 
 int randll() {
     return (int) rand() * (int) 1e9 + rand();
 }
 
-int max(int a, int b) {
-    return a > b ? a : b;
+// Insert an node
+void insertion(int data) {
+    struct rbNode *stack[20000], *ptr, *newnode, *xPtr, *yPtr;
+    int dir[20000], ht = 0, index;
+    ptr = root;
+
+    comp++;
+    if (!root) {
+        root = createNode(data);
+        return;
+    }
+
+    stack[ht] = root;
+    dir[ht++] = 0;
+    while (ptr != NULL) {
+        comp++;
+        if (ptr->data == data) {
+            printf("Duplicates Not Allowed!!\n");
+            return;
+        }
+        index = (data - ptr->data) > 0 ? 1 : 0;
+        stack[ht] = ptr;
+        ptr = ptr->link[index];
+        dir[ht++] = index;
+    }
+    stack[ht - 1]->link[index] = newnode = createNode(data);
+    while ((ht >= 3) && (stack[ht - 1]->color == RED)) {
+        comp++;
+        comp++;
+        if (dir[ht - 2] == 0) {
+            yPtr = stack[ht - 2]->link[1];
+            comp++;
+            if (yPtr != NULL && yPtr->color == RED) {
+                stack[ht - 2]->color = RED;
+                stack[ht - 1]->color = yPtr->color = BLACK;
+                ht = ht - 2;
+            } else {
+                comp++;
+                if (dir[ht - 1] == 0) {
+                    yPtr = stack[ht - 1];
+                } else {
+                    xPtr = stack[ht - 1];
+                    yPtr = xPtr->link[1];
+                    xPtr->link[1] = yPtr->link[0];
+                    yPtr->link[0] = xPtr;
+                    stack[ht - 2]->link[0] = yPtr;
+                }
+                xPtr = stack[ht - 2];
+                xPtr->color = RED;
+                yPtr->color = BLACK;
+                xPtr->link[0] = yPtr->link[1];
+                yPtr->link[1] = xPtr;
+                comp++;
+                if (xPtr == root) {
+                    root = yPtr;
+                } else {
+                    stack[ht - 3]->link[dir[ht - 3]] = yPtr;
+                }
+                break;
+            }
+        } else {
+            yPtr = stack[ht - 2]->link[0];
+            comp++;
+            if ((yPtr != NULL) && (yPtr->color == RED)) {
+                stack[ht - 2]->color = RED;
+                stack[ht - 1]->color = yPtr->color = BLACK;
+                ht = ht - 2;
+            } else {
+                comp++;
+                if (dir[ht - 1] == 1) {
+                    yPtr = stack[ht - 1];
+                } else {
+                    xPtr = stack[ht - 1];
+                    yPtr = xPtr->link[0];
+                    xPtr->link[0] = yPtr->link[1];
+                    yPtr->link[1] = xPtr;
+                    stack[ht - 2]->link[1] = yPtr;
+                }
+                xPtr = stack[ht - 2];
+                yPtr->color = BLACK;
+                xPtr->color = RED;
+                xPtr->link[1] = yPtr->link[0];
+                yPtr->link[0] = xPtr;
+                comp++;
+                if (xPtr == root) {
+                    root = yPtr;
+                } else {
+                    stack[ht - 3]->link[dir[ht - 3]] = yPtr;
+                }
+                break;
+            }
+        }
+    }
+    root->color = BLACK;
+}
+// Delete a node
+void deletion(int data) {
+    struct rbNode *stack[20000], *ptr, *xPtr, *yPtr;
+    struct rbNode *pPtr, *qPtr, *rPtr;
+    int dir[20000], ht = 0, diff, i;
+    enum nodeColor color;
+
+    comp++;
+    if (!root) {
+        printf("Tree not available\n");
+        return;
+    }
+
+    ptr = root;
+    while (ptr != NULL) {
+        comp++;
+        comp++;
+        if ((data - ptr->data) == 0)
+            break;
+        diff = (data - ptr->data) > 0 ? 1 : 0;
+        stack[ht] = ptr;
+        dir[ht++] = diff;
+        ptr = ptr->link[diff];
+    }
+
+    comp++;
+    if (ptr->link[1] == NULL) {
+        comp++;
+        comp++;
+        if ((ptr == root) && (ptr->link[0] == NULL)) {
+            free(ptr);
+            root = NULL;
+        } else if (ptr == root) {
+            root = ptr->link[0];
+            free(ptr);
+        } else {
+            stack[ht - 1]->link[dir[ht - 1]] = ptr->link[0];
+        }
+    } else {
+        xPtr = ptr->link[1];
+        comp++;
+        if (xPtr->link[0] == NULL) {
+            xPtr->link[0] = ptr->link[0];
+            color = xPtr->color;
+            xPtr->color = ptr->color;
+            ptr->color = color;
+
+            comp++;
+            if (ptr == root) {
+                root = xPtr;
+            } else {
+                stack[ht - 1]->link[dir[ht - 1]] = xPtr;
+            }
+
+            dir[ht] = 1;
+            stack[ht++] = xPtr;
+        } else {
+            i = ht++;
+            while (1) {
+                dir[ht] = 0;
+                stack[ht++] = xPtr;
+                yPtr = xPtr->link[0];
+                if (!yPtr->link[0])
+                    break;
+                xPtr = yPtr;
+            }
+
+            dir[i] = 1;
+            stack[i] = yPtr;
+            comp++;
+            if (i > 0)
+                stack[i - 1]->link[dir[i - 1]] = yPtr;
+
+            yPtr->link[0] = ptr->link[0];
+
+            xPtr->link[0] = yPtr->link[1];
+            yPtr->link[1] = ptr->link[1];
+
+            comp++;
+            if (ptr == root) {
+                root = yPtr;
+            }
+
+            color = yPtr->color;
+            yPtr->color = ptr->color;
+            ptr->color = color;
+        }
+    }
+
+    if (ht < 1)
+        return;
+
+    if (ptr->color == BLACK) {
+        while (1) {
+            pPtr = stack[ht - 1]->link[dir[ht - 1]];
+            if (pPtr && pPtr->color == RED) {
+                pPtr->color = BLACK;
+                break;
+            }
+
+            if (ht < 2)
+                break;
+
+            if (dir[ht - 2] == 0) {
+                rPtr = stack[ht - 1]->link[1];
+
+                if (!rPtr)
+                    break;
+
+                if (rPtr->color == RED) {
+                    stack[ht - 1]->color = RED;
+                    rPtr->color = BLACK;
+                    stack[ht - 1]->link[1] = rPtr->link[0];
+                    rPtr->link[0] = stack[ht - 1];
+
+                    if (stack[ht - 1] == root) {
+                        root = rPtr;
+                    } else {
+                        stack[ht - 2]->link[dir[ht - 2]] = rPtr;
+                    }
+                    dir[ht] = 0;
+                    stack[ht] = stack[ht - 1];
+                    stack[ht - 1] = rPtr;
+                    ht++;
+
+                    rPtr = stack[ht - 1]->link[1];
+                }
+
+                if ((!rPtr->link[0] || rPtr->link[0]->color == BLACK) &&
+                        (!rPtr->link[1] || rPtr->link[1]->color == BLACK)) {
+                    rPtr->color = RED;
+                } else {
+                    if (!rPtr->link[1] || rPtr->link[1]->color == BLACK) {
+                        qPtr = rPtr->link[0];
+                        rPtr->color = RED;
+                        qPtr->color = BLACK;
+                        rPtr->link[0] = qPtr->link[1];
+                        qPtr->link[1] = rPtr;
+                        rPtr = stack[ht - 1]->link[1] = qPtr;
+                    }
+                    rPtr->color = stack[ht - 1]->color;
+                    stack[ht - 1]->color = BLACK;
+                    rPtr->link[1]->color = BLACK;
+                    stack[ht - 1]->link[1] = rPtr->link[0];
+                    rPtr->link[0] = stack[ht - 1];
+                    if (stack[ht - 1] == root) {
+                        root = rPtr;
+                    } else {
+                        stack[ht - 2]->link[dir[ht - 2]] = rPtr;
+                    }
+                    break;
+                }
+            } else {
+                rPtr = stack[ht - 1]->link[0];
+                if (!rPtr)
+                    break;
+
+                if (rPtr->color == RED) {
+                    stack[ht - 1]->color = RED;
+                    rPtr->color = BLACK;
+                    stack[ht - 1]->link[0] = rPtr->link[1];
+                    rPtr->link[1] = stack[ht - 1];
+
+                    if (stack[ht - 1] == root) {
+                        root = rPtr;
+                    } else {
+                        stack[ht - 2]->link[dir[ht - 2]] = rPtr;
+                    }
+                    dir[ht] = 1;
+                    stack[ht] = stack[ht - 1];
+                    stack[ht - 1] = rPtr;
+                    ht++;
+
+                    rPtr = stack[ht - 1]->link[0];
+                }
+                if ((!rPtr->link[0] || rPtr->link[0]->color == BLACK) &&
+                        (!rPtr->link[1] || rPtr->link[1]->color == BLACK)) {
+                    rPtr->color = RED;
+                } else {
+                    if (!rPtr->link[0] || rPtr->link[0]->color == BLACK) {
+                        qPtr = rPtr->link[1];
+                        rPtr->color = RED;
+                        qPtr->color = BLACK;
+                        rPtr->link[1] = qPtr->link[0];
+                        qPtr->link[0] = rPtr;
+                        rPtr = stack[ht - 1]->link[0] = qPtr;
+                    }
+                    rPtr->color = stack[ht - 1]->color;
+                    stack[ht - 1]->color = BLACK;
+                    rPtr->link[0]->color = BLACK;
+                    stack[ht - 1]->link[0] = rPtr->link[1];
+                    rPtr->link[1] = stack[ht - 1];
+                    if (stack[ht - 1] == root) {
+                        root = rPtr;
+                    } else {
+                        stack[ht - 2]->link[dir[ht - 2]] = rPtr;
+                    }
+                    break;
+                }
+            }
+            ht--;
+        }
+    }
 }
 
-void trocar_valores(No* a, No* b) {
-    int aux = a->valor;
-    a->valor = b->valor;
-    b->valor = aux;
+// Print the inorder traversal of the tree
+void inorderTraversal(struct rbNode *node) {
+    if (node) {
+        inorderTraversal(node->link[0]);
+        printf("%lld  ", node->data);
+        inorderTraversal(node->link[1]);
+    }
     return;
 }
 
-Arvore* criar() {
-    Arvore *arvore = malloc(sizeof(Arvore));
-    arvore->nulo = NULL;
-    arvore->raiz = NULL;
-
-    arvore->nulo = criarNo(arvore, NULL, 0);
-    arvore->nulo->cor = Preto;
-
-    return arvore;
-}
-
-int vazia(Arvore* arvore) {
-    return arvore->raiz == NULL;
-}
-
-
-No* criarNo(Arvore* arvore, No* pai, int valor) {
-    No* no = malloc(sizeof(No));
-
-    no->pai = pai;    
-    no->valor = valor;
-    no->direita = arvore->nulo;
-    no->esquerda = arvore->nulo;
-
-    return no;
-}
-
-int multinsert(int termo) {
-    Arvore* a = criar();
-    comp = 0;
-    for (int i = 1; i <= termo; i++) {
-        int k = randll();
-        adicionar(a, k);
-    }
-    return comp;
-}
-
 int multidelete(int termo) {
-    Arvore* a = criar();
-    int arr[100000];
-    for (int i = 1; i <= 10000; i++){
-        arr[i - 1] = 0;
-        adicionar(a, i);
+    int arr[10001];
+    for (int i=0; i < 10400; i++) {
+        arr[i] = 0;
+        insertion(i);
     }
     comp = 0;
     for (int i=0; i < termo; i++) {
-        int dm = comp;
-        int k = abs(rand() % 10001);
-        if (k == 0) k++;
+        int k = abs(randll() % 10001);
         if (!arr[k]) {
-            deletar(a, k);
-            /* remove_nodo(a, a->raiz, k); */
+            printf("k -> %lld\n", k);
+            deletion(k);
             arr[k]++;
-        }
-        else {
-            /* printf("i -> %lld\n", i); */
+        } else {
             i--;
-            comp -= (comp - dm);
             continue;
         }
     }
     return comp;
 }
 
-No* adicionarNo(Arvore* arvore, No* no, int valor) {
-    comp++;
-    if (valor > no->valor) {
-        comp++;
-        if (no->direita == arvore->nulo) {
-            no->direita = criarNo(arvore, no, valor);     
-            no->direita->cor = Vermelho;       
-
-            return no->direita;
-        } else {
-            return adicionarNo(arvore, no->direita, valor);
-        }
-    } else {
-        comp++;
-        if (no->esquerda == arvore->nulo) {
-            no->esquerda = criarNo(arvore, no, valor);
-            no->esquerda->cor = Vermelho;
-
-            return no->esquerda;
-        } else {
-            return adicionarNo(arvore, no->esquerda, valor);
-        }
+int multinsert(int termo) {
+    comp = 0;
+    for (int i = 1; i <= termo; i++) {
+        int k = randll();
+        insertion(k);
     }
+    return comp;
 }
 
-No* adicionar(Arvore* arvore, int valor) {
-    comp++;
-    if (vazia(arvore)) {
-        arvore->raiz = criarNo(arvore, arvore->nulo, valor);
-        arvore->raiz->cor = Preto;
-
-        return arvore->raiz;
-    } else {
-        No* no = adicionarNo(arvore, arvore->raiz, valor);
-        balancearRemocao(arvore, no);
-        return no;
-    }
-}
-// parte nova
-
-No* deletar(Arvore* arvore, int valor) {
-    comp++;
-    if (!vazia(arvore)) {
-        arvore->raiz = deletarNo(arvore, arvore->raiz, valor);
-        rec = 0;
-        arvore->raiz->cor = Preto;
-    }
-}
-
-No* deletarNo(Arvore* arvore, No* no, int valor) {
-    rec++;
-    /* printf("recursão infinita ? - %lld\n", rec); */
-    comp++;
-    if (no == arvore->nulo) {
-        printf("1\n");
-        return no;
-    }
-
-    comp++;
-    if (valor < no->valor) {
-        printf("2\n");
-        no->esquerda = deletarNo(arvore, no->esquerda, valor);
-    } else if (valor > no->valor) {
-        printf("3\n");
-        comp++;
-        no->direita = deletarNo(arvore, no->direita, valor);
-    } else {
-        comp++;
-        if (no->esquerda == arvore->nulo || no->direita == arvore->nulo) {
-            printf("5\n");
-            No* filho = (no->esquerda == arvore->nulo) ? no->direita : no->esquerda;
-            comp++;
-            if (no->cor == Preto && filho->cor == Preto) {
-                printf("6\n");
-                balancear(arvore, no);
-            }
-
-            free(no);
-            /* printf("vai printar o fiho\n"); */
-            /* printf("vai retornar o filho %lld\n", filho->valor); */
-            return filho;
-        }
-        printf("4\n");
-        comp++;
-        No* sucessor = minimo(arvore, no->direita);
-        no->valor = sucessor->valor;
-        no->direita = deletarNo(arvore, no->direita, sucessor->valor);
-    }
-
-    return no;
-}
-
-No* minimo(Arvore* arvore, No* no) {
-    while (no->esquerda != arvore->nulo) {
-        no = no->esquerda;
-    }
-    return no;
-}
-
-void balancearRemocao(Arvore* arvore, No* no) {
-    while (no != arvore->raiz && no->cor == Preto) {
-        if (no == no->pai->esquerda) {
-            No* irmao = no->pai->direita;
-
-            if (irmao->cor == Vermelho) {
-                irmao->cor = Preto;
-                no->pai->cor = Vermelho;
-                rotacionarEsquerda(arvore, no->pai);
-                irmao = no->pai->direita;
-            }
-
-            if (irmao->esquerda->cor == Preto && irmao->direita->cor == Preto) {
-                irmao->cor = Vermelho;
-                no = no->pai;
-            } else {
-                if (irmao->direita->cor == Preto) {
-                    irmao->esquerda->cor = Preto;
-                    irmao->cor = Vermelho;
-                    rotacionarDireita(arvore, irmao);
-                    irmao = no->pai->direita;
-                }
-
-                irmao->cor = no->pai->cor;
-                no->pai->cor = Preto;
-                irmao->direita->cor = Preto;
-                rotacionarEsquerda(arvore, no->pai);
-                no = arvore->raiz;
-            }
-        } else {
-            No* irmao = no->pai->esquerda;
-
-            if (irmao->cor == Vermelho) {
-                irmao->cor = Preto;
-                no->pai->cor = Vermelho;
-                rotacionarDireita(arvore, no->pai);
-                irmao = no->pai->esquerda;
-            }
-
-            if (irmao->direita->cor == Preto && irmao->esquerda->cor == Preto) {
-                irmao->cor = Vermelho;
-                no = no->pai;
-            } else {
-                if (irmao->esquerda->cor == Preto) {
-                    irmao->direita->cor = Preto;
-                    irmao->cor = Vermelho;
-                    rotacionarEsquerda(arvore, irmao);
-                    irmao = no->pai->esquerda;
-                }
-
-                irmao->cor = no->pai->cor;
-                no->pai->cor = Preto;
-                irmao->esquerda->cor = Preto;
-                rotacionarDireita(arvore, no->pai);
-                no = arvore->raiz;
-            }
-        }
-    }
-    no->cor = Preto;
-}
-
-No *successor(No *x) {
-    No *temp = x;
-
-    while (temp->esquerda != NULL)
-        temp = temp->esquerda;
-
-    return temp;
-}
-
-No* BSTreplace(No* x) {
-    // when node have 2 children
-    if (x->esquerda != NULL && x->esquerda != NULL)
-        return successor(x->direita);
-
-    // when leaf
-    if (x->esquerda == NULL && x->direita == NULL)
-        return NULL;
-
-    // when single child
-    if (x->esquerda != NULL)
-        return x->esquerda;
-    else
-        return x->direita;
-}
-
-No* localizar(Arvore* arvore, int valor) {
-    comp++;
-    if (!vazia(arvore)) {
-        No* no = arvore->raiz;
-
-        while (no != arvore->nulo) {
-            comp++;
-            if (no->valor == valor) {
-                return no;
-            } else {
-                no = valor < no->valor ? no->esquerda : no->direita;
-            }
-        }
-    }
-    return NULL;
-}
-
-void visitar(int valor){
-    printf("%lld ", valor);
-}
-
-void balancear(Arvore* arvore, No* no) {
-    /* printf("consegui entrar no balanceamento\n"); */
-    /* printf("quero balancear o nodo de valor %lld\n", no->valor); */
-    while (no->pai->cor == Vermelho) {
-        /* printf("nodo é vermelho\n"); */
-        if (no->pai == no->pai->pai->esquerda) {
-            No *tio = no->pai->pai->direita;
-
-            if (tio->cor == Vermelho) {
-                tio->cor = Preto; //Caso 1
-                no->pai->cor = Preto; 
-
-                no->pai->pai->cor = Vermelho; //Caso 1
-                no = no->pai->pai; //Caso 1
-            } else {
-                if (no == no->pai->direita) {
-                    no = no->pai; //Caso 2
-                    rotacionarEsquerda(arvore, no); //Caso 2
-                } else {
-                    no->pai->cor = Preto; 
-                    no->pai->pai->cor = Vermelho; //Caso 3
-                    rotacionarDireita(arvore, no->pai->pai); //Caso 3
-                }
-            }
-        } else {
-            No *tio = no->pai->pai->esquerda;
-
-            if (tio->cor == Vermelho) {
-                tio->cor = Preto; //Caso 1
-                no->pai->cor = Preto; 
-
-                no->pai->pai->cor = Vermelho; //Caso 1
-                no = no->pai->pai; //Caso 1
-            } else {
-                if (no == no->pai->esquerda) {
-                    no = no->pai; //Caso 2
-                    rotacionarDireita(arvore, no); //Caso 2
-                } else {
-                    no->pai->cor = Preto; 
-                    no->pai->pai->cor = Vermelho; //Caso 3
-                    rotacionarEsquerda(arvore, no->pai->pai); //Caso 3
-                }
-            }
-        }
-    }
-    arvore->raiz->cor = Preto; //Conserta possível quebra regra 2
-}
-
-void rotacionarEsquerda(Arvore* arvore, No* no) {
-    No* direita = no->direita;
-    no->direita = direita->esquerda; 
-
-    if (direita->esquerda != arvore->nulo) {
-        direita->esquerda->pai = no;
-    }
-
-    direita->pai = no->pai;
-
-    if (no->pai == arvore->nulo) {
-        arvore->raiz = direita;
-    } else if (no == no->pai->esquerda) {
-        no->pai->esquerda = direita;
-    } else {
-        no->pai->direita = direita;
-    }
-
-    direita->esquerda = no;
-    no->pai = direita;
-}
-
-void rotacionarDireita(Arvore* arvore, No* no) {
-    No* esquerda = no->esquerda;
-    no->esquerda = esquerda->direita;
-
-    if (esquerda->direita != arvore->nulo) {
-        esquerda->direita->pai = no;
-    }
-
-    esquerda->pai = no->pai;
-
-    if (no->pai == arvore->nulo) {
-        arvore->raiz = esquerda;
-    } else if (no == no->pai->esquerda) {
-        no->pai->esquerda = esquerda;
-    } else {
-        no->pai->direita = esquerda;
-    }
-
-    esquerda->direita = no;
-    no->pai = esquerda;
-}
-
-signed main() {
+// Driver code
+int main() {
     srand(time(NULL));
-
-    /* int res1 = multinsert(10); */
-    /* printf("resultado -> %lld \n", res1); */
-    /* int res2 = multinsert(100); */
-    /* printf("resultado -> %lld \n", res2); */
-    /* int res3 = multinsert(1000); */
-    /* printf("resultado -> %lld \n", res3); */
-    /* int res4 = multinsert(10000); */
-    /* printf("resultado -> %lld \n", res4); */
-    /* int res5 = multinsert(100000); */
-    /* printf("resultado -> %lld \n", res5); */
-    /* { */
-    /*     int res1 = multidelete(1); */
-    /*     printf("resultado -> %lld \n", res1); */
-    /* } */
-    /* { */
-    /*     int res1 = multidelete(10); */
-    /*     printf("resultado -> %lld \n", res1); */
-    /* } */
-    {
-        /* int res1 = multidelete(1000); */
-        /* printf("resultado -> %lld \n", res1); */
+    int ch, data;
+    /* int k = multinsert(10000); */
+    /* printf("k -> %lld\n", k); */
+    int k = multidelete(9);
+    printf("k -> %lld\n", k);
+    return 0;
+    while (1) {
+        printf("1. Insertion\t2. Deletion\n");
+        printf("3. Traverse\t4. Exit");
+        printf("\nEnter your choice:");
+        scanf("%lld", &ch);
+        switch (ch) {
+            case 1:
+                printf("Enter the element to insert:");
+                scanf("%lld", &data);
+                insertion(data);
+                break;
+            case 2:
+                printf("Enter the element to delete:");
+                scanf("%lld", &data);
+                deletion(data);
+                break;
+            case 3:
+                inorderTraversal(root);
+                printf("\n");
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Not available\n");
+                break;
+        }
+        printf("\n");
     }
-    /* int res1 = multidelete(2000); */
-    int res1 = multidelete(100);
-    printf("resultado -> %lld \n", res1);
+    return 0;
 }

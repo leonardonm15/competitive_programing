@@ -47,6 +47,7 @@ int multidelete(int termo) {
     comp = 0;
     for (int i=0; i < termo; i++) {
         int k = abs(rand() % 10001);
+        int dm = comp;
         if (!arr[k]) {
             remove_nodo(a, a->raiz, k);
             arr[k]++;
