@@ -7,7 +7,7 @@ void solve () {
     int n; cin >> n;
     vector<int> arr(n);
     vector<int> rarr;
-    vector<int> resp;
+
     for (int i=0; i < n; i++) cin >> arr[i];
 
     if (n == 1) {
@@ -15,31 +15,33 @@ void solve () {
         else cout << "YES" << endl;
         return;
     }
-    // constroi de tras pra frente
-    // primeiro cara = proximo cara k++;
-    // quando for diferente append n caras
+
+    int k = n;
+    int l = n - 1;
+    int r = n - 1;
+    // começa com 5
+    // vai descendo com base nos numeros repetidos, se tiver repetido espera pra
+    // printar vindo com o r
     //
-    // primeiro piso sempre é 1
-    int k = 1;
-    rarr = arr;
-    reverse(rarr.begin(), rarr.end());
-    resp.push_back(1);
-    for (int i=0; i < n - 1; i++) {
-        k += (rarr[i + 1] - k);
-        resp.push_back(k);
+    // colocar 5 * quantidade de vezes que o primeiro cara aprece repetido
+    while (l != 0 && r != 0) {
+        while (l > 0 && arr[l] == arr[r]) {
+            l--;
+            k--;
+        }
+        while (l != r) {
+            rarr.push_back(k);
+            r--;
+        }
     }
 
-    reverse(resp.begin(), resp.end());
-
-    /* for (auto cara: arr) cout << cara << " "; */
-    /* cout << endl; */
-
-    for (auto cara: resp) cout << cara << " ";
+    for (auto cara: arr) cout << cara << " ";
     cout << endl;
 
-    cout << (arr == resp? "YES" : "NO") << endl;
+    for (auto cara: rarr) cout << cara << " ";
+    cout << endl;
     
-
+    cout << (arr == rarr ? "YES" : "NO") << endl;
 }
 
 signed main() {
