@@ -1,362 +1,473 @@
-// Implementing Red-Black Tree in C
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
+#include <assert.h>
+#include <stdlib.h>
+#define stepspace  4
+#include "rb.h"
 
-#define int long long
-
-int comp = 0;
-
-enum nodeColor {
-    RED,
-    BLACK
-};
-
-struct rbNode {
-    int data, color;
-    struct rbNode *link[2];
-};
-
-struct rbNode *root = NULL;
-
-// Create a red-black tree
-struct rbNode *createNode(int data) {
-    struct rbNode *newnode;
-    newnode = (struct rbNode *)malloc(sizeof(struct rbNode));
-    newnode->data = data;
-    newnode->color = RED;
-    newnode->link[0] = newnode->link[1] = NULL;
-    return newnode;
-}
+long long comp = 0;
 
 int randll() {
     return (int) rand() * (int) 1e9 + rand();
 }
 
-// Insert an node
-void insertion(int data) {
-    struct rbNode *stack[20000], *ptr, *newnode, *xPtr, *yPtr;
-    int dir[20000], ht = 0, index;
-    ptr = root;
-
-    comp++;
-    if (!root) {
-        root = createNode(data);
-        return;
-    }
-
-    stack[ht] = root;
-    dir[ht++] = 0;
-    while (ptr != NULL) {
-        comp++;
-        if (ptr->data == data) {
-            printf("Duplicates Not Allowed!!\n");
-            return;
-        }
-        index = (data - ptr->data) > 0 ? 1 : 0;
-        stack[ht] = ptr;
-        ptr = ptr->link[index];
-        dir[ht++] = index;
-    }
-    stack[ht - 1]->link[index] = newnode = createNode(data);
-    while ((ht >= 3) && (stack[ht - 1]->color == RED)) {
-        comp++;
-        comp++;
-        if (dir[ht - 2] == 0) {
-            yPtr = stack[ht - 2]->link[1];
-            comp++;
-            if (yPtr != NULL && yPtr->color == RED) {
-                stack[ht - 2]->color = RED;
-                stack[ht - 1]->color = yPtr->color = BLACK;
-                ht = ht - 2;
-            } else {
-                comp++;
-                if (dir[ht - 1] == 0) {
-                    yPtr = stack[ht - 1];
-                } else {
-                    xPtr = stack[ht - 1];
-                    yPtr = xPtr->link[1];
-                    xPtr->link[1] = yPtr->link[0];
-                    yPtr->link[0] = xPtr;
-                    stack[ht - 2]->link[0] = yPtr;
-                }
-                xPtr = stack[ht - 2];
-                xPtr->color = RED;
-                yPtr->color = BLACK;
-                xPtr->link[0] = yPtr->link[1];
-                yPtr->link[1] = xPtr;
-                comp++;
-                if (xPtr == root) {
-                    root = yPtr;
-                } else {
-                    stack[ht - 3]->link[dir[ht - 3]] = yPtr;
-                }
-                break;
-            }
-        } else {
-            yPtr = stack[ht - 2]->link[0];
-            comp++;
-            if ((yPtr != NULL) && (yPtr->color == RED)) {
-                stack[ht - 2]->color = RED;
-                stack[ht - 1]->color = yPtr->color = BLACK;
-                ht = ht - 2;
-            } else {
-                comp++;
-                if (dir[ht - 1] == 1) {
-                    yPtr = stack[ht - 1];
-                } else {
-                    xPtr = stack[ht - 1];
-                    yPtr = xPtr->link[0];
-                    xPtr->link[0] = yPtr->link[1];
-                    yPtr->link[1] = xPtr;
-                    stack[ht - 2]->link[1] = yPtr;
-                }
-                xPtr = stack[ht - 2];
-                yPtr->color = BLACK;
-                xPtr->color = RED;
-                xPtr->link[1] = yPtr->link[0];
-                yPtr->link[0] = xPtr;
-                comp++;
-                if (xPtr == root) {
-                    root = yPtr;
-                } else {
-                    stack[ht - 3]->link[dir[ht - 3]] = yPtr;
-                }
-                break;
-            }
-        }
-    }
-    root->color = BLACK;
+node grandparent(node n) {
+    assert (n != NULL);
+    assert (n->parent != NULL);
+    assert (n->parent->parent != NULL);
+    return n->parent->parent;
 }
-// Delete a node
-void deletion(int data) {
-    struct rbNode *stack[20000], *ptr, *xPtr, *yPtr;
-    struct rbNode *pPtr, *qPtr, *rPtr;
-    int dir[20000], ht = 0, diff, i;
-    enum nodeColor color;
 
-    comp++;
-    if (!root) {
-        printf("Tree not available\n");
+node sibling(node n) {
+    assert (n != NULL);
+    assert (n->parent != NULL);
+    if (n == n->parent->left)
+        return n->parent->right;
+    else
+        return n->parent->left;
+}
+
+node uncle(node n) {
+    assert (n != NULL);
+    assert (n->parent != NULL);
+    assert (n->parent->parent != NULL);
+    return sibling(n->parent);
+}
+
+void verify_properties(rbtree t) {
+    property_1(t->root);
+    property_2(t->root);
+    property_4(t->root);
+    property_5(t->root);
+}
+
+void property_1(node n) {
+    assert(node_color(n) == RED || node_color(n) == BLACK);
+    if (n == NULL) return;
+    property_1(n->left);
+    property_1(n->right);
+}
+
+void property_2(node root) {
+    assert(node_color(root) == BLACK);
+}
+
+color node_color(node n) {
+    return n == NULL ? BLACK : n->color;
+}
+
+void property_4(node n) {
+    if (node_color(n) == RED) {
+        assert (node_color(n->left)   == BLACK);
+        assert (node_color(n->right)  == BLACK);
+        assert (node_color(n->parent) == BLACK);
+    }
+    if (n == NULL) return;
+    property_4(n->left);
+    property_4(n->right);
+}
+
+void property_5(node root) {
+    int black_count_path = -1;
+    property_5_helper(root, 0, &black_count_path);
+}
+
+void property_5_helper(node n, int black_count, int* path_black_count) {
+    if (node_color(n) == BLACK) {
+        black_count++;
+    }
+    if (n == NULL) {
+        if (*path_black_count == -1) {
+            *path_black_count = black_count;
+        } else {
+            assert (black_count == *path_black_count);
+        }
         return;
     }
+    property_5_helper(n->left,  black_count, path_black_count);
+    property_5_helper(n->right, black_count, path_black_count);
+}
 
-    ptr = root;
-    while (ptr != NULL) {
-        comp++;
-        comp++;
-        if ((data - ptr->data) == 0)
-            break;
-        diff = (data - ptr->data) > 0 ? 1 : 0;
-        stack[ht] = ptr;
-        dir[ht++] = diff;
-        ptr = ptr->link[diff];
-    }
+rbtree rbtree_create() {
+    rbtree t = malloc(sizeof(struct rbtree_t));
+    t->root = NULL;
+    verify_properties(t);
+    return t;
+}
 
-    comp++;
-    if (ptr->link[1] == NULL) {
-        comp++;
-        comp++;
-        if ((ptr == root) && (ptr->link[0] == NULL)) {
-            free(ptr);
-            root = NULL;
-        } else if (ptr == root) {
-            root = ptr->link[0];
-            free(ptr);
+node new_node(void* key , color node_color, node left, node right) {
+    node result = malloc(sizeof(struct rbtree_node_t));
+    result->key = key;
+    result->color = node_color;
+    result->left = left;
+    result->right = right;
+    if (left  != NULL)  left->parent = result;
+    if (right != NULL) right->parent = result;
+    result->parent = NULL;
+    return result;
+}
+
+node lookup_node(rbtree t, void* key, compare_func compare) {
+    node n = t->root;
+    while (n != NULL) {
+        int comp_result = compare(key, n->key);
+        if (comp_result == 0) {
+            return n;
+        } else if (comp_result < 0) {
+            n = n->left;
         } else {
-            stack[ht - 1]->link[dir[ht - 1]] = ptr->link[0];
+            assert(comp_result > 0);
+            n = n->right;
         }
+    }
+    return n;
+}
+
+void* rbtree_lookup(rbtree t, void* key, compare_func compare) {
+    node n = lookup_node(t, key, compare);
+    return n == NULL ? NULL : n->key;
+}
+
+void rotate_left(rbtree t, node n) {
+    node r = n->right;
+    replace_node(t, n, r);
+    n->right = r->left;
+    if (r->left != NULL) {
+        r->left->parent = n;
+    }
+    r->left = n;
+    n->parent = r;
+}
+
+void rotate_right(rbtree t, node n) {
+    node L = n->left;
+    replace_node(t, n, L);
+    n->left = L->right;
+    if (L->right != NULL) {
+        L->right->parent = n;
+    }
+    L->right = n;
+    n->parent = L;
+}
+
+void replace_node(rbtree t, node oldn, node newn) {
+    if (oldn->parent == NULL) {
+        t->root = newn;
     } else {
-        xPtr = ptr->link[1];
-        comp++;
-        if (xPtr->link[0] == NULL) {
-            xPtr->link[0] = ptr->link[0];
-            color = xPtr->color;
-            xPtr->color = ptr->color;
-            ptr->color = color;
-
-            comp++;
-            if (ptr == root) {
-                root = xPtr;
-            } else {
-                stack[ht - 1]->link[dir[ht - 1]] = xPtr;
-            }
-
-            dir[ht] = 1;
-            stack[ht++] = xPtr;
-        } else {
-            i = ht++;
-            while (1) {
-                dir[ht] = 0;
-                stack[ht++] = xPtr;
-                yPtr = xPtr->link[0];
-                if (!yPtr->link[0])
-                    break;
-                xPtr = yPtr;
-            }
-
-            dir[i] = 1;
-            stack[i] = yPtr;
-            comp++;
-            if (i > 0)
-                stack[i - 1]->link[dir[i - 1]] = yPtr;
-
-            yPtr->link[0] = ptr->link[0];
-
-            xPtr->link[0] = yPtr->link[1];
-            yPtr->link[1] = ptr->link[1];
-
-            comp++;
-            if (ptr == root) {
-                root = yPtr;
-            }
-
-            color = yPtr->color;
-            yPtr->color = ptr->color;
-            ptr->color = color;
-        }
+        if (oldn == oldn->parent->left)
+            oldn->parent->left = newn;
+        else
+            oldn->parent->right = newn;
     }
-
-    if (ht < 1)
-        return;
-
-    if (ptr->color == BLACK) {
-        while (1) {
-            pPtr = stack[ht - 1]->link[dir[ht - 1]];
-            if (pPtr && pPtr->color == RED) {
-                pPtr->color = BLACK;
-                break;
-            }
-
-            if (ht < 2)
-                break;
-
-            if (dir[ht - 2] == 0) {
-                rPtr = stack[ht - 1]->link[1];
-
-                if (!rPtr)
-                    break;
-
-                if (rPtr->color == RED) {
-                    stack[ht - 1]->color = RED;
-                    rPtr->color = BLACK;
-                    stack[ht - 1]->link[1] = rPtr->link[0];
-                    rPtr->link[0] = stack[ht - 1];
-
-                    if (stack[ht - 1] == root) {
-                        root = rPtr;
-                    } else {
-                        stack[ht - 2]->link[dir[ht - 2]] = rPtr;
-                    }
-                    dir[ht] = 0;
-                    stack[ht] = stack[ht - 1];
-                    stack[ht - 1] = rPtr;
-                    ht++;
-
-                    rPtr = stack[ht - 1]->link[1];
-                }
-
-                if ((!rPtr->link[0] || rPtr->link[0]->color == BLACK) &&
-                        (!rPtr->link[1] || rPtr->link[1]->color == BLACK)) {
-                    rPtr->color = RED;
-                } else {
-                    if (!rPtr->link[1] || rPtr->link[1]->color == BLACK) {
-                        qPtr = rPtr->link[0];
-                        rPtr->color = RED;
-                        qPtr->color = BLACK;
-                        rPtr->link[0] = qPtr->link[1];
-                        qPtr->link[1] = rPtr;
-                        rPtr = stack[ht - 1]->link[1] = qPtr;
-                    }
-                    rPtr->color = stack[ht - 1]->color;
-                    stack[ht - 1]->color = BLACK;
-                    rPtr->link[1]->color = BLACK;
-                    stack[ht - 1]->link[1] = rPtr->link[0];
-                    rPtr->link[0] = stack[ht - 1];
-                    if (stack[ht - 1] == root) {
-                        root = rPtr;
-                    } else {
-                        stack[ht - 2]->link[dir[ht - 2]] = rPtr;
-                    }
-                    break;
-                }
-            } else {
-                rPtr = stack[ht - 1]->link[0];
-                if (!rPtr)
-                    break;
-
-                if (rPtr->color == RED) {
-                    stack[ht - 1]->color = RED;
-                    rPtr->color = BLACK;
-                    stack[ht - 1]->link[0] = rPtr->link[1];
-                    rPtr->link[1] = stack[ht - 1];
-
-                    if (stack[ht - 1] == root) {
-                        root = rPtr;
-                    } else {
-                        stack[ht - 2]->link[dir[ht - 2]] = rPtr;
-                    }
-                    dir[ht] = 1;
-                    stack[ht] = stack[ht - 1];
-                    stack[ht - 1] = rPtr;
-                    ht++;
-
-                    rPtr = stack[ht - 1]->link[0];
-                }
-                if ((!rPtr->link[0] || rPtr->link[0]->color == BLACK) &&
-                        (!rPtr->link[1] || rPtr->link[1]->color == BLACK)) {
-                    rPtr->color = RED;
-                } else {
-                    if (!rPtr->link[0] || rPtr->link[0]->color == BLACK) {
-                        qPtr = rPtr->link[1];
-                        rPtr->color = RED;
-                        qPtr->color = BLACK;
-                        rPtr->link[1] = qPtr->link[0];
-                        qPtr->link[0] = rPtr;
-                        rPtr = stack[ht - 1]->link[0] = qPtr;
-                    }
-                    rPtr->color = stack[ht - 1]->color;
-                    stack[ht - 1]->color = BLACK;
-                    rPtr->link[0]->color = BLACK;
-                    stack[ht - 1]->link[0] = rPtr->link[1];
-                    rPtr->link[1] = stack[ht - 1];
-                    if (stack[ht - 1] == root) {
-                        root = rPtr;
-                    } else {
-                        stack[ht - 2]->link[dir[ht - 2]] = rPtr;
-                    }
-                    break;
-                }
-            }
-            ht--;
-        }
+    if (newn != NULL) {
+        newn->parent = oldn->parent;
     }
 }
 
-// Print the inorder traversal of the tree
-void inorderTraversal(struct rbNode *node) {
-    if (node) {
-        inorderTraversal(node->link[0]);
-        printf("%lld  ", node->data);
-        inorderTraversal(node->link[1]);
+void rbtree_insert(rbtree t, void* key, compare_func compare) {
+    node inserted_node = new_node(key, RED, NULL, NULL);
+    if (t->root == NULL) {
+        t->root = inserted_node;
+    } else {
+        node n = t->root;
+        while (1) {
+            int comp_result = compare(key, n->key);
+            if (comp_result == 0) {
+                free (inserted_node);
+                return;
+            } else if (comp_result < 0) {
+                if (n->left == NULL) {
+                    n->left = inserted_node;
+                    break;
+                } else {
+                    n = n->left;
+                }
+            } else {
+                assert (comp_result > 0);
+                if (n->right == NULL) {
+                    n->right = inserted_node;
+                    break;
+                } else {
+                    n = n->right;
+                }
+            }
+        }
+        inserted_node->parent = n;
     }
-    return;
+    insert_case1(t, inserted_node);
+    verify_properties(t);
+}
+
+void insert_case1(rbtree t, node n) {
+    if (n->parent == NULL)
+        n->color = BLACK;
+    else
+        insert_case2(t, n);
+}
+
+void insert_case2(rbtree t, node n) {
+    if (node_color(n->parent) == BLACK)
+        return;
+    else
+        insert_case3(t, n);
+}
+
+void insert_case3(rbtree t, node n) {
+    if (node_color(uncle(n)) == RED) {
+        n->parent->color = BLACK;
+        uncle(n)->color = BLACK;
+        grandparent(n)->color = RED;
+        insert_case1(t, grandparent(n));
+    } else {
+        insert_case4(t, n);
+    }
+}
+
+void insert_case4(rbtree t, node n) {
+    if (n == n->parent->right && n->parent == grandparent(n)->left) {
+        rotate_left(t, n->parent);
+        n = n->left;
+    } else if (n == n->parent->left && n->parent == grandparent(n)->right) {
+        rotate_right(t, n->parent);
+        n = n->right;
+    }
+    insert_case5(t, n);
+}
+
+void insert_case5(rbtree t, node n) {
+    n->parent->color = BLACK;
+    grandparent(n)->color = RED;
+    if (n == n->parent->left && n->parent == grandparent(n)->left) {
+        rotate_right(t, grandparent(n));
+    } else {
+        assert (n == n->parent->right && n->parent == grandparent(n)->right);
+        rotate_left(t, grandparent(n));
+    }
+}
+
+void rbtree_delete(rbtree t, void* key, compare_func compare) {
+    node child;
+    node n = lookup_node(t, key, compare);
+    if (n == NULL) return; 
+    if (n->left != NULL && n->right != NULL) {
+        node pred = maximum_node(n->left);
+        n->key   = pred->key;
+        n = pred;
+    }
+
+    assert(n->left == NULL || n->right == NULL);
+    child = n->right == NULL ? n->left  : n->right;
+    if (node_color(n) == BLACK) {
+        n->color = node_color(child);
+        delete_case1(t, n);
+    }
+    replace_node(t, n, child);
+    if (n->parent == NULL && child != NULL)
+        child->color = BLACK;
+    free(n);
+
+    verify_properties(t);
+}
+
+static node maximum_node(node n) {
+    assert (n != NULL);
+    while (n->right != NULL) {
+        n = n->right;
+    }
+    return n;
+}
+
+void delete_case1(rbtree t, node n) {
+    if (n->parent == NULL)
+        return;
+    else
+        delete_case2(t, n);
+}
+
+void delete_case2(rbtree t, node n) {
+    if (node_color(sibling(n)) == RED) {
+        n->parent->color = RED;
+        sibling(n)->color = BLACK;
+        if (n == n->parent->left)
+            rotate_left(t, n->parent);
+        else
+            rotate_right(t, n->parent);
+    }
+    delete_case3(t, n);
+}
+
+void delete_case3(rbtree t, node n) {
+    if (node_color(n->parent) == BLACK &&
+            node_color(sibling(n)) == BLACK &&
+            node_color(sibling(n)->left) == BLACK &&
+            node_color(sibling(n)->right) == BLACK)
+    {
+        sibling(n)->color = RED;
+        delete_case1(t, n->parent);
+    }
+    else
+        delete_case4(t, n);
+}
+
+void delete_case4(rbtree t, node n) {
+    if (node_color(n->parent) == RED &&
+            node_color(sibling(n)) == BLACK &&
+            node_color(sibling(n)->left) == BLACK &&
+            node_color(sibling(n)->right) == BLACK)
+    {
+        sibling(n)->color = RED;
+        n->parent->color = BLACK;
+    }
+    else
+        delete_case5(t, n);
+}
+
+void delete_case5(rbtree t, node n) {
+    if (n == n->parent->left &&
+            node_color(sibling(n)) == BLACK &&
+            node_color(sibling(n)->left) == RED &&
+            node_color(sibling(n)->right) == BLACK)
+    {
+        sibling(n)->color = RED;
+        sibling(n)->left->color = BLACK;
+        rotate_right(t, sibling(n));
+    }
+    else if (n == n->parent->right &&
+            node_color(sibling(n)) == BLACK &&
+            node_color(sibling(n)->right) == RED &&
+            node_color(sibling(n)->left) == BLACK)
+    {
+        sibling(n)->color = RED;
+        sibling(n)->right->color = BLACK;
+        rotate_left(t, sibling(n));
+    }
+    delete_case6(t, n);
+}
+
+void delete_case6(rbtree t, node n) {
+    sibling(n)->color = node_color(n->parent);
+    n->parent->color = BLACK;
+    if (n == n->parent->left) {
+        assert (node_color(sibling(n)->right) == RED);
+        sibling(n)->right->color = BLACK;
+        rotate_left(t, n->parent);
+    }
+    else
+    {
+        assert (node_color(sibling(n)->left) == RED);
+        sibling(n)->left->color = BLACK;
+        rotate_right(t, n->parent);
+    }
+}
+
+//----------------------------------------------------------
+
+static int compare_int(void* left, void* right);
+static void print_tree(rbtree t);
+static void print_tree_helper(rbtree_node n, int step);
+
+int compare_int(void* leftp, void* rightp) {
+    int left = (int)leftp;
+    int right = (int)rightp;
+    comp++;
+    comp++;
+    if (left < right) 
+        return -1;
+    else if (left > right)
+        return 1;
+    else {
+        comp++;
+        assert (left == right);
+        return 0;
+    }
+}
+
+
+void print_tree_helper(rbtree_node n, int step);
+
+void print_tree(rbtree t) {
+    print_tree_helper(t->root, 0);
+    puts("");
+}
+
+void print_tree_helper(rbtree_node n, int step) {
+    int i;
+    if (n == NULL) {
+        fputs("<empty tree>", stdout);
+        return;
+    }
+    if (n->right != NULL) {
+        print_tree_helper(n->right, step + stepspace);
+    }
+    for(i=0; i<step; i++)
+        fputs(" ", stdout);
+    if (n->color == BLACK)
+        printf("%lld\n", (int)n->key);
+    else
+        printf("<%lld>\n", (int)n->key);
+    if (n->left != NULL) {
+        print_tree_helper(n->left, step + stepspace);
+    }
+}
+
+void preorder(struct rbtree_node_t *ptr) {
+    rbtree t;
+    if(t==NULL) {
+        printf("Tree is empty");
+        return;
+    }
+    if(ptr!=NULL) {
+        printf("%lld -> ",(int)ptr->key);
+        preorder(ptr->left);
+        preorder(ptr->right);
+    }
+}
+
+void inorder(struct rbtree_node_t *ptr) {
+    rbtree t;
+    if(t==NULL) {
+        printf("Tree is empty");
+        return;
+    }
+    if(ptr!=NULL) {
+        inorder(ptr->left);
+        printf("%lld -> ",(int)ptr->key);
+        inorder(ptr->right);
+    }
+}
+
+
+void postorder(struct rbtree_node_t *ptr) {
+    rbtree t;
+    if(t==NULL) {
+        printf("Tree is empty");
+        return;
+    }
+    if(ptr!=NULL) {
+        postorder(ptr->left);
+        postorder(ptr->right);
+        printf("%lld -> ",(int)ptr->key);
+    }
 }
 
 int multidelete(int termo) {
-    int arr[10001];
-    for (int i=0; i < 10400; i++) {
-        arr[i] = 0;
-        insertion(i);
+    
+    rbtree t = rbtree_create();
+    signed arr[100000];
+    for (int i = 1; i <= 10000; i++){
+        int k = i;
+        arr[i - 1] = 0;
+        rbtree_insert(t, (void*)k, compare_int);
     }
+
     comp = 0;
     for (int i=0; i < termo; i++) {
-        int k = abs(randll() % 10001);
+        int k = abs(rand() % 10001);
         if (!arr[k]) {
-            printf("k -> %lld\n", k);
-            deletion(k);
+            rbtree_delete(t,(void*)k,compare_int);
             arr[k]++;
-        } else {
+        }
+        else {
             i--;
             continue;
         }
@@ -365,50 +476,24 @@ int multidelete(int termo) {
 }
 
 int multinsert(int termo) {
+    rbtree t = rbtree_create();
     comp = 0;
     for (int i = 1; i <= termo; i++) {
         int k = randll();
-        insertion(k);
+        rbtree_insert(t, (void*)k, compare_int);
     }
     return comp;
 }
 
-// Driver code
-int main() {
+signed main() {
     srand(time(NULL));
-    int ch, data;
-    /* int k = multinsert(10000); */
-    /* printf("k -> %lld\n", k); */
-    int k = multidelete(9);
-    printf("k -> %lld\n", k);
-    return 0;
-    while (1) {
-        printf("1. Insertion\t2. Deletion\n");
-        printf("3. Traverse\t4. Exit");
-        printf("\nEnter your choice:");
-        scanf("%lld", &ch);
-        switch (ch) {
-            case 1:
-                printf("Enter the element to insert:");
-                scanf("%lld", &data);
-                insertion(data);
-                break;
-            case 2:
-                printf("Enter the element to delete:");
-                scanf("%lld", &data);
-                deletion(data);
-                break;
-            case 3:
-                inorderTraversal(root);
-                printf("\n");
-                break;
-            case 4:
-                exit(0);
-            default:
-                printf("Not available\n");
-                break;
-        }
-        printf("\n");
-    }
-    return 0;
+    /* printf("10 -> %lld\n", multinsert(10)); */
+    /* printf("100 -> %lld\n", multinsert(100)); */
+    /* printf("1000 -> %lld\n", multinsert(1000)); */
+    /* printf("10000 -> %lld\n", multinsert(10000)); */
+    
+    /* printf("10 -> %lld\n", multidelete(10)); */
+    /* printf("100 -> %lld\n", multidelete(100)); */
+    /* printf("1000 -> %lld\n", multidelete(1000)); */
+    /* printf("10000 -> %lld\n", multidelete(10000)); */
 }

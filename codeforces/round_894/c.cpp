@@ -24,6 +24,12 @@ void solve () {
     // printar vindo com o r
     //
     // colocar 5 * quantidade de vezes que o primeiro cara aprece repetido
+
+    while (arr[l] == arr[n - 1]) {
+        l--;
+        rarr.push_back(n);
+    }
+    r = l;
     while (l != 0 && r != 0) {
         while (l > 0 && arr[l] == arr[r]) {
             l--;
@@ -33,6 +39,8 @@ void solve () {
             rarr.push_back(k);
             r--;
         }
+        /* cout << "l -> " << l << endl; */
+        /* cout << "r -> " << r << endl; */
     }
 
     for (auto cara: arr) cout << cara << " ";
@@ -55,4 +63,3 @@ signed main() {
     }
     return 0;
 }
-

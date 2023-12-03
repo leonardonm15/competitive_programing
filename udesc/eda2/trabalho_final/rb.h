@@ -1,72 +1,57 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <time.h>
-
 #define int long long
 
-enum coloracao { Vermelho, Preto };
-typedef enum coloracao Cor;
+enum rbtree_node_color { RED, BLACK };
 
-typedef struct no {
-    struct no* pai;
-    struct no* esquerda;
-    struct no* direita;
-    Cor cor;
-    int valor;
-} No;
+typedef struct rbtree_node_t {
+    void* key;
+    struct rbtree_node_t* left;
+    struct rbtree_node_t* right;
+    struct rbtree_node_t* parent;
+    enum rbtree_node_color color;
+} *rbtree_node;
 
-typedef struct arvore {
-    struct no* raiz;
-    struct no* nulo; 
-} Arvore;
+typedef struct rbtree_t {
+    rbtree_node root;
+} *rbtree;
 
-int randll();
+typedef int (*compare_func)(void* left, void* right);
 
-int max(int a, int b);
+rbtree rbtree_create();
+void* rbtree_lookup(rbtree t, void* key, compare_func compare);
+void rbtree_insert(rbtree t, void* key, compare_func compare);
+void rbtree_delete(rbtree t, void* key, compare_func compare);
+typedef rbtree_node node;
+typedef enum rbtree_node_color color;
 
-void trocar_valores(No* a, No* b);
+static node grandparent(node n);
+static node sibling(node n);
+static node uncle(node n);
+static void verify_properties(rbtree t);
+static void property_1(node root);
+static void property_2(node root);
+static color node_color(node n);
+static void property_4(node root);
+static void property_5(node root);
+static void property_5_helper(node n, int black_count, int* black_count_path);
 
-Arvore* criar();
+static node new_node(void* key, color node_color, node left, node right);
+static node lookup_node(rbtree t, void* key, compare_func compare);
+static void rotate_left(rbtree t, node n);
+static void rotate_right(rbtree t, node n);
 
-int vazia(Arvore* arvore);
+//the cases for insertion and deletion (the conditions tobe checked)
 
-No* criarNo(Arvore* arvore, No* pai, int valor);
-
-int multinsert(int termo);
-
-void deleteByVal(Arvore* a, int n);
-
-int multidelete(int termo);
-
-// returns pointer to sibling
-
-void remove_nodo(Arvore* arvore, No *v);
-
-No* adicionarNo(Arvore* arvore, No* no, int valor);
-
-No* adicionar(Arvore* arvore, int valor);
-// parte nova
-
-No* deletar(Arvore* arvore, int valor);
-
-No* deletarNo(Arvore* arvore, No* no, int valor);
-
-No* minimo(Arvore* arvore, No* no);
-
-void balancearRemocao(Arvore* arvore, No* no);
-
-No *successor(No *x);
-
-No* BSTreplace(No* x);
-
-No* localizar(Arvore* arvore, int valor);
-
-void visitar(int valor);
-
-void balancear(Arvore* arvore, No* no);
-
-void rotacionarEsquerda(Arvore* arvore, No* no);
-
-void rotacionarDireita(Arvore* arvore, No* no);
+static void replace_node(rbtree t, node oldn, node newn);
+static void insert_case1(rbtree t, node n);
+static void insert_case2(rbtree t, node n);
+static void insert_case3(rbtree t, node n);
+static void insert_case4(rbtree t, node n);
+static void insert_case5(rbtree t, node n);
+static node maximum_node(node root);
+static void delete_case1(rbtree t, node n);
+static void delete_case2(rbtree t, node n);
+static void delete_case3(rbtree t, node n);
+static void delete_case4(rbtree t, node n);
+static void delete_case5(rbtree t, node n);
+static void delete_case6(rbtree t, node n);
 
