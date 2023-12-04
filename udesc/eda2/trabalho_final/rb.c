@@ -451,38 +451,47 @@ void postorder(struct rbtree_node_t *ptr) {
 }
 
 int multidelete(int termo) {
-    
-    rbtree t = rbtree_create();
-    signed arr[100000];
-    for (int i = 1; i <= 10000; i++){
-        int k = i;
-        arr[i - 1] = 0;
-        rbtree_insert(t, (void*)k, compare_int);
-    }
+    int k = 10;
+    int p = 0;
+    while (k--) {
+        rbtree t = rbtree_create();
+        signed arr[100000];
+        for (int i = 1; i <= 10000; i++){
+            int k = i;
+            arr[i - 1] = 0;
+            rbtree_insert(t, (void*)k, compare_int);
+        }
 
-    comp = 0;
-    for (int i=0; i < termo; i++) {
-        int k = abs(rand() % 10001);
-        if (!arr[k]) {
-            rbtree_delete(t,(void*)k,compare_int);
-            arr[k]++;
+        comp = 0;
+        for (int i=0; i < termo; i++) {
+            int k = abs(rand() % 10001);
+            if (!arr[k]) {
+                rbtree_delete(t,(void*)k,compare_int);
+                arr[k]++;
+            }
+            else {
+                i--;
+                continue;
+            }
         }
-        else {
-            i--;
-            continue;
-        }
+        p += comp;
     }
-    return comp;
+    return p / 10;
 }
 
 int multinsert(int termo) {
-    rbtree t = rbtree_create();
-    comp = 0;
-    for (int i = 1; i <= termo; i++) {
-        int k = randll();
-        rbtree_insert(t, (void*)k, compare_int);
+    int k = 10;
+    int p = 0;
+    while (k--) {
+        rbtree t = rbtree_create();
+        comp = 0;
+        for (int i = 1; i <= termo; i++) {
+            int k = randll();
+            rbtree_insert(t, (void*)k, compare_int);
+        }
+        p += comp;
     }
-    return comp;
+    return p / 10;
 }
 
 signed main() {

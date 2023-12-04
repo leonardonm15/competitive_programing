@@ -27,37 +27,47 @@ int vazia(Arvore* arvore) {
 }
 
 int multinsert(int termo) {
-    Arvore* a = criar();
-    comp = 0;
-    for (int i = 1; i <= termo; i++) {
-        int k = randll();
-        adicionar(a, k);
+    int k = 10;
+    long long p = 0;
+    while (k--) {
+        Arvore* a = criar();
+        comp = 0;
+        for (int i = 1; i <= termo; i++) {
+            int k = randll();
+            adicionar(a, k);
+        }
+        p += comp;
     }
-    return comp;
+    return p / 10;
 }
 
 int multidelete(int termo) {
-    Arvore* a = criar();
-    int arr[100000];
-    for (int i = 1; i <= 10000; i++){
-        arr[i - 1] = 0;
-        adicionar(a, i);
-    }
+    int k = 10;
+    long long p = 0;
+    while (k--) {
+        Arvore* a = criar();
+        int arr[100000];
+        for (int i = 1; i <= 10000; i++){
+            arr[i - 1] = 0;
+            adicionar(a, i);
+        }
 
-    comp = 0;
-    for (int i=0; i < termo; i++) {
-        int k = abs(rand() % 10001);
-        int dm = comp;
-        if (!arr[k]) {
-            remove_nodo(a, a->raiz, k);
-            arr[k]++;
+        comp = 0;
+        for (int i=0; i < termo; i++) {
+            int k = abs(rand() % 10001);
+            int dm = comp;
+            if (!arr[k]) {
+                remove_nodo(a, a->raiz, k);
+                arr[k]++;
+            }
+            else {
+                i--;
+                continue;
+            }
         }
-        else {
-            i--;
-            continue;
-        }
+        p += comp;
     }
-    return comp;
+    return p / 10;
 }
 
 
@@ -143,7 +153,6 @@ No* adicionarNo(No* no, int valor) {
             No* novo = criarNo(valor);
             novo->pai = no;
             no->direita = novo;
-
             return novo;
         } else {
             return adicionarNo(no->direita, valor);
@@ -230,19 +239,20 @@ No* menor_nodo(No* nodo) {
 
 
 No* remove_nodo(Arvore* arvore , No* raiz, int valor) { 
-    comp++;
     if (raiz == NULL) 
         return raiz; 
     comp++;
-    comp++;
     if (valor < raiz->valor) raiz->esquerda = remove_nodo(arvore, raiz->esquerda, valor); 
-    else if ( valor > raiz->valor ) raiz->direita = remove_nodo(arvore, raiz->direita, valor); 
+    else if ( valor > raiz->valor ) {
+        comp++;
+        raiz->direita = remove_nodo(arvore, raiz->direita, valor); 
+    }
     else { 
         comp++;
         if((raiz->esquerda == NULL) || (raiz->direita == NULL) ) { 
             No* noDeletar = raiz->esquerda ? 
                 raiz->esquerda : 
-                raiz->direita; 
+                raiz->direita;
             comp++;
             if (noDeletar == NULL) { 
                 noDeletar = raiz; 
@@ -263,18 +273,13 @@ No* remove_nodo(Arvore* arvore , No* raiz, int valor) {
             raiz->direita = remove_nodo(arvore, raiz->direita, temp->valor); 
         } 
     } 
-
     comp++;
     if (raiz == NULL) return raiz; 
 
     int f = fb(raiz); 
-    comp++;
     if (f > 1 && fb(raiz->esquerda) >= 0) return rsd(arvore, raiz); 
-    comp++;
     if (f > 1 && fb(raiz->esquerda) < 0) return rdd(arvore, raiz); 
-    comp++;
     if (f < -1 && fb(raiz->direita) <= 0) return rse(arvore, raiz); 
-    comp++;
     if (f < -1 && fb(raiz->direita) > 0) return rde(arvore, raiz);
 
     return raiz; 
@@ -320,7 +325,6 @@ int fb(No* no) {
 
 signed main() {
     srand(time(NULL));
-
     /* int res1 = multinsert(10); */
     /* printf("resultado -> %lld \n", res1); */
     /* int res2 = multinsert(100); */
@@ -329,8 +333,8 @@ signed main() {
     /* printf("resultado -> %lld \n", res3); */
     /* int res4 = multinsert(10000); */
     /* printf("resultado -> %lld \n", res4); */
-    /* int res5 = multinsert(100000); */
-    /* printf("resultado -> %lld \n", res5); */
+    int res5 = multinsert(100000);
+    printf("resultado -> %lld \n", res5);
 
 
     /* int res2 = multidelete(10); */

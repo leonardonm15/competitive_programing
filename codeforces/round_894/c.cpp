@@ -5,44 +5,42 @@ using namespace std;
 
 void solve () {
     int n; cin >> n;
-    vector<int> arr(n);
+    vector<int> arr;
     vector<int> rarr;
+    vector<int> set;
+    map<int, int, greater<int>> map;
 
-    for (int i=0; i < n; i++) cin >> arr[i];
+    for (int i=0; i < n; i++) {
+        int num; cin >> num;
+        
+        if (set.empty() || num != set[i - 1]) {
+            set.push_back(num);
+        }
+
+        arr.push_back(num);
+        map[num]++;
+    }
 
     if (n == 1) {
         if (arr[0] > 1) cout << "NO" << endl;
         else cout << "YES" << endl;
         return;
     }
-
+    
+    // quando é 55533
+    // quando é 54321
+    int inv = 1;
     int k = n;
-    int l = n - 1;
-    int r = n - 1;
-    // começa com 5
-    // vai descendo com base nos numeros repetidos, se tiver repetido espera pra
-    // printar vindo com o r
-    //
-    // colocar 5 * quantidade de vezes que o primeiro cara aprece repetido
-
-    while (arr[l] == arr[n - 1]) {
-        l--;
-        rarr.push_back(n);
-    }
-    r = l;
-    while (l != 0 && r != 0) {
-        while (l > 0 && arr[l] == arr[r]) {
-            l--;
-            k--;
+    for (auto [cara, f]: map) {
+        int c = k;
+        k -= map[inv];
+        /* cout << "map cara -> " << map[cara] << endl; */
+        while (map[cara]--) {
+            /* cout << "K -> " << k << endl; */
+            rarr.push_back(c);
         }
-        while (l != r) {
-            rarr.push_back(k);
-            r--;
-        }
-        /* cout << "l -> " << l << endl; */
-        /* cout << "r -> " << r << endl; */
-    }
 
+    }
     for (auto cara: arr) cout << cara << " ";
     cout << endl;
 

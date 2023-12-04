@@ -1,62 +1,71 @@
 from random import sample
 from ctypes import CDLL
-# from plotter import *
+from plotter import *
 import time
 
 while __name__ == "__main__":
     # variáveis que vão guardar os número de comparações
-    comp_insert_avl = []
-    comp_delete_avl = []
+    insert_time_avl = []
+    delete_time_avl = []
 
-    comp_insert_rb = []
-    comp_delete_rb = []
+    insert_time_rb= []
+    delete_time_rb = []
+
+    insert_time_bt1 = []
+    delete_time_bt1 = []
+
+    insert_time_bt5 = []
+    delete_time_bt5 = []
+
+    insert_time_bt10 = []
+    delete_time_bt10 = []
     
     # paths
     avl = r"./avl.so"
     rb = r"./rb.so"
+    bt = r"./bt.so"
 
     # declaração dos wrappers
     favl = CDLL(avl)
-    frb = CDLL(rb);
-
-    # k = 10
-    # while k > 0:
-    #     print("-------------------")
-    #     print(frb.multinsert(10000))
-    #     print(frb.multidelete(10000))
-    #     k -= 1
-
-    termo = 10
-    while termo <= 10000:
-        insert_time_avl = []
-        delete_time_avl = []
-
-        insert_time_rb = []
-        delete_time_rb = []
-
-        for _ in range(10):
-            print(f"operações de range {termo}")
-            insert_time_avl.append(favl.multinsert(termo))
-            delete_time_avl.append(favl.multidelete(termo))
-            print("avl feito");
-
-            insert_time_rb.append(frb.multinsert(termo))
-            delete_time_rb.append(frb.multidelete(termo))
-            print("rb feito")
-
-        comp_insert_avl.append(insert_time_avl)
-        comp_delete_avl.append(delete_time_avl)
-
-        comp_insert_rb.append(insert_time_rb)
-        comp_delete_rb.append(delete_time_rb)
-        
-        termo *= 10
+    frb = CDLL(rb)
+    fbt = CDLL(bt)
     
-    # plot(time_insert_avl, time_delete_avl)
+    for termo in [1, 10, 100, 1000, 10000]: 
+        print(f"-------- TERMO {termo} --------")
+        insert_time_avl.append(favl.multinsert(termo))
+        delete_time_avl.append(favl.multidelete(termo))
+        print(f"----- avl feito -----");
 
-    print("insert operations -> ", time_insert_avl)
-    print("delete operations -> ", time_delete_avl)
-    print("-------------------------------------")
-    print("insert operations -> ", time_insert_rb)
-    print("delete operations -> ", time_delete_rb)
+        insert_time_rb.append(frb.multinsert(termo))
+        delete_time_rb.append(frb.multidelete(termo))
+        print(f"----- rb feito -----")
+
+        insert_time_bt1.append(fbt.multinsert(termo, 1))
+        delete_time_bt1.append(fbt.multidelete(termo, 1))
+        print(f"----- bt1 feito -----")
+
+        insert_time_bt5.append(fbt.multinsert(termo, 5))
+        delete_time_bt5.append(fbt.multidelete(termo, 5))
+        print(f"----- bt5 feito -----")
+
+        insert_time_bt10.append(fbt.multinsert(termo, 10))
+        delete_time_bt10.append(fbt.multidelete(termo, 10))
+        print(f"----- bt10 feito -----")
+    
+
+    # print("avl insert.len -> ", insert_time_avl)
+
+    print("avl insert.len -> ", len(insert_time_avl))
+    print("avl delete.len -> ", len(delete_time_avl))
+    print("rb insert.len -> ", len(insert_time_rb))
+    print("rb delete.len -> ", len(delete_time_rb))
+    print("insert_time_bt1 -> ", len(insert_time_bt1))
+    print("delete_time_bt1 -> ", len(delete_time_bt1))
+    print("insert_time_bt5 -> ", len(insert_time_bt5))
+    print("delete_time_bt5 -> ", len(delete_time_bt5))
+    print("insert_time_bt10 -> ", len(insert_time_bt10))
+    print("delete_time_bt10 -> ", len(delete_time_bt10))
+
+    plot(len(insert_time_avl), insert_time_avl, insert_time_rb, insert_time_bt1, insert_time_bt5, insert_time_bt10, 
+         delete_time_avl, delete_time_rb, delete_time_bt1, delete_time_bt5, delete_time_bt10)
     break;
