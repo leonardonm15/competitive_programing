@@ -145,6 +145,7 @@ No* criarNo(int valor) {
 No* adicionarNo(No* no, int valor) {
     comp++;
     if (valor > no->valor) {
+        comp++;
         if (no->direita == NULL) {
             /* printf("Adicionando %d\n",valor); */
             No* novo = criarNo(valor);
@@ -155,6 +156,7 @@ No* adicionarNo(No* no, int valor) {
             return adicionarNo(no->direita, valor);
         }
     } else {
+        comp++;
         if (no->esquerda == NULL) {
             /* printf("Adicionando %d\n",valor); */
             No* novo = criarNo(valor);
@@ -317,12 +319,23 @@ int fb(No* no) {
 
 signed main() {
     srand(time(NULL));
+    /* printf(" ------- INSERT ----- \n"); */
     /* int res1 = multinsert(10); */
     /* printf("resultado -> %lld \n", res1); */
-    int res2 = multinsert(100);
-    printf("resultado -> %lld \n", res2);
+    /* int res2 = multinsert(100); */
+    /* printf("resultado -> %lld \n", res2); */
     /* int res3 = multinsert(1000); */
     /* printf("resultado -> %lld \n", res3); */
     /* int res4 = multinsert(10000); */
+    /* printf("resultado -> %lld \n", res4); */
+
+    /* printf(" ------ DELETE ------\n"); */
+    /* res1 = multidelete(10); */
+    /* printf("resultado -> %lld \n", res1); */
+    /* res2 = multidelete(100); */
+    /* printf("resultado -> %lld \n", res2); */
+    /* res3 = multidelete(1000); */
+    /* printf("resultado -> %lld \n", res3); */
+    /* res4 = multidelete(10000); */
     /* printf("resultado -> %lld \n", res4); */
 }

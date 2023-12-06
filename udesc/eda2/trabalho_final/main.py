@@ -29,8 +29,8 @@ while __name__ == "__main__":
     favl = CDLL(avl)
     frb = CDLL(rb)
     fbt = CDLL(bt)
-    
-    for termo in [1, 10, 100, 1000, 10000]: 
+    termos = [1, 5, 10, 50, 100, 500, 1000, 5000, 10000]
+    for termo in termos: 
         print(f"-------- TERMO {termo} --------")
         insert_time_avl.append(favl.multinsert(termo))
         delete_time_avl.append(favl.multidelete(termo))
@@ -53,19 +53,7 @@ while __name__ == "__main__":
         print(f"----- bt10 feito -----")
     
 
-    # print("avl insert.len -> ", insert_time_avl)
-
-    print("avl insert.len -> ", len(insert_time_avl))
-    print("avl delete.len -> ", len(delete_time_avl))
-    print("rb insert.len -> ", len(insert_time_rb))
-    print("rb delete.len -> ", len(delete_time_rb))
-    print("insert_time_bt1 -> ", len(insert_time_bt1))
-    print("delete_time_bt1 -> ", len(delete_time_bt1))
-    print("insert_time_bt5 -> ", len(insert_time_bt5))
-    print("delete_time_bt5 -> ", len(delete_time_bt5))
-    print("insert_time_bt10 -> ", len(insert_time_bt10))
-    print("delete_time_bt10 -> ", len(delete_time_bt10))
-
-    plot(len(insert_time_avl), insert_time_avl, insert_time_rb, insert_time_bt1, insert_time_bt5, insert_time_bt10, 
+    print("avl insert.len -> ", insert_time_avl)
+    plot(termos, insert_time_avl, insert_time_rb, insert_time_bt1, insert_time_bt5, insert_time_bt10, 
          delete_time_avl, delete_time_rb, delete_time_bt1, delete_time_bt5, delete_time_bt10)
     break;
