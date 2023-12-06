@@ -12,7 +12,7 @@ Arvore* criar() {
     return arvore;
 }
 
-long long randll() {
+int randll() {
     return (int) rand() * (int) 1e9 + rand();
 }
 
@@ -145,7 +145,6 @@ No* criarNo(int valor) {
 No* adicionarNo(No* no, int valor) {
     comp++;
     if (valor > no->valor) {
-        comp++;
         if (no->direita == NULL) {
             /* printf("Adicionando %d\n",valor); */
             No* novo = criarNo(valor);
@@ -156,7 +155,6 @@ No* adicionarNo(No* no, int valor) {
             return adicionarNo(no->direita, valor);
         }
     } else {
-        comp++;
         if (no->esquerda == NULL) {
             /* printf("Adicionando %d\n",valor); */
             No* novo = criarNo(valor);
@@ -198,6 +196,7 @@ void balanceamento(Arvore* a, No* no) {
 }
 
 No* adicionar(Arvore* arvore, int valor) {
+    /* printf("comp -> %lld\n", comp); */
     if (arvore->raiz == NULL) {
         /* printf("Adicionando %d\n",valor); */
         No* novo = criarNo(valor);
@@ -205,7 +204,7 @@ No* adicionar(Arvore* arvore, int valor) {
         return novo;
     } else {
         No* no = adicionarNo(arvore->raiz, valor);
-        balanceamento(arvore, no->pai);
+        balanceamento(arvore, no);
         return no;
     }
 }
@@ -232,7 +231,6 @@ No* localizar(No* no, int valor) {
 No* menor_nodo(No* nodo) {
     return nodo->esquerda == NULL ? nodo : menor_nodo(nodo->esquerda);
 }
-
 
 No* remove_nodo(Arvore* arvore , No* raiz, int valor) { 
     if (raiz == NULL) 
@@ -317,28 +315,14 @@ int fb(No* no) {
     return esquerda - direita;
 }
 
-
-
 signed main() {
     srand(time(NULL));
-    int res1 = multinsert(10);
-    printf("resultado -> %lld \n", res1);
+    /* int res1 = multinsert(10); */
+    /* printf("resultado -> %lld \n", res1); */
     int res2 = multinsert(100);
     printf("resultado -> %lld \n", res2);
-    int res3 = multinsert(1000);
-    printf("resultado -> %lld \n", res3);
-    int res4 = multinsert(10000);
-    printf("resultado -> %lld \n", res4);
-    /* int res5 = multinsert(100000); */
-    /* printf("resultado -> %lld \n", res5); */
-
-
-    /* int res2 = multidelete(10); */
-    /* printf("resultado -> %lld \n", res2); */
-    /* res2 = multidelete(100); */
-    /* printf("resultado -> %lld \n", res2); */
-    /* res2 = multidelete(1000); */
-    /* printf("resultado -> %lld \n", res2); */
-    /* res2 = multidelete(10000); */
-    /* printf("resultado -> %lld \n", res2); */
+    /* int res3 = multinsert(1000); */
+    /* printf("resultado -> %lld \n", res3); */
+    /* int res4 = multinsert(10000); */
+    /* printf("resultado -> %lld \n", res4); */
 }
