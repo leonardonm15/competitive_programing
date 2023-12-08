@@ -12,10 +12,16 @@ void solve () {
     resp = arr[0];
     int i = 1;
     while (i < n) {
+        // partir e colocar resto  
         if (arr[i] > resp) {
-            if ((arr[i] - (arr[i] / 2)) <= resp) {
-                c++;
-                resp = arr[i] / 2;
+            int x = 2;
+            int p = arr[i] / x;
+            int r = 1e9 + 5;
+            // se tiver extra soma se tiver espaço no primero cara
+            while (p + ((arr[i] % x) > 0 ? 1 : 0) >= resp) {
+                int p = arr[i] / x;
+                if (p * x != arr[i]) p++;
+                r = min(r, 
             }
         } else {
             resp = arr[i];
