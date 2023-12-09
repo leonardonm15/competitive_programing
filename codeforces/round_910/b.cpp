@@ -12,22 +12,26 @@ void solve () {
     resp = arr[0];
     int i = 1;
     while (i < n) {
-        // partir e colocar resto  
+        // partir e colocar resto
         if (arr[i] > resp) {
-            int x = 2;
-            int p = arr[i] / x;
-            int r = 1e9 + 5;
+            int p = (arr[i] / resp);
+            int x = (p + ((arr[i] % resp) > 0 ? 1 : 0));
+            /* cout << "arr[i] -> " << arr[i] << endl; */
+            /* cout << "x - > " << x << endl; */
             // se tiver extra soma se tiver espaço no primero cara
-            while (p + ((arr[i] % x) > 0 ? 1 : 0) >= resp) {
-                int p = arr[i] / x;
-                if (p * x != arr[i]) p++;
-                r = min(r, 
-            }
+            /* while (p + ((arr[i] % resp) > 0 ? 1 : 0) > resp) { */
+            /*     x++; */
+            /*     p = arr[i] / x; */
+            /* } */
+            resp = arr[i] / x;
+            i++;
+            c += (x - 1);
         } else {
             resp = arr[i];
             i++;
         }
     }
+    cout << c << endl;
     // se metade do cara for menor doq o da direita marcha, else tira so
     // o cara da direita
 }
