@@ -21,29 +21,17 @@ void solve () {
         arr[i] = soma;
     }
 
-    cout << endl;
-    cout << "caras - > ";
-    for (auto cara: arr) cout << cara << " ";
-    cout << endl;
+    /* cout << endl; */
+    /* cout << "caras - > "; */
+    /* for (auto cara: arr) cout << cara << " "; */
+    /* cout << endl; */
 
     while (q--) {
         int num; cin >> num;
-        int anw = 0;
-        int l = 0;
-        int r = n - 1;
-        int mid = (l + r) / 2;
-        while (l <= r) {
-            mid = (l + r) / 2;
-            if (arr[mid] >= num) {
-                anw = mid;
-                r = mid - 1;
-            } else {
-                l = mid + 1;
-            }
-        }
-        cout << "arr[mid] -> " << arr[mid] << " - num -> " << num << endl;
-        if (arr[mid] < num) cout << -1 << endl;
-        else cout << mid + 1 << endl;
+        int k = lower_bound(arr.begin(), arr.end(), num) - arr.begin();
+        /* cout << "k -> " << k << endl; */
+        if (k >= n || arr[k] < num) cout << -1 << endl;
+        else cout << k + 1 << endl;
     }
 }
 
