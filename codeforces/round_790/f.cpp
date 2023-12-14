@@ -36,6 +36,7 @@ void solve () {
                 }
             }
             arr.clear();
+            arr.push_back(cara);
         }
     }
 
