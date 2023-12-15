@@ -6,13 +6,21 @@ using namespace std;
 void solve () {
     int n; cin >> n;
     vector<int> arr(n);
-    for (int i=0; i < n; i++) cin >> arr[i];
+    vector<pair<int, int>> v(n);
 
+    for (int i=0; i < n; i++) cin >> arr[i];
+    for (int i=0; i < n; i++) v[i] = {arr[i], i};
+
+    sort(v.begin(), v.end());
     for (int i=0; i < n; i++) {
-        for (int j=0; j < n; j++) {
+            /* cout << "v[i].first -> " << v[i].first << endl; */
+            /* cout << "arr[v[i].second] - > " << arr[i] << endl; */
+        if ((v[i].first & 1) != (arr[i] & 1)) {
+            cout << "NO" << endl;
+            return;
         }
     }
-
+    cout << "YES" << endl;
 }
 
 signed main() {
