@@ -5,14 +5,17 @@ using namespace std;
 
 void solve () {
     int n; cin >> n;
+    int resp;
     vector<int> arr(n);
-    for (int i=0; i < n; i++) cin >> arr[i];
-
     for (int i=0; i < n; i++) {
-        for (int j=0; j < n; j++) {
+        int num; cin >> num;
+        if (i == 0) resp = num;
+        else {
+            resp &= num;
         }
     }
 
+    cout << resp << endl;
 }
 
 signed main() {
