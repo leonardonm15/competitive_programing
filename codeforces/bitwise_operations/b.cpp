@@ -20,8 +20,11 @@ int bpow(int a, int b) {
 
 void solve () {
     int n, k; cin >> n >> k;
-    cout << bpow(k, n) << endl;
-
+    int resp = 1;
+    for (int i=0; i < k; i++) {
+        resp = (resp * n) % mod;
+    }
+    cout << resp << endl;
 }
 
 signed main() {
