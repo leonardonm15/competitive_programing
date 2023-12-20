@@ -12,11 +12,16 @@ double dist(pii a, pii b) {
     return sqrt((k * k) + (t * t));
 }
 
-bool valid(int mid, pii a, pii b, pii p, pii o) {
-    if (
-            (min(dist(p, b), dist(p, a)) - mid) <= eps && // dist p esta numa bola
-            (min(dist(o, a), dist(o, b)) - mid) <= eps    // o esta numa bola
-       )
+bool valid(double mid, pii a, pii b, pii p, pii o) {
+    bool inside =  (min(dist(p, b), dist(p, a)) - mid) <= eps &&  // p esta em
+                   (min(dist(o, a), dist(o, b)) - mid) <= eps;    // o esta numa bola
+                                                                  //
+    bool mesma_bola = (dist(a, o) - mid <= eps && dist(a, p) - mid <= eps) ||
+                      (dist(b, o) - mid <= eps && dist(b, p) - mid <= eps);
+
+    bool diff_bola =  2*mid - dist(a, b) >= eps;
+
+    if (inside && (mesma_bola || diff_bola)) return true;
     else return false;
 }
 
@@ -28,20 +33,6 @@ void solve () {
     pii b = {bx, by};
     pii o = {0, 0};
 
-    // estao dentro da area de alguma bola 
-    // min(dist(p, b), dist(p, a)) <= mid
-    // and
-    // min(dist(o, a), dist(o, b)) <= mid;
-    // and
-    //
-    // ( dentro da mesma bola
-    // dist(a, p) && dist(a, o) <= mid
-    // ou
-    // dist(b, p) && dist(b, a) <= mid
-    // )
-    // ou
-    // dist(a, b) / 2 <= mid
-    
     double l = 1;
     double r = 1e9;
     double mid = (l + r) / 2;
@@ -56,10 +47,7 @@ void solve () {
             l = mid + eps;
         }
     }
-
-    cout << "l -> " << l << endl;
-    cout << "r -> " << r << endl;
-    cout << "answ -> " << answ << endl;
+    cout << answ << endl;
 }
 
 signed main() {
