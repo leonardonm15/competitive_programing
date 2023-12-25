@@ -17,8 +17,8 @@ void dfsz(int a) {
 }
 
 int dfs(int a, int mx) {
-    multiset<pair<int, int>> now;
     int resp = 0;
+    multiset<pair<int, int>> now;
     // montando array sortado subarvores
     for (auto cara: adj[a]) now.emplace(sub[cara], cara);
 
@@ -49,6 +49,11 @@ void solve () {
         int num; cin >> num;
         num--;
         adj[num].emplace_back(i);
+    }
+
+    if (n == 2) {
+        cout << 0 << endl;
+        return;
     }
 
     dfsz(0);
