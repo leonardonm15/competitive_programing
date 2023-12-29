@@ -10,15 +10,9 @@ void solve () {
         int num; cin >> num;
         soma += num;
     }
-    
-    bool flag = false;
-    for (int i=1; i * i <= soma; i++) {
-        if ((i * i) == soma) {
-            cout << "YES" << endl;
-            return;
-        }
-    }
-    cout << "NO" << endl;
+    int s = sqrt(soma);
+    if ((s * s) == soma) cout << "YES" << endl;
+    else cout << "NO" << endl;
 }
 
 signed main() {

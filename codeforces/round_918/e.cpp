@@ -5,29 +5,30 @@ using namespace std;
 
 void solve () {
     int n; cin >> n;
-    vector<int> ppar;
-    vector<int> pimp;
-    int somap = 0;
-    int somai = 0;
-    pimp.push_back(0);
+    vector<int> arr;
+    /* map<int, int> map; */
+    /* if (n&1) ppar.push_back(0); */
+    int soma = 0;
+    bool flag = false;
     for (int i=0; i < n; i++) {
         int num; cin >> num;
         if (i&1) {
-            somai += num;
-            pimp.push_back(somai);
+            soma -= num;
         } else {
-            somap += num;
-            ppar.push_back(somap);
+            soma += num;
         }
+        arr.push_back(soma);
     }
 
-    cout << "ppar -> ";
-    for (auto cara: ppar) cout << cara << " ";
-    cout << endl;
+    sort(arr.begin(), arr.end());
+    for (int i=0; i < arr.size() - 1; i++) {
+        if (arr[i] == arr[i + 1] || arr[i] == 0) {
+            cout << "YES" << endl;
+            return;
+        }
+    }
+    cout << "NO" << endl;
 
-    cout << "pimp -> ";
-    for (auto cara: pimp) cout << cara << " ";
-    cout << endl;
 }
 
 signed main() {
