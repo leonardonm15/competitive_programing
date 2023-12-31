@@ -18,8 +18,11 @@ void solve () {
         }
         if (nimp >= 3) {
             int k = nimp;
-            k -= 2;
-            cout << soma - (k % 3) << " ";
+            if (k % 3 == 0 || k % 3 == 2) {
+                cout << soma - (nimp / 3) << " ";
+            } else if (k % 3 == 1) {
+                cout << soma - (nimp / 3) - 1 << " ";
+            }
         } else {
             cout << soma - ((int) nimp&1) << " ";
         }
@@ -38,3 +41,4 @@ signed main() {
     }
     return 0;
 }
+
