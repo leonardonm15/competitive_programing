@@ -1,33 +1,76 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-//#define int long long
+#define int long long
+
+
+void dbg(multiset<int> a, multiset<int> b) {
+    cout << "a -> ";
+    for (auto cara: a) cout << cara << " ";
+    cout << endl;
+
+    cout << "b -> ";
+    for (auto cara: b) cout << cara << " ";
+    cout << endl;
+}
 
 void solve () {
-    int n, m, k; cin >> n >> m >> l;
-    vector<int> n;
-    vector<int> c_n;
-    vector<int> m;
-    vector<int> c_m;
-
-    for (int i=0; i < n; i++) {
-        int num; cin >> num;
-        n.push_back(num);
-        c_n.pus_back(num);
-    }
-
-    for (int i=0; i < n; i++) {
-        int num; cin >> num;
-        m.push_back(num);
-        c_m.pus_back(num);
-    }
+    int n, m, k; cin >> n >> m >> k;
+    int q = min(1000ll, k);
+    multiset<int> a;
+    multiset<int> b;
     
-    sort(n.begin(), n.end());
-    sort(c_n.begin(), c_n.end());
+    for (int i=0; i < n; i++) {
+        int num; cin >> num;
+        a.emplace(num);
+    }
 
-    sort(m.begin(), m.end());
-    sort(c_m,.begin(), c_m.end());
+    for (int i=0; i < m; i++) {
+        int num; cin >> num;
+        b.emplace(num);
+    }
 
+
+    int i = 0;
+    while (q--) {
+        i++;
+        if (i&1) {
+            if (*a.begin() < *b.rbegin()) {
+                int x = *a.begin();
+                int y = *b.rbegin();
+                a.erase(a.begin());
+                b.erase(--b.end());
+                b.emplace(x);
+                a.emplace(y);
+            }
+        } else {
+            if (*b.begin() < *a.rbegin()) {
+                int x = *b.begin();
+                int y = *a.rbegin();
+                b.erase(b.begin());
+                a.erase(--a.end());
+                a.emplace(x);
+                b.emplace(y);
+            }
+        }
+        /* dbg(a, b); */
+    }
+
+    if (k > 1000) {
+        k -= 1000;
+        if (k&1 && *a.begin() < *b.rbegin()) {
+            int x = *a.begin();
+            int y = *b.rbegin();
+            a.erase(a.begin());
+            b.erase(--b.end());
+            b.emplace(x);
+            a.emplace(y);
+        }
+    }
+
+    int soma = 0;
+    for (auto cara: a) soma += cara;
+    cout << soma << endl;
 }
 
 signed main() {
