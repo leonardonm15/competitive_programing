@@ -18,11 +18,9 @@ void solve () {
 
         if (cnt >= k) {
             if (cnt - k > 0) {
-                resp += (cnt - k) + 1;
-                resp++;
-                resp += ((0 + ((cnt - k))) * cnt) / 2;
-            }
-            else resp++;
+                int y = (cnt - k) + 1;
+                resp += ((1 + y) * y) / 2;
+            } else resp++;
         }
     }
 
