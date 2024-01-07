@@ -3,29 +3,45 @@
 using namespace std;
 #define int long long
 
+bool check(vector<int> &arr, int mid) {
+    int n = arr.size();
+    int i = 0;
+
+    int range = arr[0] + mid;
+    while (i < n && arr[i] - range <= mid) i++;
+
+    range = arr[i] + mid;
+    while (i < n && arr[i] - range <= mid) i++;
+
+    range = arr[i] + mid;
+    while (i < n && arr[i] - range <= mid) i++;
+
+    return (i == n);
+}
+
 void solve () {
     int n; cin >> n;
-    vector<int> soma(n);
-    int cum = 0;
-
-    for (int i=0; i < n; i++) {
-        int num; cin >> num;
-        cum = abs(cum - num);
-        soma[i] = num;
-    }
-    sort(soma.begin(), soma.end());
+    vector<int> arr(n);
+    for (int i=0; i < n; i++) cin >> arr[i];
     
-    cout << "sort soma -> ";
-    for (auto cara: soma) cout << cara << " ";
-    cout << endl;
-
+    sort(arr.begin(), arr.end());
+    /* arr.erase(unique(arr.begin(), arr.end())); */
+    
     int l = 0;
-    int r = 
-    int resp = 1e9;
-    for (int i=0; i < n - 3; i++) {
-        
+    int r = 1e9;
+    int resp;
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+        if (check(arr, mid)) {
+            resp = mid;
+            r = mid - 1;
+        } 
+        else {
+            l = mid + 1;
+        }
     }
 
+    cout << resp << endl;
 }
 
 signed main() {
