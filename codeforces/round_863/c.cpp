@@ -8,24 +8,14 @@ void solve () {
     vector<int> arr(n - 1);
     vector<int> resp;
     for (int i=0; i < n - 1; i++) cin >> arr[i];
-    arr.push_back(-1);
-
     // arr[i] = max(xi e xi + 1)
     
     resp.push_back(arr[0]);
-    for (int i=0; i < n; i++) {
-        int lc = resp[resp.size() - 1];
-        int x = lc;
-        if (lc == -1) break;
-        if (arr[i] == max(lc, x)) {
-            resp.push_back(arr[i]);
-        } else {
-           resp.push_back(arr[i]);
-           resp.push_back(arr[i]);
-        }
+    for (int i=1; i < n - 1; i++) {
+        resp.push_back(min(arr[i], arr[i - 1]));
     }
 
-    resp.pop_back();
+    resp.push_back(arr[arr.size() - 1]);
     for (auto c: resp) {
         cout << c << " ";
     }

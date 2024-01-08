@@ -8,16 +8,15 @@ void solve () {
 
     int na = 0;
     int nx = 0;
-    if (b > a) b -= a;
-    // tenho acesso a 10 niveis
-    // subi 20, em qual nivel eu to
-    if (a > n / 2) a -= n / 2;
-    if (b > n / 2) b -= n / 2;
-    if (x > n / 2) x -= n / 2;
-    if (y > n / 2) y -= n / 2;
+
+    if (a > n / 2) a = ((n / 2) + 1) - abs((n / 2) - a);
+    if (b > n / 2) b = ((n / 2) + 1) - abs((n / 2) - b);
+    if (x > n / 2) x = ((n / 2) + 1) - abs((n / 2) - x);
+    if (y > n / 2) y = ((n / 2) + 1) - abs((n / 2) - y);
     
-    int k = max({abs(a - x), abs(b - y)});
-    cout << k << endl;
+    na = min(a, b);
+    nx = min(x, y);
+    cout << abs(na - nx) << endl;
 }
 
 signed main() {
