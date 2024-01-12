@@ -32,8 +32,8 @@ void solve () {
     /* cout << "fib -> "; */
     /* for (int i=0; i <= 10; i++) cout << fib[i] << " "; */
     /* cout << endl; */
-    /* cout << "h -> " << h << endl; */
-    /* cout << "w -> " << w << endl; */
+    cout << "h -> " << h << endl;
+    cout << "w -> " << w << endl;
     // direita cima esquerda baixo
     vector<pair<int, int>> mv = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
@@ -45,13 +45,17 @@ void solve () {
         cout << " ---------------- " << endl;
         for (int i=1; i <= n; i++) {
             int op = q % 4;
-            /* int z = 0; */
-            /* if (i == n) z = -1; */
-            /* cout << (mv[op].first * fib[i + z]) << endl; */
-            /* cout << (mv[op].second * fib[i + z]) << endl; */
-            a += (mv[op].first * fib[i]) + (mv[(op + 1) % 4].first * (fib[i] - 1));
-            b += (mv[op].second * fib[i]) + (mv[(op + 1) % 4].second * (fib[i] - 1));
-            q++;
+            cout << "op -> " << op << endl;
+            if (i > 1) {
+                a += (mv[op].first * fib[i]) + (mv[(op + 1) % 4].first * (fib[i] - 1));
+                b += (mv[op].second * fib[i]) + (mv[(op + 1) % 4].second * (fib[i] - 1));
+                op++;
+            } else {
+                /* cout << "(mv[op].first * fib[i]) -> " << (mv[op].first * fib[i]) << endl; */
+                /* cout << "(mv[op].second * fib[i]) -> " << (mv[op].second * fib[i]) << endl; */
+                a += (mv[op].first * fib[i]);
+                b += (mv[op].second * fib[i]);
+            }
             cout << a << " - " << b << endl;
             if (aob(h, w, b, a)) {
                 flag = false;
@@ -73,11 +77,7 @@ void solve () {
         cout << " ---------------- " << endl;
         for (int i=1; i <= n; i++) {
             int op = q % 4;
-            /* cout << "op -> " << op << endl; */
-            /* int z = 0; */
-            /* if (i == n) z = -1; */
-            /* cout << (mv[op].first * fib[i + z]) << endl; */
-            /* cout << (mv[op].second * fib[i + z]) << endl; */
+            cout << "op -> " << op << endl;
             a += (mv[op].first * fib[i]) + (mv[(op - 1) % 4].first * (fib[i] - 1));
             b += (mv[op].second * fib[i]) + (mv[(op - 1) % 4].second * (fib[i] - 1));
             op--;
