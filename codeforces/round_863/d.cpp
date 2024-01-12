@@ -12,8 +12,8 @@ using namespace std;
 vector<int> fib(46);
 
 bool aob (int h, int w, int a, int b) {
-    if ((a > h || a <= 0) || (b < w || b <= 0)) return false;
-    else return true;
+    if ((a > h || a <= 0) || (b > w || b <= 0)) return true;
+    else return false;
 }
 
 void build() {
@@ -25,12 +25,16 @@ void build() {
 }
 
 void solve () {
-    int n, x, y; cin >> n >> x >> y;
+    int n, y, x; cin >> n >> y >> x;
     int h, w;
     h = fib[n];
     w = fib[n + 1];
-    cout << "h -> " << h << endl;
-    cout << "w -> " << w << endl;
+    /* cout << "fib -> "; */
+    /* for (int i=0; i <= 10; i++) cout << fib[i] << " "; */
+    /* cout << endl; */
+    /* cout << "h -> " << h << endl; */
+    /* cout << "w -> " << w << endl; */
+    // direita cima esquerda baixo
     vector<pair<int, int>> mv = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
     for (int k=0; k < 4; k++) {
@@ -39,16 +43,17 @@ void solve () {
         int b = y;
         bool flag = true;
         cout << " ---------------- " << endl;
-        for (int i=1; i <= n + 1; i++) {
+        for (int i=1; i <= n; i++) {
             int op = q % 4;
-            int z = 0;
-            if (i == n) z = -1;
+            /* int z = 0; */
+            /* if (i == n) z = -1; */
             /* cout << (mv[op].first * fib[i + z]) << endl; */
             /* cout << (mv[op].second * fib[i + z]) << endl; */
-            a += (mv[op].first * fib[i + z]);
-            b += (mv[op].second * fib[i + z]);
+            a += (mv[op].first * fib[i]) + (mv[(op + 1) % 4].first * (fib[i] - 1));
+            b += (mv[op].second * fib[i]) + (mv[(op + 1) % 4].second * (fib[i] - 1));
+            q++;
             cout << a << " - " << b << endl;
-            if (aob(h, w, a, b)) {
+            if (aob(h, w, b, a)) {
                 flag = false;
                 break;
             }
@@ -59,6 +64,37 @@ void solve () {
             return;
         }
     }
+    cout << " ---------- INVERSO -----------" << endl;
+    for (int k=4; k > 0; k--) {
+        int q = k;
+        int a = x;
+        int b = y;
+        bool flag = true;
+        cout << " ---------------- " << endl;
+        for (int i=1; i <= n; i++) {
+            int op = q % 4;
+            /* cout << "op -> " << op << endl; */
+            /* int z = 0; */
+            /* if (i == n) z = -1; */
+            /* cout << (mv[op].first * fib[i + z]) << endl; */
+            /* cout << (mv[op].second * fib[i + z]) << endl; */
+            a += (mv[op].first * fib[i]) + (mv[(op - 1) % 4].first * (fib[i] - 1));
+            b += (mv[op].second * fib[i]) + (mv[(op - 1) % 4].second * (fib[i] - 1));
+            op--;
+            cout << a << " - " << b << endl;
+            if (aob(h, w, b, a)) {
+                flag = false;
+                break;
+            }
+            q--;
+        }
+        if (flag) {
+            cout << "YES" << endl;
+            return;
+        }
+    }
+
+
 
     cout << "NO" << endl;
 
