@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#inlude <bits/stdc++.h>
  
 using namespace std;
  
@@ -14,8 +14,8 @@ int cmp = 0b000000000011111111111111111111111111;
  
 void solve () {
     int n; cin >> n;
-    map<pair<int, int>, int> f;
     map<int, pair<int, int>> map;
+    map<pair<int, int>, int> f;
     int resp = 0;
  
     for (int i=0; i < n; i++) {
@@ -41,13 +41,13 @@ void solve () {
                         else v++;
                     }
                     if (v == 1) {
-                        resp += f[{need, map[need].first}];
+                        resp += f[{p, l}] + 1;
                     }
                 }
             }
         }
         map[p] = {l, sz};
-        f[{p, l}]++;
+        map[{p, l}]++;
     }
     cout << resp << endl;
 }
@@ -62,4 +62,4 @@ signed main() {
         solve();
     }
     return 0;
-}
+}c
