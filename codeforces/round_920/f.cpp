@@ -3,6 +3,7 @@
 using namespace std;
 
 #define endl '\n' 
+#define ll long long
 //#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
@@ -10,9 +11,20 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 
 void solve () {
-    int t; cin >> t;
-    while (t--) {
+    int n, q; cin >> n >> q;
+    vector<int> arr(n);
+
+    for (int i=0; i < n; i++) cin >> arr[i];
+
+    while (q--) {
         int s, d, k; cin >> s >> d >> k;
+        ll resp = 0;
+        if (d > (int) sqrt(n)) {
+            for (int i=1; i <= k; i++) {
+                resp += arr[s + (d * (i - 1))] * i;
+            }
+        } else {
+        }
         // se d for maior que 
         //  sqrt(d * k) só itera k vezes
         //
