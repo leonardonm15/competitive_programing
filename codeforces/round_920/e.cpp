@@ -12,20 +12,15 @@ using namespace std;
 void solve () {
     int h, w, x, y, a, b; cin >> h >> w >> y >> x >> b >> a;
     
-    int dv = y - b;
-    int dh = abs(a - x);
-
-    /* cout << "dh -> " << dh << endl; */
-    /* cout << "dv -> " << dv << endl; */
-
-    if (dv >= 0 && dh <= dv && dv % 2 == 1) {
-        cout << "ALICE" << endl;
-    } else if (dv >= 0 && dh <= dv && dv % 2 == 0) {
-        cout << "BOB" << endl;
-    } else {
+    int dv = b - y;
+    int dh = a - x;
+    
+    if (dv <= 0) {
         cout << "DRAW" << endl;
+        return;
     }
-
+    
+    pair<int, int>
 }
 
 signed main() {
