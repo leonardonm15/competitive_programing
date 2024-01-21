@@ -3,17 +3,16 @@
 using namespace std;
 
 #define endl "\n"
-typedef long long ll;
+#define ll long long
 
 void solve(){
-    ll n; cin >> n;
-    map<string, char> cods;
+    int n; cin >> n;
+    map<string, int> cods;
     int par = 0;
-
     for (ll i = 0; i < n; i++){
-        string x; cin >> x;  
+        string x; cin >> x;
         char c; cin >> c;
-        if (cods[x] >= 1) par++;
+        if (cods[x] >= 1) par = 1;
         else cods[x]++;
     }
     cout << par << endl;
