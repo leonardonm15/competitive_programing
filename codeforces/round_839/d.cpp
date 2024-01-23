@@ -10,25 +10,12 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 //
 
-int check(vector<int> &arr, int mn, int& iat) {
-    int n = arr.size();
-    int i = 0;
-    for (i; i < n; i++) {
-        if (abs(arr[i] - mn) > abs(arr[i + 1] - mn)) {
-            break;
-        }
-    }
-    iat = i;
-    return i;
-}
-
 void solve () {
     int n; cin >> n;
     vector<int> arr(n);
     vector<int> sarr;
 
     for (int i=0; i < n; i++) cin >> arr[i];
-    arr.push_back(1e9);
     sarr = arr;
     sort(sarr.begin(), sarr.end());
     if (arr == sarr) {
@@ -36,27 +23,29 @@ void solve () {
         return;
     }
 
-    int l = 0;
-    int r = 2 * *(max_element(arr.begin(), arr.end()));
-    /* r = 1e9; */
-    int resp = 0;
-    int maxi = 0;
-    int iat = 0;
+    int l = *(min_element(arr.begin(), arr.end()));
+    int r = *(max_element(arr.begin(), arr.end()));
     while (l <= r) {
         /* cout << "-------------" << endl; */
         int mid = (l + r) / 2;
-        /* cout << "mid -> " << mid << endl; */
-        /* cout << "maxi -> " << maxi << endl; */
-        if (check(arr, mid, iat) < maxi) {
-            l = mid + 1;
-        } else {
-            resp = mid;
-            maxi = iat;
-            r = mid - 1;
+        bool hi; bool low; bool answ = true;
+        for (int i = 1; i < n; i++) {
+            if (abs(arr[i] - mid) < abs(arr[i - 1] - mid)) {
+                answ = false;
+                hi = arr[i] > arr[i - 1];
+                break;
+            }
         }
+
+        if (answ) {
+            cout << mid << endl;
+            return;
+        }
+
+        if (hi) r = mid - 1;
+        else l = mid + 1;
     }
-    if (resp == 0 || maxi < n - 1) cout << -1 << endl;
-    else cout << resp << endl;
+    cout << -1 << endl;
 }
 
 signed main() {
