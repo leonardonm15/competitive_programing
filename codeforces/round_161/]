@@ -28,23 +28,19 @@ void solve () {
         }
     }
     
-    /* cout << "c -> " << endl; */
-    /* for (auto cara: c) cout << cara << " "; */
-    /* cout << endl; */
+    cout << "c -> " << endl;
+    for (auto cara: c) cout << cara << " ";
+    cout << endl;
 
-    for (int i=2; i <= n; i++) {
+    for (int i=2; i < n; i++) {
         if (c[i-1]) l[i] = l[i - 1] + 1;
-        else l[i] = l[i - 1] + (arr[i] - arr[i - 1]);
+        else l[i] = l[i - 1] + (arr[i + 1] - arr[i]);
     }
 
-    for (int i= n - 1; i > 0; i--) {
-        if (!c[i + 1]) r[i] = r[i + 1] + 1;
-        else r[i] = r[i + 1] + (arr[i + 1] - arr[i]);
-    }
-
-    /* cout << "l -> " << endl; */
-    /* for (auto cara: l) cout << cara << " "; */
-    /* cout << endl; */
+    cout << "l -> " << endl;
+    for (auto cara: l) cout << cara << " ";
+    cout << endl;
+    return;
 
     /* cout << "r -> " << endl; */
     /* for (auto cara: r) cout << cara << " "; */
@@ -56,7 +52,7 @@ void solve () {
         if (x < y) {
             cout << l[y] - l[x] << endl;
         } else {
-            cout << r[y] - r[x] << endl;
+            /* cout << r[x] - r[y] << endl; */
         }
     }
 }
