@@ -11,6 +11,11 @@ using namespace std;
 
 
 int calc(int l, int r) {
+
+    // ta entre duas raizes
+    // tira 1 sqrt(r) 
+    // dps 1 sqrt(sqrt(r))
+    // qundo achar, faz sqrt(sqrt(r)) como sendo o l e o sqrt(r) como sendo o R
     int s = (long long) sqrt(r - l);
     if (l == r) return l;
     for (int i=l; i < r; i += s) {
@@ -29,8 +34,10 @@ void solve () {
     int l = 1;
     int answ = 0;
     int k = 0;
+    while (k != 1) {
 
-    answ = calc(1, 1e18);
+    }
+
     cout << "! " << answ << endl;
 }
 
