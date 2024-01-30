@@ -11,17 +11,15 @@ using namespace std;
 
 void solve () {
     int x, n; cin >> x >> n;
-    while (x > 0) {
-        cout << "---------------" << endl;
-        int q = x / n;
-        q += x % n;
-        int k = x / q;
-        cout << "n -> " << n << endl;
-        cout << "q -> " << q << endl;
-        cout << "k -> " << k << endl;
-        n -= k;
-        x -= k * q;
+    int resp = 0;
+
+    for (int i=1; i * i <= x; i++) {
+        if (x % i > 0) continue;
+        if (x / i >= n) resp = max(resp, i);
+        if ((x / (x / i)) >= n) resp = max(resp, x / i);
     }
+
+    cout << resp << endl;
 }
 
 signed main() {
