@@ -8,36 +8,34 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
+//
 
 void solve () {
     int n, k; cin >> n >> k;
-    k++;
-
     vector<int> v(n);
-    int mx = LLONG_MAX;
-    v.push_back(mx);
-
-    // asdjhasjdaksb
+    int resp = 1e18 + 1;
 
     for (int i=0; i < n; i++) cin >> v[i];
 
-    int resp = 0;
-    for (int i=0; i < n;) {
-        int c = 0;
-        /* cout << "i -> " << i << endl; */
-        while (i < n && v[i] < (v[i + 1] * 2)) {
-            i++;
-            c++;
-        }
-        /* cout << "i -> " << i << endl; */
-        /* cout << "c -> " << c << endl; */
+    if (k >= 3) {
+        cout << 0 << endl;
+        return;
+    }
 
-        if (c > 0) {
-            c++;
-            resp += max(0ll, (c - k) + 1);
-        } else {
-            i++;
-        }
+    sort(v.begin(), v.end());
+    resp = v[0];
+    for (int i=0; i < n - 1; i++) resp = min(resp, v[i + 1] - v[i]);
+
+    if (k == 1) {
+        cout << resp << endl;
+        return;
+    }
+
+    for (int i=0; i < n; i++) for (int j=0; j < i; j++) {
+        int q = abs(v[i] - v[j]);
+        int p = lower_bound(v.begin(), v.end(), q) - v.begin();
+        if (p < n) resp = min(resp, abs(q - v[p]));
+        if (p > 0) resp = min(resp, abs(q - v[p - 1]));
     }
 
     cout << resp << endl;
