@@ -11,20 +11,18 @@ using namespace std;
 
 void solve () {
     int n, k; cin >> n >> k;
+    vector<int> resp(n);
+    int mn = 1;
+    int mx = n;
 
-    vector<vector<int>> v;
-    for (int i = 1; i <= n / 2; i++) {
-
+    for (int i=0; i < k; i++) {
+        if (i&1) for (int j=i; j < n; j += k) resp[j] = mx--;
+        else for (int j=i; j < n; j += k) resp[j] = mn++;
     }
 
-
-
-    for (int i=1; i <= n; i++) {
-        if (i + k <= n) swap(v[i + k], v[i]);
-    }
-
-    for (auto cara: v) cout << cara << " ";
+    for (auto cara: resp) cout << cara << " ";
     cout << endl;
+
 }
 
 signed main() {
