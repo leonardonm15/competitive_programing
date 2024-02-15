@@ -9,15 +9,9 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-struct compare {
-    bool operator() (pair<int, int> a, pair<int, int> b) const {
-        return (a.first == b.first ? (a.second > b.second) : (a.first > b.first));
-    }
-};
-
 void solve () {
     int n, m; cin >> n >> m;
-    multiset<pair<int, int>, compare> s;
+    multiset<pair<int, int>> s;
     for (int i=0; i < n; i++) {
         string num; cin >> num;
         int k = 0;
@@ -29,13 +23,14 @@ void solve () {
         s.emplace(make_pair(k, num.size()));
     }
 
-    for (auto [t, u]: s) {
-        cout << t << " " << u << endl;
+    for (auto [t, v]: s) {
+        cout << t << " " << v << endl;
     }
+    return;
 
     int i = 0;
     while (true) {
-        cout << i << endl;
+        /* cout << i << endl; */
         if (i > 0 && s.size() <= 1) break;
         if (i % 2 == 0) {
             int a = (*s.begin()).first;
@@ -46,14 +41,12 @@ void solve () {
             int c = (*s.rbegin()).first; // tamanho string com menor tamanho
             int u = (*s.begin()).second;
 
-            auto idx = s.lower_bound(make_pair(c, -1e17));
-            /* cout << idx << endl; */
+            auto idx = s.lower_bound(make_pair(c, 1e17));
 
             if (idx == s.begin()) {
                 idx++;
             }
 
-            /* cout << "s -> " << s.size() << endl; */
             int b = (*idx).first;
             int r = (*idx).second;
 
@@ -62,7 +55,6 @@ void solve () {
             s.emplace(make_pair(b, r + u));
         }
 
-        cout << "s.size() -> " << s.size() << endl;
         i++;
     }
 
@@ -71,7 +63,7 @@ void solve () {
 }
 
 signed main() {
-    /* ios_base::sync_with_stdio(0);cin.tie(0); */
+    ios_base::sync_with_stdio(0);cin.tie(0);
     int TC = 1;
     if (TC){
         cin >> TC;
