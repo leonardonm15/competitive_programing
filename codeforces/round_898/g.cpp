@@ -3,53 +3,51 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-
-pair<string, string> cmp = {"BA", "AB"};
-pair<string, string> resp = {"CB", "BC"};
-
-void calc(int i, char c, int coin, string &s) {
-    char proximo = '_';
-    resp = max(resp, coin);
-    if (i == 0) return;
-    if (i - 1 > n) {
-        string k;
-        k += c;
-        k += s[i + 1];
-        if (k == u) {
-            proximo = 'B';
-        }
-        if (k == v) {
-            proximo = 'C';
-        }
-    }
-    if (proximo != '_') {
-        calc(i + 1, proximo, coin + 1, s);
-    }
- 
-    calc(i + 1, s[i + 1], coin, s);
-}
-
-// cada vez que bate chama o calc
 void solve () {
     string s; cin >> s;
     int n = s.size();
 
-    string stack;
+    vector<int> a;
 
+    bool flag = false;
+    if (s[0] == 'B' || s[n - 1] == 'B') flag = true;
+
+    for (int i=0; i < n - 1; i++) {
+        if (s[i] == s[i + 1] && s[i] == 'B') flag = true;
+    }
+
+    int c = 0;
     for (int i=0; i < n; i++) {
-        string k;
-        if (stack.size() < 2) stack.push_back(s[i]);
+        if (s[i] == 'A') c++;
         else {
-            
+            if (c > 0) a.push_back(c);
+            c = 0;
         }
     }
-    
+
+    if (c > 0) a.push_back(c);
+
+    if (a.size() == 0) {
+        cout << 0 << endl;
+        return;
+    }
+
+    sort(a.begin(), a.end());
+
+    int resp = 0;
+    if (flag) resp += a[0];
+    for (int i=1; i < a.size(); i++) {
+        resp += a[i];
+    }
+
+
+    cout << resp << endl;
 }
 
 signed main() {
