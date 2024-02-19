@@ -12,30 +12,45 @@ using namespace std;
 void solve () {
     int n, k; cin >> n >> k;
     vector<int> arr;
-    int soma = 1;
     for (int i=0; i < n; i++) {
         int num; cin >> num;
         arr.push_back(num);
-        soma *= num;
     }
 
     string s; cin >> s;
-    vector<int> resp;
     int l = 0;
     int r = s.size() - 1;
     for (int i=0; i < s.size(); i++) {
+        if (l == r) break;
         if (s[i] == 'L') {
-            resp.push_back((soma % k));
-            soma /= arr[l];
             l++;
         } else {
-            resp.push_back((soma % k));
-            soma /= arr[r];
             r--;
         }
     }
 
-    for (auto c: resp) cout << c << " ";
+    vector<int> resp;
+    /* reverse(s.begin(), s.end()); */
+    int soma = arr[l] % k;
+    resp.push_back(soma);
+    for (int i=s.size() - 2; i >= 0; i--) {
+        cout << "-----------" << endl;
+        cout << "l -> " << l << endl;
+        cout << "r -> " << r << endl;
+        if (s[i] == 'L') {
+            l--;
+            soma *= arr[l];
+            soma %= k;
+        } else {
+            r++;
+            soma *= arr[r];
+            soma %= k;
+        }
+        resp.push_back(soma);
+    }
+
+    if (resp.size() > 1) reverse(resp.begin(), resp.end());
+    for (auto cara: resp) cout << cara << " ";
     cout << endl;
 }
 
