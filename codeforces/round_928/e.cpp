@@ -12,32 +12,38 @@ using namespace std;
 void solve () {
     int n, k; cin >> n >> k;
     int c = (n / 2);
-    if (c&1) c++;
-    
+    if (n&1) c++;
+
     if (n == 1 && k == 1) {
         cout << 1 << endl;
         return;
     }
-
 
     if (k <= c) {
         int v = k * 2;
         if (v % 2 == 0) v--;
         cout << v << endl;
     } else {
+        int z = 2;
+        k -= c;
+        int l = 1;
+        int r = n - c;
+        cout << "l -> " << l << endl;
+        cout << "r -> " << r << endl;
 
-        int z = 1;
-
-        while (k > c) {
-            k -= c;
+        while (k > ((l + r + 1) / 2)) {
+            /* cout << "l -> " << l << endl; */
+            /* cout << "k - l -> " << k - l << endl; */
+            l += (l + r + 1) / 2;
+            cout << "r - l -> " << r - l << endl;
             z *= 2;
         }
         
-        while (k >= c/2) {
-            z  *= 2;
-        }
-
-        cout << k * z << endl;
+        int v = (r - l) + 1;
+        v = v * 2;
+        if (v % 2 == 0) v--;
+        cout << v * z << endl;
+        /* cout << "z -> " << z << endl; */
     }
 }
 
