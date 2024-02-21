@@ -19,10 +19,88 @@ void solve () {
         map[s[0]].emplace(s[1] - '0');
     }
 
+    vector<char> s = {'C', 'D', 'H', 'S'};
+    for (int i=0; i < s.size(); i++) {
+        if (s[i] == c) {
+            s.erase(s.begin() + i);
+            break;
+        }
+    }
 
-    cout << "arr -> ";
-    for (auto cara: arr) cout << cara << " ";
-    cout << endl;
+    vector<string> p;
+    int k = 0;
+    for (int i=0; i < n; i++) {
+        if (map[s[k]].size() == 0) k++;
+        
+        if (k > s.size()) {
+            while (map[c].size() > 0) {
+                if (map[c].size() == 1 || (*map[c].begin() == *map[c].rbegin())) {
+                    cout << "IMPOSSIBLE" << endl;
+                    return;
+                }
+
+                string u;
+                u += c + ('0' + *map[c].begin());
+                p.push_back(u);
+                u.clear();
+                u += c + ('0' + *map[c].rbegin());
+                p.push_back(u);
+                map[c].erase(map[c].begin());
+                map[c].erase(map[c].end()--);
+            }
+        }
+
+        // pegar begin e rbegin
+        if (map[s[k]].size() > 1 && (*map[s[k]].begin() != *map[s[k]].rbegin())) {
+            string u;
+            u += s[k] + ('0' + *map[s[k]].begin());
+            p.push_back(u);
+            u.clear();
+            u += s[k] + ('0' + *map[s[k]].rbegin());
+            p.push_back(u);
+            map[s[k]].erase(map[s[k]].end()--);
+            map[s[k]].erase(map[s[k]].begin());
+        } else if (map[c].size() > 0) {
+            // pegar o begin + um dos coringas repetidos
+            // se nao tiver repetido pega o primeiro, se nao tiver retorna
+            int lc = -1;
+            int a = 0;
+            for (auto cara: map[c]) {
+                if (cara == lc) {
+                    lc = cara;
+                    break;
+                }
+                lc = cara;
+                a++;
+            }
+            
+            string u;
+            u += s[k] + ('0' + *map[s[k]].begin());
+            p.push_back(u);
+            u.clear();
+
+            if (lc == -1) {
+                u += c + ('0' + *map[c].begin());
+                map[c].erase(map[c].begin());
+            } else {
+                u += c + ('0' + lc);
+                auto idx = map[c].begin();
+                advance(idx, a);
+                map[c].erase(idx);
+            }
+
+            p.push_back(u);
+            map[s[k]].erase(map[s[k]].begin());
+
+        } else {
+            cout << "IMPOSSIBLE" << endl;
+            return;
+        }
+
+    }
+
+    cout << p[0] << " " << p[1] << endl;
+
     
 }
 
