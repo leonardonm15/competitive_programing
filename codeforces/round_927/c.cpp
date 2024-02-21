@@ -33,10 +33,10 @@ void solve () {
     /* reverse(s.begin(), s.end()); */
     int soma = arr[l] % k;
     resp.push_back(soma);
-    for (int i=s.size() - 2; i >= 0; i--) {
-        cout << "-----------" << endl;
-        cout << "l -> " << l << endl;
-        cout << "r -> " << r << endl;
+    for (int i=(int)s.size() - 2; i >= 0; i--) {
+        /* cout << "-----------" << endl; */
+        /* cout << "l -> " << l << endl; */
+        /* cout << "r -> " << r << endl; */
         if (s[i] == 'L') {
             l--;
             soma *= arr[l];
@@ -49,8 +49,8 @@ void solve () {
         resp.push_back(soma);
     }
 
-    if (resp.size() > 1) reverse(resp.begin(), resp.end());
-    for (auto cara: resp) cout << cara << " ";
+    reverse(resp.begin(), resp.end());
+    for (int i=0; i < resp.size(); i++) cout << resp[i] << " ";
     cout << endl;
 }
 
