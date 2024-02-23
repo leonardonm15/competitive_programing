@@ -23,9 +23,7 @@ void solve () {
             atual = (x * arr[i]);
         }
     }
-
     cout << atual << endl;
-    
 }
 
 signed main() {

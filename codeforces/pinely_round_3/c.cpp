@@ -21,41 +21,37 @@ void solve () {
 
     sort(l.begin(), l.end());
     sort(r.begin(), r.end());
-
-    vector<int> diff;
-
-    for (int i=0; i < n; i++) {
-        auto p = upper_bound(l.begin(), l.end(), r[i]);
-        int idx = p - l.begin();
-        int u;
-        if ((idx - 1) >= 0) u = r[i] - l[idx - 1];
-        else u = r[i] - l[idx];
-        diff.push_back(u);
-        if (p == l.end()) l.erase(p - 1);
-        else l.erase(p);
-    }
-
-    /* for (int i=0; i < n; i++) { */
-    /*     int u = r[i] - l[i]; */
-    /*     diff.push_back(u); */
-    /* } */
-
-    sort(diff.begin(), diff.end());
-
-    /* cout << "diff -> "; */
-    /* for (auto cara: diff) cout << cara << " "; */
-    /* cout << endl; */
-    /* return; */
-
     sort(c.rbegin(), c.rend());
 
     int resp = 0;
     for (int i=0; i < n; i++) {
-        resp += (diff[i] * c[i]);
-        /* cout << resp << endl; */
+        int d = 0;
+        int u = l.size();
+        int m = 0;
+        int k = 0;
+        
+        cout << "------------" << endl;
+        while (d <= u) {
+            int mid = (d + u) >> 1;
+            cout << "mid -> " << l[mid] << endl;
+            if (l[mid] > r[i]) u = mid - 1;
+            else {
+                k = l[mid];
+                m = mid;
+                d = mid + 1;
+            }
+        }
+
+        /* cout << "l[mid] -> " << k << endl; */
+        resp += (c[i] * (r[i] - k));
+        l.erase(l.begin() + (m - 1));
+        cout << "l -> ";
+        for (auto cara: l) cout << cara << " ";
+        cout << endl;
     }
-    
+
     cout << resp << endl;
+
 }
 
 signed main() {
