@@ -66,7 +66,7 @@ void solve () {
         arr = k;
     }
 
-    cout << (brute(arr, v) ? 'S' : 'N') << endl;
+    /* cout << (brute(arr, v) ? 'S' : 'N') << endl; */
 }
 
 signed main() {
