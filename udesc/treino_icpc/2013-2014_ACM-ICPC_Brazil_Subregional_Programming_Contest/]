@@ -37,15 +37,22 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 #define debarr(x...)
 #endif
 
+
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
+
 vector<int> dobra(vector<int> arr, int pos) {
-    vector<int> v;
     int n = arr.size();
     int r = pos + 1;
     int l = pos;
+    vector<int> v;
+    debug(r);
+    debug(l);
+    debug(arr);
+    debug(arr[r]);
+    debug(arr[l]);
     while (r <= n - 1 || l >= 0) {
         if (l >= 0 && r <= n - 1) {
             v.push_back(arr[r] + arr[l]);
@@ -55,37 +62,40 @@ vector<int> dobra(vector<int> arr, int pos) {
             v.push_back(arr[l]);
             l--;
         }
-        else if (l < 0 && r <= n - 1) {
+        else if (l < 0 && r >= n - 1) {
             v.push_back(arr[r]);
             r++;
         }
+        debug(v);
     }
-    reverse(v.begin(), v.end());
+    debug(v);
     return v;
 }
 
-bool brute(vector<int> arr, vector<int> &ref) {
-    /* debug(arr); */
-    if (arr == ref) return true;
-    reverse(arr.begin(), arr.end());
-    if (arr == ref) return true;
-    reverse(arr.begin(), arr.end());
+/* bool brute(vector<int> &arr, vector<int> &ref) { */
+/*     for (int i=0; i < arr.size(); i++) { */
     
-    for (int i=0; i < arr.size() - 1; i++) {
-        if (brute(dobra(arr, i), ref)) return true;
-    }
-    return false;
-}
+/*     } */
+    
+/* } */
 
 void solve () {
     int n; cin >> n;
     vector<int> arr(n);
-    for (auto &cara: arr) cin >> cara;
+    int soma = 0;
+    for (auto &cara: arr) {
+        cin >> cara;
+        soma += cara;
+    }
     int k; cin >> k;
     vector<int> ref(k);
     for (auto &cara: ref) cin >> cara;
 
-    cout << (brute(arr, ref) ? 'S' : 'N') << endl;
+    dobra(arr, 1);
+    /* for (int i=0; i < n - 1; i++) { */
+    /* } */
+
+    /* cout << (brute(arr, v) ? 'S' : 'N') << endl; */
 }
 
 signed main() {
