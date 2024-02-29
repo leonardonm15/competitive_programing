@@ -9,11 +9,9 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-int gauss(int u, int d) {
-    if (d > u) {
-        
-    }
-    return;
+int gauss(int d, int u) { // quantidade de termos
+    int k = u - k + 1; // quantidade de termos
+    int g = (u + k)
 }
 
 
@@ -22,6 +20,7 @@ void solve () {
     vector<int> arr(n);
     vector<int> pref;
     int sum = 0;
+
     pref.push_back(0);
     for (int i=0; i < n; i++) {
         cin >> arr[i];
@@ -29,51 +28,23 @@ void solve () {
         pref.push_back(sum);
     }
 
-    cout << "pref -> ";
-    for (auto cara: pref) cout << cara << " ";
-    cout << endl;
+    /* cout << "pref -> "; */
+    /* for (auto cara: pref) cout << cara << " "; */
+    /* cout << endl; */
 
     int q; cin >> q;
     while (q--) {
         int l, u; cin >> l >> u;
-        int ele = l;
-        int r = pref.size() - 1;
-        int resp = 1e9 + 5;
-        int mx = pref[ele - 1] + u;
-        int cur_sum = 0;
-        cout << "---------" << endl;
-        cout << "max -> " << mx << endl;
-        auto lidx = lower_bound(pref.begin(), pref.end(), arr[ele] + u);
-        auto uidx = upper_bound(pref.begin(), pref.end(), pref[ele] + u);
-        while (l <= r) {
-            /* cout << "============" << endl; */
-            int mid = (l + r) >> 1;
-            int cur = pref[mid] - pref[ele - 1];
-            /* cout << "soma atual -> " << cur << endl; */
-            if (cur > mx) {
-                r = mid - 1;
-            } else {
-                cout << "potencial resposta -> " << mid << endl;
-                // o quao perto ta do perfeito é o quao perto ta do U
-                int k = abs(cur - u);
-                if (cur > cur_sum || cur_sum == 1e9 + 5) {
-                    resp = mid;
-                    cur_sum = cur;
-                }
-                if ((cur > cur_sum && mid > resp) || (cur == cur_sum && mid < resp)) {
-                    resp = mid;
-                    cur_sum = cur;
-                }
-                /* else resp = min(resp, mid); */
-                /* cout << "resp -> " << resp << endl; */
-                l = mid + 1;
-            }
+        int uidx = (--(upper_bound(pref.begin(), pref.end(), pref[l - 1] + u))) - pref.begin();
+        int resp = LLONG_MIN;
+        for (int i = min(l, uidx - 10); i < max((int)pref.size() - 1, uidx + 10); i++) {
+            
         }
-
-        cout << resp << endl;
+        
     }
-    cout << endl;
 }
+
+
 
 signed main() {
     ios_base::sync_with_stdio(0);cin.tie(0);

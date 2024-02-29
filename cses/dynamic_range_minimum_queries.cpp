@@ -35,7 +35,7 @@ void update(int u, int l, int r, int i, int v) {
 
     int mid = (l + r) >> 1;
     if (i <= mid) update(2 * u, l, mid, i, v);
-    else update(2 * u, mid + 1, r, i, v);
+    else update(2 * u + 1, mid + 1, r, i, v);
     seg[u] = merge(seg[2 * u], seg[2 * u + 1]);
 }
 void update(int i, int v) {
@@ -62,13 +62,15 @@ void solve () {
     int q; cin >> n >> q;
     vector<int> arr(n);
     for (int i=0; i < n; i++) cin >> arr[i];
-    build(arr);
 
+    build(arr);
     while (q--) {
         int a, b, c; cin >> a >> b >> c;
         if (a&1) {
+            b--;
             update(b, c);
         } else {
+            b--; c--;
             int d = query(b, c);
             cout << d << endl;
         }
