@@ -10,9 +10,8 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 
 int gauss(int u, int d) {
-    int f = u - min(d, u);
     if (d > u) {
-
+        
     }
     return;
 }
@@ -44,6 +43,8 @@ void solve () {
         int cur_sum = 0;
         cout << "---------" << endl;
         cout << "max -> " << mx << endl;
+        auto lidx = lower_bound(pref.begin(), pref.end(), arr[ele] + u);
+        auto uidx = upper_bound(pref.begin(), pref.end(), pref[ele] + u);
         while (l <= r) {
             /* cout << "============" << endl; */
             int mid = (l + r) >> 1;
