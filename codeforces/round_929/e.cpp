@@ -9,9 +9,9 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-int gauss(int d, int u) { // quantidade de termos
-    int k = u - k + 1; // quantidade de termos
-    int g = (u + k)
+int gauss(int u, int v) { // quantidade de termos
+    int g = (u + u - v + 1) * v / 2;
+    return g;
 }
 
 
@@ -28,22 +28,27 @@ void solve () {
         pref.push_back(sum);
     }
 
-    /* cout << "pref -> "; */
-    /* for (auto cara: pref) cout << cara << " "; */
-    /* cout << endl; */
-
     int q; cin >> q;
+    int ri = -1;
+    int resp = 0;
+    int l, u;
     while (q--) {
-        int l, u; cin >> l >> u;
+        cin >> l >> u;
+        ri = -1;
+        resp = 0;
         int uidx = (--(upper_bound(pref.begin(), pref.end(), pref[l - 1] + u))) - pref.begin();
-        int resp = LLONG_MIN;
-        for (int i = min(l, uidx - 10); i < max((int)pref.size() - 1, uidx + 10); i++) {
-            
+        for (int i = max(l, uidx - 10); i <= min((int)pref.size() - 1, uidx + 10); i++) {
+            int a = pref[i] - pref[l - 1];
+            int g = gauss(u, a);
+            if (g > resp || ri == -1) {
+                resp = g;
+                ri = i;
+            }
         }
-        
+        cout << max(ri, l) << " ";
     }
+    cout << endl;
 }
-
 
 
 signed main() {
