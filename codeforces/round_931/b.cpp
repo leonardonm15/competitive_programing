@@ -18,7 +18,7 @@ void solve () {
     for (int i=0; i < dp.size(); i++) {
         if (dp[i] >= 1 && dp[i] != 1e9 + 5) {
             for (auto cara: c) {
-                if (i + cara <= 60) dp[i + cara] = min({dp[i + cara], dp[i] + 1});
+                if (i + cara <= 30) dp[i + cara] = min({dp[i + cara], dp[i] + 1});
             }
         }
     }
@@ -27,13 +27,18 @@ void solve () {
     /* cout << "dp -> "; */
     /* for (auto cara: dp) cout << cara << " "; */
     /* cout << endl; */
-    int resto = (n % 60);
-    int nm = 4 * (n / 60);
-    cout << "resto -> " << resto << endl;
-    cout << "dp[resto] -> " << dp[resto] << endl;
-    cout << "nm -> " << nm << endl;
+    if (n > 30) {
+        cout << dp[30] + (2 * ((n - 30) / 30)) + dp[(n - 30) % 30] << endl;
+    } else {
+        cout << dp[n] << endl;
+    }
+    /* int resto = (n % 30); */
+    /* int nm = 2 * (n / 30); */
+    /* cout << "resto -> " << resto << endl; */
+    /* cout << "dp[resto] -> " << dp[resto] << endl; */
+    /* cout << "nm -> " << nm << endl; */
 
-    cout << (n > 60? nm : 0) + dp[resto] << endl;
+    /* cout << (n > 60? nm : 0) + dp[resto] << endl; */
 }
 
 signed main() {

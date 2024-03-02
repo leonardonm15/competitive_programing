@@ -9,27 +9,23 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-vector<int> c = {15, 10, 6, 3, 1};
 void solve () {
     int n; cin >> n;
-    vector<int> dp(17);
-    for (auto cara: c) dp[cara]++;
-    int lc = 1;
-    for (int i=2; i < dp.size(); i++) {
-        if (dp[i] == 1) lc = i;
-        dp[i] = dp[lc] + dp[i - lc];
+    int resp = 1e9 + 5;
+    for (int o = 0; o <= 2; o++) {
+        for (int t = 0; t <= 1; t++) {
+            for (int s = 0; s <= 4; s++) {
+                for (int d = 0; d <= 2; d++) {
+                    int k = o + 3*t + 6*s + 10*d;
+                    if (k <= n && (n - k) % 15 == 0) {
+                        resp = min(resp, o + t + s + d + (n - k) / 15);
+                    }
+                }
+            }
+        }
     }
 
-
-    cout << "dp -> ";
-    for (auto cara: dp) cout << cara << " ";
-    cout << endl;
-    int resto = (n % 15);
-    int nm = n / 15;
-    cout << "resto -> " << resto << endl;
-    /* cout << "nm -> " << nm << endl; */
-
-    cout << nm + dp[resto] << endl;
+    cout << resp << endl;
 }
 
 signed main() {
