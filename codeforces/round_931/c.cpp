@@ -9,44 +9,45 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
+int ask (int a, int b) {
+    cout << "? " << a << " " << b << endl;
+    int num; cin >> num;
+    return num;
+}
+
+void answ (int a, int b) {
+    cout << "! " << a << " " << b << endl;
+    return;
+}
+
 void solve () {
-    int n, m; cin >> n >> m;
-    cout << "? " << 1 << " " << 1 << endl;
-    int num;
-    cin >> num;
-
-    if (num == 1 && n == 1 && m == 2) {
-        cout << "! " << 1 << " " << 2 << endl;
-        return;
-    }
-    if (num == 1 && n == 2 && m == 1) {
-        cout << "! " << 2 << " " << 1 << endl;
+    int n, m; cin >> n >> m; // 4 x 3
+    int r1 = ask(1, 1);
+    if (r1 == 0) {
+        answ(1, 1);
         return;
     }
 
-    if (num > 1) {
-        cout << "? " << 1 + num << " " << 1 << endl;
-        int down; cin >> down;
-        cout << "? " << 1 << " " << 1 + num << endl;
-        int side; cin >> side;
-
-        cout << "? " << 1 + (side / 2) << " " << (1 + num) - (side - (side / 2)) << endl;
-        int c1; cin >> c1;
-
-        if (!c1) cout << "! " << 1 + (side / 2) << " " << (1 + num) - (side - (side / 2)) << endl;
-        else cout << "! " << (1 + num) - (down - (down / 2)) << " " << 1 + (down / 2) << endl;
-    } else if (num == 0) {
-        cout << "! " << 1 << " " << 1 << endl;
-    } else {
-        cout << "? " << 2 << " " << 1 << endl;
-        int num; cin >> num;
-        if (!num) {
-            cout << "! " << 2 << " " << 1 << endl;
-        } else {
-            cout << "! " << 1 << " " << 2 << endl;
-        }
+    int r2 = ask(n, 1);
+    if (r2 == 0) {
+        answ(n, 1);
+        return;
+    }
+    
+    int r3 = ask(1, m);
+    if (r3 == 0) {
+        answ(1, m);
+        return;
     }
 
+    int x1 = (r1 - r2 + n + 1) / 2;
+    int y1 = (r1 + r2 - n + 3) / 2;
+
+    int x2 = (r1 + r3 - m + 3) / 2;
+    int y2 = (r1 - r3 + m + 1) / 2;
+
+    if (1 <= x1 && x1 <= n && 1 <= y1 && y1 <= m && ask(x1, y1) == 0) answ(x1, y1);
+    else answ(x2, y2);
 }
 
 signed main() {

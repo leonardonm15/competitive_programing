@@ -3,45 +3,38 @@
 using namespace std;
 
 #define endl '\n' 
+#define pii pair<int, int>
 //#define int long long
-#define ii pair<int, int>
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-const int MAX = 1e4 + 5;
-const int INF = 1e9 + 9;
-vector<int> resp;
 
-vector<ii> adj[MAX];
-vector<int> dist(MAX);
-
-int dk(int s, int t) {
-    priority_queue<ii, vector<ii>, greater<ii>> fila;
-    fill(dist.begin(), dist.end(), INF);
-    dist[s] = 0;
-    fila.emplace(dist[s], s);
-    while (!fila.empty()) {
-        auto [d, u] = fila.top();
-        fila.pop();
-        if (u == t) {
-            return dist[t];
-        }
-        if (d != dist[u]) {
-            continue;
-        }
-        for (auto [w, v] : adj[u]) {
-            if (dist[v] > d + w) dist[v] = d + w;
-            fila.emplace(dist[v], v);
-        }
-    }
-
-    return -1;
-}
+const int N = 2e4 + 5;
+const int M = 1e5 + 5; 
+vector<pii> adj[N];
 
 void solve () {
-    
+    int n, m, q; cin >> n >> m >> q;
+    vector<tuple<int, int, int>> edg;
+    for (int i=0; i < m; i++) {
+        int a, b, w; cin >> a >> b >> w;
+        edg.push_back({w, a, b});
+    }
+
+    sort(edg.rbegin(), edg.rend());
+    /* cout << "--------" << endl; */
+    for (auto [w, a, b]: edg) {
+        /* cout << w << " "; */
+        if (adj[a].size() == 0 || adj[b].size() == 0) {
+            /* cout << a << " " << b << " " << w << endl; */
+            adj[a].push_back({b, w});
+            adj[b].push_back({a, w});
+        }
+    }
+    cout << endl;
+
 }
 
 signed main() {
