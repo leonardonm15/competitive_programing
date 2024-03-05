@@ -26,10 +26,11 @@ int find(int a) {
 }
 
 void dfs(int u, int p, int d) {
+    st[u][0] = u;
+    for (int j = 1; (1 << j) <= d; j++) { 
+        st[u][j] = st[st[u][j - 1]][j - 1]
+    }
     for (auto cara: adj[u]) {
-        for (int j = 0; j * 2 <= d; j *= 2) {
-
-        }
     }
 }
 
