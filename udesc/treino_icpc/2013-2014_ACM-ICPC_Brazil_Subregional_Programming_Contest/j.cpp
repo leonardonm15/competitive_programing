@@ -35,6 +35,7 @@ void dfs(int u, int p, int d) {
 
 void solve () {
     int n, m, q; cin >> n >> m >> q;
+    // teste
     vector<tuple<int, int, int>> edg;
     for (int i=0; i <= n; i++) {
         daddy[i] = i;
@@ -60,7 +61,7 @@ void solve () {
             sz[a] += sz[b];
             adj[a].push_back({b, w});
             adj[b].push_back({a, w});
-        }
+	}
     }
     /* cout << endl; */
 
