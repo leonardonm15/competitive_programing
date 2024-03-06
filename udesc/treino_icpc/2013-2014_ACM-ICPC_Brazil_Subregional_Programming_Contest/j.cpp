@@ -18,13 +18,11 @@ vector<int> sz(N);
 vector<int> daddy(N);
 vector<int> depth(N);
 vector<int> vis(N);
-/* vector<int> tin(N); */
-/* vector<int> tout(N); */
+const int neutral = 1e9 + 5;
 vector<vector<int>> up(N, vector<int>(lg));
-vector<vector<int>> st(N, vector<int>(lg));
+vector<vector<int>> st(N, vector<int>(lg, neutral));
 
-
-int lca(int u, int v) {
+pair<int, int> lca(int u, int v) {
     if (depth[v] > depth[u]) {
         swap(v, u);
     }
@@ -33,17 +31,18 @@ int lca(int u, int v) {
         if (d & (1 << i)) v = up[v][i];
     }
 
-    if (u == v) return u;
+    if (u == v) return {0, d};
 
+    int k = 0;
     for (int i=lg - 1; i >= 0; i--) {
         if (up[u][i] != up[v][i]) {
+            k += i;
             u = up[u][i];
             v = up[v][i];
         }
     }
-    return up[u][0];
+    return {k, d + k};
 }
-
 
 int c = 0;
 int find(int a) {
@@ -53,9 +52,15 @@ int find(int a) {
 void dfs(int u, int p, int w, int t) {
     up[u][0] = p;
     depth[u] = t;
+    st[u][0] = w;
     vis[u]++;
-    for (int j = 1; (1 << j) <= lg; j++) {
-        up[u][j] = up[up[p][j - 1]][j - 1];
+
+    // binary lifting + sparse table
+    if (p > -1) {
+        for (int j = 1; j < lg; j++) {
+            up[u][j] = up[up[u][j - 1]][j - 1];
+            st[u][j] = min(st[u][j - 1], st[up[u][j - 1]][j - 1]);
+        }
     }
 
     for (auto [w, v]: adj[u]) {
@@ -67,7 +72,6 @@ void dfs(int u, int p, int w, int t) {
 
 void solve () {
     int n, m, q; cin >> n >> m >> q;
-    // teste
     vector<tuple<int, int, int>> edg;
     for (int i=0; i <= n; i++) {
         daddy[i] = i;
@@ -80,27 +84,50 @@ void solve () {
         edg.push_back({w, a, b});
     }
 
+    // kruskal
     sort(edg.rbegin(), edg.rend());
-    cout << "--------" << endl;
+    int root = 0;
     for (auto [w, a, b]: edg) {
-        /* cout << w << " "; */
+        root = a;
         int pa = find(a);
         int pb = find(b);
         if (pa != pb) {
-            /* cout << a << " " << b << " " << w << endl; */
             if (sz[pb] > sz[pa]) swap(pa, pb);
             daddy[pb] = daddy[pa];
-            sz[a] += sz[b];
+            sz[pa] += sz[pb];
             adj[a].push_back({b, w});
             adj[b].push_back({a, w});
         }
     }
-    /* cout << endl; */
+    
+    dfs(root, root, 0, 0);
 
-    cout << "pais -> ";
-    for (int i = 1; i <= n; i++) cout << daddy[i] << " ";
-    cout << endl;
+    while (q--) {
+        int u, v; cin >> u >> v;
+        auto [d1, d2] = lca(u, v);
+        int resp = min(st[u][0], st[v][0]);
+        for (int i=0; i <=n; i++) {
+            cout << "st[i] -> ";
+            for (auto cara: st[i]) cout << cara << " ";
+            cout << endl;
+        }
 
+        for (int j = lg - 1; j >= 0; j--) {
+            if (d1 & (1 << j)) {
+                resp = min(resp, st[u][j]);
+                u = up[u][j];
+            }
+        }
+
+        for (int j = lg - 1; j >= 0; j--) {
+            if (d2 & (1 << j)) {
+                resp = min(resp, st[v][j]);
+                v = st[v][j];
+            }
+        }
+
+        cout << resp << endl;
+    }
 }
 
 signed main() {
