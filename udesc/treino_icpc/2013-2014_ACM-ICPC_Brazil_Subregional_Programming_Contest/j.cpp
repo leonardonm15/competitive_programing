@@ -23,9 +23,6 @@ vector<vector<int>> up(N, vector<int>(lg));
 vector<vector<int>> st(N, vector<int>(lg, neutral));
 
 pair<int, int> lca(int u, int v) {
-    if (depth[v] > depth[u]) {
-        swap(v, u);
-    }
     int d = depth[u] - depth[v];
     for (int i = lg - 1; i >= 0; i--) {
         if (d & (1 << i)) v = up[v][i];
@@ -36,11 +33,13 @@ pair<int, int> lca(int u, int v) {
     int k = 0;
     for (int i=lg - 1; i >= 0; i--) {
         if (up[u][i] != up[v][i]) {
-            k += i;
+            k += (1 << i);
             u = up[u][i];
             v = up[v][i];
         }
     }
+
+    k++;
     return {k, d + k};
 }
 
@@ -56,16 +55,15 @@ void dfs(int u, int p, int w, int t) {
     vis[u]++;
 
     // binary lifting + sparse table
-    if (p > -1) {
-        for (int j = 1; j < lg; j++) {
-            up[u][j] = up[up[u][j - 1]][j - 1];
-            st[u][j] = min(st[u][j - 1], st[up[u][j - 1]][j - 1]);
-        }
+    for (int j = 1; j < lg; j++) {
+        up[u][j] = up[up[u][j - 1]][j - 1];
+        st[u][j] = min(st[u][j - 1], st[up[u][j - 1]][j - 1]);
+        cout << "st[u][j] -> " << st[u][j] << endl;
     }
 
-    for (auto [w, v]: adj[u]) {
+    for (auto [z, v]: adj[u]) {
         if (!vis[v]) {
-            dfs(v, u, w, t + 1);
+            dfs(v, u, z, t + 1);
         }
     }
 }
@@ -75,7 +73,6 @@ void solve () {
     vector<tuple<int, int, int>> edg;
     for (int i=0; i <= n; i++) {
         daddy[i] = i;
-        st[i][0] = 0;
         sz[i] = 1;
     }
 
@@ -95,23 +92,21 @@ void solve () {
             if (sz[pb] > sz[pa]) swap(pa, pb);
             daddy[pb] = daddy[pa];
             sz[pa] += sz[pb];
-            adj[a].push_back({b, w});
-            adj[b].push_back({a, w});
+            adj[a].push_back({w, b});
+            adj[b].push_back({w, a});
         }
     }
     
-    dfs(root, root, 0, 0);
+    dfs(root, root, neutral, 0);
 
     while (q--) {
         int u, v; cin >> u >> v;
+        if (depth[u] > depth[v]) swap(u, v);
         auto [d1, d2] = lca(u, v);
-        int resp = min(st[u][0], st[v][0]);
-        for (int i=0; i <=n; i++) {
-            cout << "st[i] -> ";
-            for (auto cara: st[i]) cout << cara << " ";
-            cout << endl;
-        }
-
+        int resp = neutral; 
+        /* cout << "resp -> " << resp << endl; */
+        /* cout << "st[u][0] -> " << st[u][0] << endl; */
+        /* cout << "st[v][0] -> " << st[v][0] << endl; */
         for (int j = lg - 1; j >= 0; j--) {
             if (d1 & (1 << j)) {
                 resp = min(resp, st[u][j]);
