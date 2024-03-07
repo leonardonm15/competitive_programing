@@ -120,7 +120,6 @@ void solve () {
                 v = st[v][j];
             }
         }
-
         cout << resp << endl;
     }
 }
