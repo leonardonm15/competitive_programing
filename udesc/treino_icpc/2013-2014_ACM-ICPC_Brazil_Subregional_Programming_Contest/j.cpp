@@ -24,11 +24,12 @@ vector<vector<int>> st(N, vector<int>(lg, neutral));
 
 pair<int, int> lca(int u, int v) {
     int d = depth[u] - depth[v];
+    assert(d >= 0);
     for (int i = lg - 1; i >= 0; i--) {
-        if (d & (1 << i)) v = up[v][i];
+        if (d & (1 << i)) u = up[u][i];
     }
 
-    if (u == v) return {0, d};
+    if (u == v) return {d, 0};
 
     int k = 0;
     for (int i=lg - 1; i >= 0; i--) {
@@ -40,7 +41,7 @@ pair<int, int> lca(int u, int v) {
     }
 
     k++;
-    return {k, d + k};
+    return {d + k, k};
 }
 
 int c = 0;
@@ -58,7 +59,6 @@ void dfs(int u, int p, int w, int t) {
     for (int j = 1; j < lg; j++) {
         up[u][j] = up[up[u][j - 1]][j - 1];
         st[u][j] = min(st[u][j - 1], st[up[u][j - 1]][j - 1]);
-        cout << "st[u][j] -> " << st[u][j] << endl;
     }
 
     for (auto [z, v]: adj[u]) {
@@ -101,25 +101,27 @@ void solve () {
 
     while (q--) {
         int u, v; cin >> u >> v;
-        if (depth[u] > depth[v]) swap(u, v);
-        auto [d1, d2] = lca(u, v);
+        if (depth[v] > depth[u]) swap(u, v);
+        auto [du, dv] = lca(u, v);
         int resp = neutral; 
         /* cout << "resp -> " << resp << endl; */
         /* cout << "st[u][0] -> " << st[u][0] << endl; */
         /* cout << "st[v][0] -> " << st[v][0] << endl; */
         for (int j = lg - 1; j >= 0; j--) {
-            if (d1 & (1 << j)) {
+            if (du & (1 << j)) {
                 resp = min(resp, st[u][j]);
                 u = up[u][j];
             }
         }
 
         for (int j = lg - 1; j >= 0; j--) {
-            if (d2 & (1 << j)) {
+            if (dv & (1 << j)) {
                 resp = min(resp, st[v][j]);
-                v = st[v][j];
+                v = up[v][j];
             }
         }
+
+        assert(u == v);
         cout << resp << endl;
     }
 }
