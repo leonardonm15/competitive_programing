@@ -21,22 +21,18 @@ using ordered_set =
 void solve () {
     int n; cin >> n;
     vector<int> arr(n);
-    ordered_set<pair<int, int>> resp;
+    ordered_set<int> resp;
     int k = 0;
     for (int i=0; i < n; i++) cin >> arr[i];
     for (int i=0; i < n; i++) {
         if (arr[i] < (i + 1)) {
-            int a = arr[i];
-            int c = resp.order_of_key({a - 1, a});
+            int c = resp.order_of_key(arr[i]);
+            /* cout << "c -> " << c << endl; */
             k += c;
-            if (i > 0 && (arr[i - 1] + 2 == i)) {
-                /* cout << "arr[i - 1] -> " << arr[i - 1] << endl; */
-                /* cout << "i -> " << i << endl; */
-                k--;
-            }
-
-            resp.insert({arr[i], i + 1});
+            resp.insert(i + 1);
         }
+
+        /* if (i > 0 && arr[i - 1] < i) resp.insert(i + 1); */
     }
 
     cout << k << endl;
