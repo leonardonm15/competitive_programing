@@ -3,7 +3,7 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
@@ -24,7 +24,7 @@ void build(int u, int l, int r, vector<int> &v) {
 
 int query(int u, int l, int r, int k, int add) {
     if (l == r) return seg[u] + add;
-    else add += seg[u];
+    add += seg[u];
     int mid = (l + r) >> 1;
     if (k <= mid) return query(2 * u, l, mid, k, add);
     else return query(2 * u + 1, mid + 1, r, k, add);
@@ -41,7 +41,7 @@ void update(int u, int l, int r, int L, int R, int k) {
         return;
     }
 
-    else if (r < R || l > R) return;
+    else if (r < L || l > R) return;
     else {
         update(2 * u, l, mid, L, R, k);
         update(2 * u + 1, mid + 1, r, L, R, k);
