@@ -16,19 +16,13 @@ vector<int> arr;
 int calc(int i, int inicial, int af) {
     // to num cara, chamo ele + p1, ele + p2 pra cada
     if (inicial - i >= n) return af;
-    auto jp1 = upper_bound(arr.begin(), arr.end(), arr[i] + p1);
-    auto jp2 = upper_bound(arr.begin(), arr.end(), arr[i] + p2);
+    auto jp1 = max(upper_bound(arr.begin() + incial, arr.end(), arr[i] + p1) - arr.begin(), 1);
+    auto jp2 = max(upper_bound(arr.begin(), arr.end(), arr[i] + p2) - arr.begin(), 1);
     int a = 1e9 + 5;
     int b = 1e9 + 5;
-
-    int dm1 = jp1 != arr.end();
-    int bound1 = inicial + jp1 - arr.begin() <= n;
-
-    int dm2 = jp2 != arr.end();
-    int bound2 = jp2 != arr.end();
-
-    if (dm1 && bound1 && *jp1 > arr[i]) a = calc(i + jp1 - arr.begin(), inicial + (jp1 - arr.begin()), af + p1);
-    if (dm2 && bound2 && *jp2 > arr[i]) b = calc(i + jp2 - arr.begin(), inicial + (jp2 - arr.begin()), af + p2);
+    
+    a = calc(i + jp1, inicial, af + p1);
+    b = calc(i + jp2, inicial, af + p2);
 
     return min(a, b);
 }
