@@ -16,11 +16,12 @@ void solve () {
     for (int i=0; i < n; i++) cin >> arr[i];
 
     for (int i=0; i < n; i++) arr.push_back(arr[i] + c);
+    // 2 5 8 10 15 | 22 25 28 30 35
 
     int resp = 1e9 + 5;
     for (int i=0; i < n; i++) {
         for (int j = i; j < i + n; j++) {
-
+            
         }
     }
 }
