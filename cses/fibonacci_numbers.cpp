@@ -10,16 +10,32 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-mat operator*(mat a, mat b) {
+const int mod = 1e9 + 7;
 
-}
+mat prog = {
+    {0, 1},
+    {1, 1}
+};
 
 mat base = {
-    {1, 0, 0, 0},
-    {0, 0, 1, 0},
-    {0, 0, 0, 1},
-    {2, 1, 2, 3}
+    {0},
+    {1}
 };
+
+mat id {
+    {1, 0},
+    {0, 1}
+};
+
+mat operator*(mat a, mat b) {
+    mat resp(b.size(), vector<int> b[0].size());
+    for (int i=0; i < a.size(); i++) {
+        for (int j = 0; j < a[i].size(); j++) {
+            resp[i][0] += (a[i][j] * b[j][0]) % mod;
+        }
+    }
+    return resp;
+}
 
 void solve () {
     int n; cin >> n;
