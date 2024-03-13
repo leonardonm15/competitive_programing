@@ -3,7 +3,7 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
@@ -22,21 +22,33 @@ void solve () {
         for (int i=0; i < n; i++) cin >> arr[i];
         // custo do meu cara + custo pra chegar no menor cara que eu alcanço
 
-        for (int i=1; i < n - 1; i++) {
+        for (int i=1; i < n; i++) {
             dp[i] = *(mn.begin()) + arr[i] + 1;
             mn.emplace(dp[i]);
-            if (mn.size() > d) mn.erase(mn.find(dp[i - d]));
+            if (i - d - 1 >= 0) mn.erase(mn.find(dp[i - d - 1]));
         }
-        dp[n - 1] = *(mn.begin()) + 1;
+
         resps.push_back(dp[n - 1]);
         /* cout << "dp -> "; */
         /* for (auto cara: dp) cout << cara << " "; */
         /* cout << endl; */
     }
 
+    vector<int> pref(m + 1);
     int soma = 0;
-    for (auto cara: resps) soma += cara;
-    cout << soma << endl;
+    for (int i=1; i <= m; i++) {
+        soma += resps[i - 1];
+        pref[i] = soma;
+        /* cout << pref[i] << " "; */
+    }
+    /* cout << endl; */
+
+    int ans = 1e18 + 5;
+    for (int i=1; i + k - 1 <= m; i++) {
+        ans = min(ans, pref[i + k - 1] - pref[i - 1]);
+    }
+
+    cout << ans << endl;
 }
 
 signed main() {
