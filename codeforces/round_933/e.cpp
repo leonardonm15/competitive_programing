@@ -12,7 +12,7 @@ using namespace std;
 void solve () {
     int m, n, k, d; cin >> m >> n >> k >> d;
     vector<int> resps;
-    multiset<int> mn;
+    multiset<pair<int, int>> mn;
     vector<int> dp(n);
     dp[0] = 1;
     dp[n - 1] = 1;
@@ -22,14 +22,12 @@ void solve () {
         for (int i=0; i < n; i++) cin >> arr[i];
         // custo do meu cara + custo pra chegar no menor cara que eu alcanço
         for (int i=0; i < d; i++) {
-            mn.emplace(arr[i]);
+            mn.emplace({arr[i], i});
         }
 
-        for (int i=0; i < n; i++) {
+        for (int i=1; i < n; i++) {
             mn.emplace(arr[i]);
             if (mn.size() > d) mn.erase(arr[i - d]);
-
-            
         }
     }
 }
