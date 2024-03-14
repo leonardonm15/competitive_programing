@@ -9,28 +9,51 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-vector<int> seg;
-int n;
 const int neutral = 0;
 
-int merge(int a, int b) {
-    return max({a, b, a + b});
+struct node {
+    int soma;
+    int ans;
+    node () {
+        soma = neutral;
+        ans = neutral;
+    }
+
+    node (int s, int a) {
+        soma = s;
+        ans = a;
+    }
+};
+
+vector<node> seg;
+int n;
+
+node merge(node a, node b) {
+    node resp;
+    resp.soma = a.soma + b.soma;
+    resp.ans = max(a.ans, a.soma + b.ans);
+    return resp;
 }
 
-int query(int u, int l, int r, int L, int R) {
+node query(int u, int l, int r, int L, int R) {
     int mid = (l + r) >> 1;
     if (l >= L && r <= R) return seg[u];
-    else if (l > R || r < L) return neutral;
-    else return merge(query(u * 2, l, mid, L, R), query(u * 2 + 1, mid + 1, r, L, R));
+    else if (l > R || r < L) return node();
+    else {
+        node resp = merge(query(u * 2, l, mid, L, R), query(u * 2 + 1, mid + 1, r, L, R));
+        return resp;
+        /* return resp.ans; */
+    }
 }
 
-int query(int l, int r) {
+node query(int l, int r) {
     return query(1, 0, n - 1, l, r);
 }
 
 void update(int u, int l, int r, int i, int k) {
     if (l == r) {
-        seg[u] = k;
+        seg[u].soma = k;
+        seg[u].ans = max(0ll, k);
         return;
     }
     int mid = (l + r) >> 1;
@@ -45,7 +68,8 @@ void update(int i, int k) {
 
 void build(int u, int l, int r, vector<int>& v) {
     if (l == r) {
-        seg[u] = v[l];
+        seg[u].soma = v[l];
+        seg[u].ans = max(0ll, v[l]);
         return;
     }
     int mid = (l + r) >> 1;
@@ -54,7 +78,7 @@ void build(int u, int l, int r, vector<int>& v) {
     seg[u] = merge(seg[u * 2], seg[u * 2 + 1]);
 }
 void build(vector<int> &v) {
-    seg.resize(4 * n, neutral);
+    seg.resize(4 * n, node());
     build(1, 0, n - 1, v);
 }
 
@@ -74,7 +98,8 @@ void solve () {
         } else {
             int l, r; cin >> l >> r;
             l--; r--;
-            cout << query(l, r) << endl;
+            node c = query(l, r);
+            cout << c.ans << endl;
         }
     }
 }
