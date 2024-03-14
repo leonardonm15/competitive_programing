@@ -4,7 +4,7 @@
 - at ```/bin``` create a ```run``` file with the following code
 ```bash
 #!/bin/bash 
-g++ -std=c++21 -O2 -fsanitize=address,undefined -Wall -Wextra -Wconversion -Wfatal-errors -o /tmp/out $1 && /tmp/out
+g++ -std=c++20 -O2 -fsanitize=address,undefined -Wall -Wextra -Wconversion -Wfatal-errors -o /tmp/out $1 && /tmp/out
 ```
 - then run 
     ```sudo chmod +x /bin/run``` to create an executable, now you have a command
