@@ -3,7 +3,7 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
@@ -11,28 +11,50 @@ using namespace std;
 
 vector<int> seg;
 int n;
+const int neutral = 0;
 
-int merge(int a, int b) return a + b;
-
-void update(int u, int l, int r, int k, int ) {
-    if (l == r) seg[u] = k;
-    int mid = 
-
+int merge(int a, int b) {
+    return max({a, b, a + b});
 }
 
-void update(int u) {
-    update(1, 0, n - 1, u);
+int query(int u, int l, int r, int L, int R) {
+    int mid = (l + r) >> 1;
+    if (l >= L && r <= R) return seg[u];
+    else if (l > R || r < L) return neutral;
+    else return merge(query(u * 2, l, mid, L, R), query(u * 2 + 1, mid + 1, r, L, R));
+}
+
+int query(int l, int r) {
+    return query(1, 0, n - 1, l, r);
+}
+
+void update(int u, int l, int r, int i, int k) {
+    if (l == r) {
+        seg[u] = k;
+        return;
+    }
+    int mid = (l + r) >> 1;
+    if (i <= mid) update(u * 2, l, mid, i, k);
+    else update(2 * u + 1, mid + 1, r, i, k);
+    seg[u] = merge(seg[2 * u], seg[2 * u + 1]);
+}
+
+void update(int i, int k) {
+    update(1, 0, n - 1, i, k);
 }
 
 void build(int u, int l, int r, vector<int>& v) {
-    if (l == r) seg[u] = v[l];
+    if (l == r) {
+        seg[u] = v[l];
+        return;
+    }
     int mid = (l + r) >> 1;
     build(u * 2, l, mid, v);
     build(u * 2 + 1, mid + 1, r, v);
     seg[u] = merge(seg[u * 2], seg[u * 2 + 1]);
 }
 void build(vector<int> &v) {
-    seg.assign(4 * n);
+    seg.resize(4 * n, neutral);
     build(1, 0, n - 1, v);
 }
 
@@ -45,13 +67,21 @@ void solve () {
     build(arr);
     while (q--) {
         int t; cin >> t;
+        if (t&1) {
+            int i, k; cin >> i >> k;
+            i--;
+            update(i, k);
+        } else {
+            int l, r; cin >> l >> r;
+            l--; r--;
+            cout << query(l, r) << endl;
+        }
     }
-
 }
 
 signed main() {
     ios_base::sync_with_stdio(0);cin.tie(0);
-    int TC = 1;
+    int TC = 0;
     if (TC){
         cin >> TC;
         while (TC--) solve();
