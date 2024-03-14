@@ -1,8 +1,8 @@
 # Competitive Programing
 
 # Setup
+- at ```/bin``` create a ```run``` file with the following code
 ```bash
-" at /bin create a run file
 #!/bin/bash 
 g++ -std=c++21 -O2 -fsanitize=address,undefined -Wall -Wextra -Wconversion -Wfatal-errors -o /tmp/out $1 && /tmp/out
 ```
