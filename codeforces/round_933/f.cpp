@@ -65,44 +65,26 @@ void solve () {
     sort(difs.rbegin(), difs.rend());
 
     auto [d, r, l] = difs[0];
-
-    /* cout << "difs -> "; */
-    /* for (auto [d, _, a]: difs) cout << d << " "; */
-    /* cout << endl; */
-
-    /* debug(mod); */
-    /* debug(func); */
-    /* debug(d); */
-    /* cout << "mid -> " << ((l + r) >> 1) << endl; */
-    /* cout << "l -> " << l << endl; */
     int ans = d;
     for (int i=0; i < m; i++) {
         int tg = (l + (d / 2)) - mod[i];
-        int tg2 = l + (d/2);
-        if (tg < 0) tg = func[0];
-        /* cout << "tg -> " << tg << endl; */
-        /* cout << "tg2 -> " << tg2 << endl; */
-        /* cout << "ans -> " << ans << endl; */
-        auto r1 = lower_bound(func.begin(), func.end(), tg);
+        if (tg < func[0]) tg = func[0];
+
+        // ultimo que da certo
+        auto r1 = --(upper_bound(func.begin(), func.end(), tg));
+        // primeiro que da errado
         auto r2 = upper_bound(func.begin(), func.end(), tg);
-        auto r3 = lower_bound(mod.begin(), mod.end(), tg2);
-        auto r4 = upper_bound(mod.begin(), mod.end(), tg2);
+
         if (r1 != func.end()) {
             int resp1 = *r1 + mod[i];
+            /* cout << "r1 -> " << *r1 << endl; */
             ans = min(ans, max({r - resp1, resp1 - l}));
         }
 
-        if (r3 != mod.end()) {
-            ans = min(ans, max({r - *r3, *r3 - l}));
-        }
-        
         if (r2 != func.end()) {
             int resp2 = *r2 + mod[i];
+            /* cout << "r2 -> " << *r2 << endl; */
             ans = min(ans, max({r - resp2, resp2 - l}));
-        }
-
-        if (r4 != mod.end()) {
-            ans = min(ans, max({r - *r4, *r4 - l}));
         }
 
     }
@@ -113,7 +95,8 @@ void solve () {
         ans2 = j;
     }
 
-    cout << max(ans, ans2) << endl;
+    /* cout << "resp -> "; */
+    cout << min(d, max(ans, ans2)) << endl;
 }
 
 signed main() {
