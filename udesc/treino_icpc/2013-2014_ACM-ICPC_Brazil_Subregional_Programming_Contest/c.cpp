@@ -2,50 +2,63 @@
 
 using namespace std;
 
-#define endl '\n' 
-//#define int long long
+const int N = 500 + 5;
+const int M = 60 * 1e3;
+vector<int> adj[N];
+vector<int> age(N);
+vector<int> trade(N);
 
-// ----------    GRIND MENTALITY    ---------     
-// /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
-// ----------    GRIND MENTALITY    ---------     
-
-const int maxm = (60 * 1e3) + 5;
-vector<int> adj[maxm];
-vector<int> idade(505);
-vector<int> resp(505, 1e9 + 5);
-
-void dfs(int u) {
-    for (auto v: adj[u]) {
-        if (resp[v] < resp[u]) {
-            resp[u] = resp[v];
-            return;
-        }
-    }
+int c = 0;
+void dfs(int u, int p, int &resp) {
+    /* cout << "u -> " << u << endl; */
+    /* cout << "age[u] -> " << age[u] << endl; */
+	for (auto cara: adj[u]) {
+		if (trade[cara] != p) {
+			resp = min(resp, age[trade[cara]]);
+			dfs(trade[cara], u, resp);
+		}
+	}
 }
 
-void solve () {
-    int n, m, q; cin >> n >> m >> q;
-
-    for (int i=0; i < m; i++) {
-        int a, b; cin >> a >> b;
-        adj[b].push_back(a);
-    }
-
-    for (int i=0; i < m; i++) {
-        adj[i].clear();
-        idade[min(504, i)] = 0;
-        resp[min(504, i)] = 0;
-    }
-}
-
-signed main() {
+int main() {
     ios_base::sync_with_stdio(0);cin.tie(0);
-    int TC = 1;
-    if (TC){
-        cin >> TC;
-        while (TC--) solve();
-    } else {
-        solve();
-    }
-    return 0;
+	// employees, number of direct manage relation, number of instructions
+	int n, m, q; cin >> n >> m >> q;
+	for (int i=0; i <= n; i++) trade[i] = i;
+	for (int i=1; i <= n; i++) cin >> age[i];
+	for (int i=0; i < m; i++) {
+		int a, b; cin >> a >> b;
+		adj[b].push_back(a);
+	}
+
+	while(q--) {
+		char t; cin >> t;
+		if (t == 'T') {
+			int a, b; cin >> a >> b;
+			swap(trade[a], trade[b]);
+            /* swap(adj[a], adj[b]); */
+		} else {
+			int k; cin >> k;
+            cout << endl;
+			/* cout << "K -> " << k << endl; */
+			int resp = 1e9 + 5;
+			dfs(k, -1, resp);
+			if (resp == 1e9 + 5) {
+                cout << "*" << endl;
+            } else {
+                cout << "resp -> ";
+                cout << resp << endl;
+            }
+		}
+        cout << "-----------" << endl;
+        /* for (int i=1; i <= n; i++) { */
+        /*     cout << trade[i] << " "; */
+        /* } */
+        /* cout << endl; */
+        for (int i=1; i <= n; i++) {
+            for (auto cara: adj[trade[i]]) {
+                cout << trade[i] << " " << trade[cara] << endl;
+            }
+        }
+	}
 }
