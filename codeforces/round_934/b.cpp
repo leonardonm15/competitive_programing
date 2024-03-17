@@ -17,22 +17,20 @@ void solve () {
 
     int l = 0;
     int r = 1;
-    int curr = arr[l];
+    int curr = 0;
     curr ^= arr[l];
-    while (r < n && r - l < (2 * k)) {
-        cout << "r -> " << r << endl;
-        curr ^= arr[r++];
+    while (r <= (2 * k) - 1) {
+        curr ^= arr[r];
+        r++;
     }
     r--;
-    /* cout << "curr -> " << curr << endl; */
     map[curr].emplace(make_pair(l, r));
-    /* return; */
-        /* curr ^= arr[l]; */
+    /* cout << "l, r -> " << l << " " << r << " - " << curr << endl; */
     while (r < (2 * n) - 1) {
+        curr ^= arr[l++];
         /* r++; */
         curr ^= arr[++r];
-        curr ^= arr[l++];
-        /* l++; */
+        /* cout << "l, r -> " << l << " " << r << " - " << curr << endl; */
         map[curr].emplace(make_pair(l, r));
     }
 
@@ -40,7 +38,7 @@ void solve () {
         if (vec.size() < 2) continue;
         pair<int, int> a = *vec.begin();
         pair<int, int> b = *(vec.rbegin());
-        if (a.second >= b.first) continue;
+        if (a.second >= b.first || a.second > n - 1) continue;
         else {
             /* cout << "v -> " << v << endl; */
             for (int i=a.first; i <= a.second; i++) {
@@ -58,7 +56,7 @@ void solve () {
 }
 
 signed main() {
-    ios_base::sync_with_stdio(0);cin.tie(0);
+    /* ios_base::sync_with_stdio(0);cin.tie(0); */
     int TC = 1;
     if (TC){
         cin >> TC;
