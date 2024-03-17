@@ -25,8 +25,7 @@ void solve () {
     }
     r--;
     map[curr].emplace(make_pair(l, r));
-    /* cout << "l, r -> " << l << " " << r << " - " << curr << endl; */
-    while (r < (2 * n) - 1) {
+    while (r < n - 1) {
         curr ^= arr[l++];
         /* r++; */
         curr ^= arr[++r];
