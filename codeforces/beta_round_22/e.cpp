@@ -11,10 +11,39 @@ using namespace std;
 
 const int N = 1e5 + 5;
 vector<int> adj[N], rev[N];
+vector<set<int>> dag(N);
 vector<int> vis(N);
 vector<int> comp(N);
+vector<int> rep(N);
+vector<int> track(N, -1);
+vector<set<pair<int, int>>> resp(N);.
+
+int montar_dag(int u, int p) {
+    // monta a dag com os representantes de cada SCC 
+    // + monta a DAG
+    vis[u]++;
+
+    if (!adj[u].size()) {
+        return comp[u];
+    }
+    for (auto cara: adj[u]) {
+        if (!vis[cara]) {
+            if (comp[cara] != comp[u]) {
+                auto it = lower_bound(dag[u].begin(), dag[u].end(), rep[cara]);
+                if (it != dag[u].end()) {
+                    dag[u].emplace(rep[cara]);
+                }
+            }
+        } else if (vis[cara] && cara != pai) {
+            
+        }
+        track[cara] = montar_dag(cara); 
+    }
+    
+}
 
 void dfs2(int u, vector<int> &sccs, int it) {
+    // acha os componentes conexos e os representantes deles
     vis[u]++;
     for (auto cara: rev[u]) {
         if (!vis[cara]) dfs2(cara, sccs, it);
@@ -24,11 +53,13 @@ void dfs2(int u, vector<int> &sccs, int it) {
 }
 
 void dfs1(int u, vector<int>& stc) {
+    // acha a ordem de execução da dfs
     vis[u]++;
-    stc.push_back(u);
     for (auto cara: adj[u]) {
-        if (!vis[cara]) dfs1(cara);
+        if (!vis[cara]) dfs1(cara, stc);
     }
+
+    stc.push_back(u);
 }
 
 void solve () {
@@ -40,17 +71,27 @@ void solve () {
     }
 
     vector<int> stc;
-    dfs(1);
+    for (int i=0; i <= n; i++) {
+        if (!vis[i]) dfs1(i, stc);
+    }
     vis.assign(n + 1, 0);
 
-    vector<vector<int>>
     int it = 1;
+    vector<int> stc2 = stc;
     while ((int) stc.size()){
-        int cara = stc.top();
+        int cara = stc.back();
         stc.pop_back();
+        rep[it] = cara; // representante do componente conexo
         vector<int> sccs;
         if (!vis[cara]) dfs2(cara, sccs, it);
         it++;
+    }
+
+    vis.assign(n + 1, 0);
+    while (stc2.size() > 0) {
+        // fazer o caminho do grafo normal a partir da folha montando o track
+        int u = stc2.back();
+        dfs3(u);
     }
 
     separar os pontos finais scc

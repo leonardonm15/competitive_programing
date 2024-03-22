@@ -15,6 +15,14 @@ void solve () {
     for (int i=1; i <= n; i++) cin >> arr[i];
     vector<string> resp;
 
+    vector<int> vec = arr;
+
+    sort(vec.begin(), vec.end());
+    if (vec == arr) {
+        cout << 0 << endl;
+        return;
+    }
+
     int mid = (1 + n) / 2;
     /* cout << "mid -> " << mid << endl; */
 
@@ -34,6 +42,13 @@ void solve () {
         }
     }
 
+    int trade = 1e9 + 5;
+    for (int i=1; i <= n; i++) {
+        if (arr[i] == k && i != mid) {
+            trade = i;
+        }
+    }
+
     if (trade != 1e9 + 5) {
         string s;
         s += to_string(mid);
@@ -47,13 +62,6 @@ void solve () {
         s += "1 ";
         s += to_string(n);
         resp.push_back(s);
-    }
-
-    int trade = 1e9 + 5;
-    for (int i=1; i <= n; i++) {
-        if (arr[i] == k && i != mid) {
-            trade = i;
-        }
     }
 
 
