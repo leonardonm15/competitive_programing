@@ -17,38 +17,21 @@ void solve () {
     vector<int> grau(n);
     for (int i=0; i < n; i++) cin >> arr[i];
 
-    /* vector<int> pos; */
-    /* int neg = 0; */
-    /* int posi = 0; */
-
     int soma = 0;
     vector<int> pref(n + 1);
-    int mx = 0;
-    int mgrau = 0;
-
     for (int i=1; i <= n; i++) {
-        if (grau >= mgrau || mx < (arr[i - 1] + pref[i - 1])) {
-            
-        }
-        pref[i] = max((pref[i - 1] + arr[i - 1]) % mod, 0ll);
-        soma += arr[i - 1] % mod;
+        pref[i] = max((pref[i - 1] + arr[i - 1]), 0ll);
+        soma += arr[i - 1];
         /* cout << "arr[i - 1] -> " << arr[i - 1] << endl; */
     }
     
-
     sort(pref.rbegin(), pref.rend());
 
     soma -= pref[0];
-    soma %= mod;
-
-    cout << "pref -> ";
-    for (auto cara: pref) cout << cara << " ";
-    cout << endl;
-
 
     /* int resp = 0; */
-    cout << "soma -> " << soma << endl;
-    cout << "pref[0] -> " << pref[0] << endl;
+    /* cout << "soma -> " << soma << endl; */
+    /* cout << "pref[0] -> " << pref[0] << endl; */
 
     bool flag = false;
     if (soma == pref[0]) flag = true;
@@ -58,9 +41,10 @@ void solve () {
     }
 
     pref[0] %= mod;
+    soma %= mod;
 
     if (flag) {
-        cout << (mod + pref[0]) % mod << endl;
+        cout << (mod + (pref[0] + soma)) % mod << endl;
         return;
     }
 
