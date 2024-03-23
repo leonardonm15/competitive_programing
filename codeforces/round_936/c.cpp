@@ -16,6 +16,7 @@ vector<int> sub(N, 1);
 vector<int> vis(N);
 int resp = 1e9 + 5;
 int tg;
+int tic = 0;
 
 int dfs1(int u) {
     vis[u]++;
@@ -26,7 +27,9 @@ int dfs1(int u) {
     }
     
     if (sub[u] >= (tg - 1)) {
+        tic++;
         resp = min(sub[u], resp);
+        sub[u] = 0;
         return 0;
     }
 
@@ -46,7 +49,7 @@ void solve () {
         r.push_back(a);
         r.push_back(b);
     }
-    /* if (tc == 22) { */
+    /* if (tc == 23) { */
     /*     cout << n << "#" << k << "#" << r[0] << "#" << r[1] << "#" << r[2] << "#" << r[3] << "#" << r[4] << "#" << r[5] << "#" << r[6] << "#" << r[7] << "#" << r[8] << "#" << r[9] << "#" << r[10] << "#" << r[11] << endl; */
     /* } */
 
@@ -61,9 +64,16 @@ void solve () {
     int s = 0;
     bool flag = false;
     if (sub[1] > tg) {
+        /* vector<int> v; */
         for (auto cara: adj[1]) {
+            /* v.push_back(sub[cara]); */
             s = max(sub[cara], s);
         }
+
+        /* sort(v.rbegin(), v.rend()); */
+        /* for (int i=tic; i < k; i++) { */
+
+        /* } */
         cout << min(s, sub[1] - s) << endl;
         flag = true;
     }
@@ -77,6 +87,7 @@ void solve () {
         adj[i].clear();
         vis[i] = 0;
         sub[i] = 1;
+        tic = 0;
     }
     resp = 1e9 + 5;
 }
