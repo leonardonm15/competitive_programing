@@ -10,79 +10,53 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 
 const int N = 1e5 + 5;
-
 vector<int> adj[N];
-vector<int> sub(N, 1);
-vector<int> vis(N);
-int resp = 1e9 + 5;
-int tg;
-int tic = 0;
+int comp = 1;
 
-void dfs1(int u) {
-    vis[u]++;
-    for (auto cara: adj[u]) {
-        if (!vis[cara]) {
-            dfs1(cara);
-            sub[u] += sub[cara];
-            if (sub[u] >= (tg - 1)) {
-                resp = min({sub[u], resp, sub[cara]});
-                sub[cara] = 0;
-                sub[u] -= sub[cara];
-            }
-        }
+int dfs(int u, int p, int mx) {
+    int s = 1;
+    vector<pair<int, int>> r;
+    for (auto cara: adj[u]) if (cara != p) {
+        s += dfs(cara, u, mx);
     }
-    
-    /* if (sub[u] >= (tg - 1)) { */
-    /*     tic++; */
-    /*     resp = min({sub[u], resp, sub[); */
-    /*     sub[u] = 0; */
-    /*     return 0; */
-    /* } */
 
-    /* return sub[u]; */
+    if (s >= mx) {
+        comp++;
+        return 0;
+    }
+
+    return s;
 }
 
-/* int tc = 0; */
-
 void solve () {
-    /* tc++; */
     int n, k; cin >> n >> k;
-
-    for (int i=0; i < n - 1; i++) {
-        int a, b; cin >> a >> b;
+    for (int i=0; i < n; i++) {
+        int a, b;
+        cin >> a >> b;
         adj[a].push_back(b);
         adj[b].push_back(a);
     }
 
-    tg = (n/(k + 1)) + 1;
+    int l = 0;
+    int r = n;
+    int resp = 1;
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+        int ans = dfs(1, -1, mid);
+        int comp = 1;
+        if (ans >= resp && comp > k) {
+            resp = ans;
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
 
-    dfs1(1);
-    
     cout << resp << endl;
-
-    /* int s = 0; */
-    /* bool flag = false; */
-    /* if (sub[1] >= tg) { */
-    /*     for (auto cara: adj[1]) { */
-    /*         s = max(sub[cara], s); */
-    /*     } */
-
-    /*     cout << min(s, sub[1] - s) << endl; */
-    /*     flag = true; */
-   /* } */
-
-    /* if (!flag) { */
-    /*     resp = min(resp, sub[1]); */
-    /*     cout << resp << endl; */
-    /* } */
 
     for (int i=0; i <= n; i++) {
         adj[i].clear();
-        vis[i] = 0;
-        sub[i] = 1;
-        tic = 0;
     }
-    resp = 1e9 + 5;
 }
 
 signed main() {
