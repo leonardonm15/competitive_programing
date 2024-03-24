@@ -13,62 +13,102 @@ const int N = 1e5 + 5;
 
 vector<int> adj[N];
 vector<int> sub(N, 1);
-vector<int> vis(N);
-int resp = 1e9 + 5;
+int resp = -1;
 int tg;
+int k;
+int tic = 1;
 
-int dfs1(int u) {
-    vis[u]++;
+int dfs1(int u, int p, int& ans) {
+    sub[u] = 1;
+    /* vis[u]++; */
     vector<pair<int, int>> r;
     for (auto cara: adj[u]) {
-        if (!vis[cara]) {
-            int cc = dfs1(cara);
+        if (cara != p) {
+            int cc = dfs1(cara, u, ans);
             r.push_back({cc, cara});
-            sub[u] += cc;
         }
     }
-    sort(r.rbegin(), r.rend());
+    sort(r.begin(), r.end());
     for (auto [cc, i]: r) {
-        if (sub[u] > tg) {
-            sub[u] -= cc;
-            resp = min({sub[u], resp, cc});
-            sub[i] = 0;
+        if (sub[u] + cc <= tg || tic > k) {
+            sub[u] += cc;
+            /* resp = min({resp, cc}); */
+            /* sub[i] = 0; */
+        } else {
+            tic++;
+            /* cout << "tic -> " << tic << endl; */
+            /* /1* cout << "================" << endl; *1/ */
+            /* cout << "000000000000000" << endl; */
+            /* cout << "u -> " << u << endl; */
+            /* cout << "cc -> " << cc << endl; */
+            /* cout << "tic -> " << tic << endl; */
+            /* cout << "sub[u] -> " << sub[u] << endl; */
+            /* cout << "resp -> " << resp << endl; */
+            ans = min({ans, cc});
+            /* cout << "resp -> " << resp << endl; */
         }
     }
+    /* cout << "sub -> " << sub[u] << endl; */
 
     return sub[u];
 }
 
+int tc = 0;
 void solve () {
-    int n, k; cin >> n >> k;
-    vector<int> r;
+    tc++;
+    int n; cin >> n >> k;
+    vector<int> re;
     for (int i=0; i < n - 1; i++) {
         int a, b; cin >> a >> b;
         adj[a].push_back(b);
         adj[b].push_back(a);
-        r.push_back(a);
-        r.push_back(b);
+        re.push_back(a);
+        re.push_back(b);
     }
 
-    tg = (n/(k + 1));
+    /* if (tc == 420) { */
+    /*     cout << n << "#" << k << "#"; */
+    /*     for (auto cara: re) { */
+    /*         cout << cara << "#"; */
+    /*     } */
+    /*     cout << endl; */
+    /* } */
 
-    dfs1(1);
-
-    for (auto cara: adj[1]) {
-        if (sub[cara] == 0) continue;
-        resp = min(sub[cara], sub[1]);
+    int l = 1;
+    int r = n;
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+        /* cout << "-------------" << endl; */
+        tg = mid;
+        int rsp = 1e9 + 5;
+        tic = 1;
+        dfs1(1, -1, rsp);
+        rsp = min(rsp, sub[1]);
+        /* cout << "---" << endl; */
+        /* cout << "mid --> " << mid << endl; */
+        /* cout << "sub[1] -> " << sub[1] << endl; */
+        /* cout << "rsp -> " << rsp << endl; */
+        /* cout << "tic -> " << tic << endl; */
+        /* cout << "K -> " << k << endl; */
+        /* cout << "resp -> " << resp << endl; */
+        if (rsp > resp && tic > k) {
+            resp = rsp;
+            /* cout << "deu certo" << endl; */
+            l = mid + 1;
+        } else {
+            /* cout << "deu errado" << endl; */
+            r = mid - 1;
+        }
     }
-
-    resp = min(resp, sub[1]);
 
     cout << resp << endl;
 
     for (int i=0; i <= n; i++) {
         adj[i].clear();
-        vis[i] = 0;
         sub[i] = 1;
     }
-    resp = 1e9 + 5;
+    tic = 1;
+    resp = -1;
 }
 
 signed main() {
