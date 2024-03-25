@@ -13,33 +13,18 @@ const int N = 1e5 + 5;
 vector<int> adj[N], rev[N];
 vector<set<int>> dag(N);
 vector<int> vis(N);
-vector<int> comp(N);
-vector<int> rep(N);
+vector<int> comp(N); // componente
+vector<pair<int, set<int>> rep(N); // representante
 vector<int> track(N, -1);
-vector<set<pair<int, int>>> resp(N);.
+vector<set<pair<int, int>>> resp(N);
 
 int montar_dag(int u, int p) {
     // monta a dag com os representantes de cada SCC 
     // + monta a DAG
     vis[u]++;
 
-    if (!adj[u].size()) {
-        return comp[u];
+    (auto cara: adj[u]) {
     }
-    for (auto cara: adj[u]) {
-        if (!vis[cara]) {
-            if (comp[cara] != comp[u]) {
-                auto it = lower_bound(dag[u].begin(), dag[u].end(), rep[cara]);
-                if (it != dag[u].end()) {
-                    dag[u].emplace(rep[cara]);
-                }
-            }
-        } else if (vis[cara] && cara != pai) {
-            
-        }
-        track[cara] = montar_dag(cara); 
-    }
-    
 }
 
 void dfs2(int u, vector<int> &sccs, int it) {
