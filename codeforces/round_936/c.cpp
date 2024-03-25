@@ -21,7 +21,7 @@ int dfs(int u, int p, int mx) {
     }
 
     if (s >= mx) {
-        comp++;
+        comp += 1;
         return 0;
     }
 
@@ -30,7 +30,7 @@ int dfs(int u, int p, int mx) {
 
 void solve () {
     int n, k; cin >> n >> k;
-    for (int i=0; i < n; i++) {
+    for (int i=0; i < n - 1; i++) {
         int a, b;
         cin >> a >> b;
         adj[a].push_back(b);
@@ -38,14 +38,18 @@ void solve () {
     }
 
     int l = 0;
-    int r = n;
-    int resp = 1;
+    int r = n + 1;
+    int resp = -1;
     while (l <= r) {
+        comp = 1;
         int mid = (l + r) >> 1;
         int ans = dfs(1, -1, mid);
-        int comp = 1;
-        if (ans >= resp && comp > k) {
-            resp = ans;
+        /* cout << "----------" << endl; */
+        /* cout << "mid -> " << mid << endl; */
+        /* cout << "ans -> " << ans << endl; */
+        /* cout << "comp -> " << comp << endl; */
+        if (comp > k + 1) {
+            resp = mid;
             l = mid + 1;
         } else {
             r = mid - 1;
@@ -57,6 +61,7 @@ void solve () {
     for (int i=0; i <= n; i++) {
         adj[i].clear();
     }
+    comp = 1;
 }
 
 signed main() {
