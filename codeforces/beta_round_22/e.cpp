@@ -14,16 +14,26 @@ vector<int> adj[N], rev[N];
 vector<set<int>> dag(N);
 vector<int> vis(N);
 vector<int> comp(N); // componente
-vector<pair<int, set<int>> rep(N); // representante
+vector<int> rep(N); // representante
 vector<int> track(N, -1);
-vector<set<pair<int, int>>> resp(N);
+/* vector<set<pair<int, int>>> resp(N); */
+vector<pair<int, int>> lft(N); // quantidade de caras que tao saindo de alguem
+vector<pair<int, int>> arrive(N); // quantidade de caras que tao entrando em alguem
 
-int montar_dag(int u, int p) {
+void montar_dag(int u) {
     // monta a dag com os representantes de cada SCC 
     // + monta a DAG
     vis[u]++;
-
-    (auto cara: adj[u]) {
+    /* cout << "U -> "<< u << endl; */
+    for (auto cara: adj[u]) {
+        if (!vis[cara]) {
+            if (rep[cara] != rep[u]) {
+                dag[u].emplace(cara);
+                lft[u].first++;
+                arrive[cara].first++;
+            }
+            montar_dag(cara);
+        }
     }
 }
 
@@ -53,12 +63,18 @@ void solve () {
         int num; cin >> num;
         adj[i].push_back(num);
         rev[num].push_back(i);
+
+        arrive[i].first = 0;
+        lft[i].first = 0;
+        arrive[i].second = i;
+        lft[i].second = i;
     }
 
     vector<int> stc;
     for (int i=0; i <= n; i++) {
         if (!vis[i]) dfs1(i, stc);
     }
+
     vis.assign(n + 1, 0);
 
     int it = 1;
@@ -76,12 +92,31 @@ void solve () {
     while (stc2.size() > 0) {
         // fazer o caminho do grafo normal a partir da folha montando o track
         int u = stc2.back();
-        dfs3(u);
+        stc2.pop_back();
+        montar_dag(u);
     }
 
-    separar os pontos finais scc
-    juntar os pontos finais
-    e fazer os cilcos
+    cout << "arrive -> ";
+    for (int i=1; i <= n; i++) {
+        cout << arrive[i].first << " ";
+    }
+    cout << endl;
+
+
+    cout << "lft ->   ";
+    for (int i=1; i <= n; i++) {
+        cout << lft[i].first << " ";
+    }
+    cout << endl;
+
+    cout << "printando os poços e altos -> " << endl;
+    for (int i=1; i <= n; i++) {
+        if (arrive[i].first > 0 && lft[i].first == 0) {
+            cout << i << " é poço " << endl;
+        } else if (arrive[i].first == 0 && lft[i].first > 0) {
+            cout << i << "é pico" << endl;
+        }
+    }
 
 }
 
