@@ -13,10 +13,7 @@ const int N = 1e5 + 5;
 vector<int> adj[N], rev[N];
 vector<set<int>> dag(N);
 vector<int> vis(N);
-vector<int> comp(N); // componente
 vector<int> rep(N); // representante
-vector<int> track(N, -1);
-/* vector<set<pair<int, int>>> resp(N); */
 vector<pair<int, int>> lft(N); // quantidade de caras que tao saindo de alguem
 vector<pair<int, int>> arrive(N); // quantidade de caras que tao entrando em alguem
 
@@ -24,16 +21,13 @@ void montar_dag(int u) {
     // monta a dag com os representantes de cada SCC 
     // + monta a DAG
     vis[u]++;
-    /* cout << "U -> " << u << endl; */
     for (auto cara: adj[u]) {
+        if (rep[u] != rep[cara]) {
+            dag[rep[u]].emplace(rep[cara]);
+            lft[rep[u]].first++;
+            arrive[rep[cara]].first++;
+        }
         if (!vis[cara]) {
-            if (comp[u] != comp[cara]) {
-                dag[u].emplace(cara);
-                /* cout << cara << " " << u << endl; */
-            }
-            cout << u << " " << cara << endl;
-            lft[u].first++;
-            arrive[cara].first++;
             montar_dag(cara);
         }
     }
@@ -42,11 +36,11 @@ void montar_dag(int u) {
 void dfs2(int u, vector<int> &sccs, int it) {
     // acha os componentes conexos e os representantes deles
     vis[u]++;
+    rep[u] = it;
     for (auto cara: rev[u]) {
         if (!vis[cara]) dfs2(cara, sccs, it);
     }
     sccs.push_back(u);
-    comp[u] = it;
 }
 
 void dfs1(int u, vector<int>& stc) {
@@ -79,53 +73,44 @@ void solve () {
 
     vis.assign(n + 1, 0);
 
-    int it = 1;
     vector<int> stc2 = stc;
     while ((int) stc.size()){
         int cara = stc.back();
         stc.pop_back();
-        rep[it] = cara; // representante do componente conexo
         vector<int> sccs;
-        if (!vis[cara]) dfs2(cara, sccs, it);
-        /* cout << "sccs -> "; */
-        /* for (auto cara: sccs) { */
-        /*     cout << cara << " "; */
-        /* } */
-        /* cout << endl; */
-        it++;
+        if (!vis[cara]) dfs2(cara, sccs, cara);
     }
 
     vis.assign(n + 1, 0);
     while (stc2.size()) {
         // fazer o caminho do grafo normal a partir da folha montando o track
         int u = stc2.back();
-        /* if (u == 5) assert(vis[5] == 0); */
-        /* cout << "u -> " << u << endl; */
         stc2.pop_back();
         montar_dag(u);
     }
 
-    cout << "arrive -> ";
-    for (int i=1; i <= n; i++) {
-        cout << arrive[i].first << " ";
-    }
-    cout << endl;
-
-    cout << "lft ->    ";
-    for (int i=1; i <= n; i++) {
-        cout << lft[i].first << " ";
-    }
-    cout << endl;
-
+    set<int> picos;
+    set<int> sinks;
     cout << "printando os poços e altos -> " << endl;
     for (int i=1; i <= n; i++) {
-        if (arrive[i].first > 0 && lft[i].first == 0) {
-            cout << i << " é poço " << endl;
-        } else if (arrive[i].first == 0 && lft[i].first > 0) {
-            cout << i << "é pico" << endl;
+        if (arrive[rep[i]].first > 0 && lft[rep[i]].first == 0) {
+            /* cout << rep[i] << " é poço " << endl; */
+            sinks.emplace(rep[i]);
+        } else if (arrive[rep[i]].first == 0 && lft[rep[i]].first > 0) {
+            /* cout << rep[i] << "é pico" << endl; */
+            sinks.emplace(rep[i]);
         }
     }
 
+    vector<int> resp;
+    int pc = *picos.begin();
+    int pl = *dag[pc].begin();
+
+    for (auto cara: sinks) {
+    }
+    for (auto cara: picos) {
+        
+    }
 }
 
 signed main() {
