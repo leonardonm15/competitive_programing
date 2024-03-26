@@ -24,14 +24,16 @@ void montar_dag(int u) {
     // monta a dag com os representantes de cada SCC 
     // + monta a DAG
     vis[u]++;
-    /* cout << "U -> "<< u << endl; */
+    /* cout << "U -> " << u << endl; */
     for (auto cara: adj[u]) {
         if (!vis[cara]) {
-            if (rep[cara] != rep[u]) {
+            if (comp[u] != comp[cara]) {
                 dag[u].emplace(cara);
-                lft[u].first++;
-                arrive[cara].first++;
+                /* cout << cara << " " << u << endl; */
             }
+            cout << u << " " << cara << endl;
+            lft[u].first++;
+            arrive[cara].first++;
             montar_dag(cara);
         }
     }
@@ -85,13 +87,20 @@ void solve () {
         rep[it] = cara; // representante do componente conexo
         vector<int> sccs;
         if (!vis[cara]) dfs2(cara, sccs, it);
+        /* cout << "sccs -> "; */
+        /* for (auto cara: sccs) { */
+        /*     cout << cara << " "; */
+        /* } */
+        /* cout << endl; */
         it++;
     }
 
     vis.assign(n + 1, 0);
-    while (stc2.size() > 0) {
+    while (stc2.size()) {
         // fazer o caminho do grafo normal a partir da folha montando o track
         int u = stc2.back();
+        /* if (u == 5) assert(vis[5] == 0); */
+        /* cout << "u -> " << u << endl; */
         stc2.pop_back();
         montar_dag(u);
     }
@@ -102,8 +111,7 @@ void solve () {
     }
     cout << endl;
 
-
-    cout << "lft ->   ";
+    cout << "lft ->    ";
     for (int i=1; i <= n; i++) {
         cout << lft[i].first << " ";
     }
