@@ -28,7 +28,6 @@ void solve () {
                 int b = sz - a;
                 resp += (b * (b + 1)) / 2;
             }
-
             i += x;
         }
     }
