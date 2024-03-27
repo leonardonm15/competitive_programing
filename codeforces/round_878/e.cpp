@@ -45,10 +45,10 @@ void solve () {
         } 
         if (tc == 2) {
             int a, x, b, y; cin >> a >> x >> b >> y;
-            operations.push_back(a);
-            operations.push_back(x);
-            operations.push_back(b);
-            operations.push_back(y);
+            /* operations.push_back(a); */
+            /* operations.push_back(x); */
+            /* operations.push_back(b); */
+            /* operations.push_back(y); */
             if (a == 1 && b == 1) swap(s[x - 1], s[y - 1]);
             if (a == 2 && b == 2) swap(r[x - 1], r[y - 1]);
             if (b != a) {
@@ -78,6 +78,8 @@ void solve () {
         if (tc == 3) {
             test++;
             if (test == 1849) {
+                cout << total << endl;
+                cout << "total$" << total << "$";
                 cout << s << "$$$$$$" << r << "$$$$";
                 cout << t << "#" << q << "*";
                 for (auto cara: operations) {
@@ -85,8 +87,13 @@ void solve () {
                 }
                 cout << endl;
             }
+            /* if (total > 0) cout << "NO" << endl; */
+            /* else cout << "YES" << endl; */
             cout << (total ? "NO" : "YES") << endl;
         }
+
+        /* cout << "s -> " << s << endl; */
+        /* cout << "r -> " << r << endl; */
     }
 
     /* cout << "Ops -> "; */
