@@ -18,19 +18,18 @@ void solve () {
     for (int i=0; i < n; i++) {
         if (arr[i] <= k) {
             int sz = 0;
-            while (x < n && arr[i] <= k) {
+            int x = i;
+            while (x < n && arr[x] <= k) {
                 sz++;
                 x++;
-                i++;
             }
 
             if (sz >= a) {
-                if (sz == a) resp++;
-                else {
-                    int b = sz - a + 1;
-                    resp += (b * (b + 1)) / 2;
-                }
+                int b = sz - a;
+                resp += (b * (b + 1)) / 2;
             }
+
+            i += x;
         }
     }
 
