@@ -9,10 +9,11 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
+const int N = 1e5 + 5;
 vector<int> fixo;
 
 void calc() {
-    for (int i=2; i <= 1e5 + 5; i++) {
+    for (int i=2; i <= N; i++) {
         int k = i;
         bool flag = true;
         while (k) {
@@ -24,29 +25,22 @@ void calc() {
         }
         if (flag) fixo.push_back(i);
     }
+
+    reverse(fixo.begin(), fixo.end());
 }
 
 void solve () {
     int n; cin >> n;
 
-    reverse(fixo.begin(), fixo.end());
-    while (n > 1) {
-        /* cout << "n -> " << n << endl; */
-        bool flag = true;
-        for (auto cara: fixo) {
-            if (n % cara == 0) {
-                n /= cara;
-                flag = false;
-                break;
-            }
-        }
-        if (flag) {
-            cout << "NO" << endl;
-            return;
+    for (auto cara: fixo) {
+        while (n % cara == 0) {
+            n /= cara;
         }
     }
 
-    cout << "YES" << endl;
+    string resp;
+    resp = (n == 1 ? "YES" : "NO");
+    cout << resp << endl;
 }
 
 signed main() {

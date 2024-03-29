@@ -3,58 +3,36 @@
 using namespace std;
 
 #define endl '\n' 
-#define int long long
+//#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
+const int N = 1e5 + 5;
+vector<int> dp(N);
+
+void calc() {
+    int n = 1;
+    while (n <= N) {
+        n <<= 1;
+        dp[n]++;
+    }
+}
+
 void solve () {
     int n; cin >> n;
-
-    while (n >= 1) {
-        /* cout << "n -> " << n << endl; */
-        set<int> fat;
-        for (int i=2; i * i <= n; i++) {
-            if (n % i == 0) {
-                fat.emplace(i);
-            }
-        }
-
-        // ve se meu cara atual é primo
-        string r = to_string(n);
-        bool flag3 = true;
-        for (auto c: r) {
-            if (c != '0' && c != '1') {
-                flag3 = false;
-            }
-        }
-        if (flag3) {
-            cout << "YES" << endl;
-            return;
-        }
-
-        int z = n;
-
-        for (int cara: fat) {
-            string r = to_string(cara);
-            bool flag = true;
-            for (auto c: r) {
-                if (c != '0' && c != '1') {
-                    flag = false;
-                }
-            }
-            if (flag) {
-                n /= cara;
-            }
-        }
-
-        if (z == n) {
-            cout << "NO" << endl;
-            return;
+    
+    for (int i=2; i * i <= n; i++) {
+        if (n % i == 0 && dp[i]) {
+            n /= i;
         }
     }
-    cout << "YES" << endl;
+
+    cout << "n -> " << n << endl;
+
+    cout << (n == 1 ? "YES" : "NO") << endl;
+
 }
 
 signed main() {
