@@ -9,16 +9,10 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-int tc = 0;
 void solve () {
-    tc++;
     int n; cin >> n;
     int x = n;
     string s; cin >> s;
-    if (tc == 75) {
-        cout << n << "$";
-        cout << s << endl;
-    }
     set<int> div;
     div.emplace(n);
     vector<int> freq(26);
@@ -43,20 +37,29 @@ void solve () {
     
     for (auto r: div) {
         string ref;
+        string ref2;
         for (int i=0; i < r; i++) {
             ref.push_back(s[i]);
         }
 
+        for (int i=n - 1; i >= n - r; i--) {
+            ref2.push_back(s[i]);
+        }
+        reverse(ref2.begin(), ref2.end());
+
         int err = 0;
-        bool flag = false;
-        int same_word = 0;
         for (int i=r; i < n; i++) {
             int k = i % r;
-
             if (ref[k] != s[i]) err++;
         }
 
-        if (err <= 1 || err == (n / r) - 1) {
+        int err2 = 0;
+        for (int i=0; i < n - r; i++) {
+            int k = i % r;
+            if (ref2[k] != s[i]) err2++;
+        }
+
+        if (err <= 1 || err2 <= 1) {
             cout << r << endl;
             return;
         }
