@@ -41,10 +41,14 @@ void solve () {
         sx = (a == '+' ? 0 : 1);
         sy = (b == '+' ? 0 : 1);
 
-        g[2 * x + sx].push_back(2 * y + !sy); // (a -> ~b) 
-        g[2 * y + sy].push_back(2 * x + !sx); // (b -> ~a)
-        gt[2 * x + !sx].push_back(2 * y + sy);
-        gt[2 * y + !sy].push_back(2 * x + sx);
+       // y or x
+       // g[not y].pushback(x)
+       // g[not x].pushback(y)
+
+        g[2 * y + sy].push_back(2 * x + !(sx)); 
+        g[2 * x + sx].push_back(2 * y + !(sy));
+        gt[2 * y + !(sy)].push_back(2 * x + sx);
+        gt[2 * x + !(sx)].push_back(2 * y + sy);
     }
 
     vector<int> stc;
@@ -52,7 +56,7 @@ void solve () {
         if (!vis[i]) dfs(i, stc);
     }
 
-    vis.assign(2 * m + 2, 0);
+    vis.assign((2 * m) + 2, 0);
     int group = 1;
     while ((int)stc.size()) {
         int u = stc.back();
@@ -60,19 +64,23 @@ void solve () {
         if (!vis[u]) dfst(u, group++);
     }
 
-    for (int i=1; i <= 2 * m; i++) {
-        cout << rep[i] << " ";
-    }
-    cout << endl;
+    /* for (int i=1; i <= 2 * m; i++) { */
+    /*     cout << rep[i] << " "; */
+    /* } */
+    /* cout << endl; */
 
     vector<char> resp(m, ')');
-    for (int i=1; i <= 2 * m; i += 2) {
-        if ((rep[i] == rep[i + 1])) {
+    for (int i=1; i <= m; i++) {
+        /* cout << "----------------" << endl; */
+        /* cout << "rep[i] -> " << rep[i] << endl; */
+        /* cout << "rep[i + 1] -> " << rep[i + 1] << endl; */
+        if ((rep[2 * i] == rep[2 * i + 1])) {
             cout << "IMPOSSIBLE" << endl;
             return;
         }
-        resp[i/2] = (rep[i] > rep[i + 1] ? '+' : '-');
+        resp[i - 1] = (rep[2 * i] < rep[2 * i + 1] ? '+' : '-');
     }
+
 
     for (auto cara: resp) cout << cara << " ";
     cout << endl;
