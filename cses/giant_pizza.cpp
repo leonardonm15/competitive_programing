@@ -9,7 +9,7 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
-const int N = 1e5 + 5;
+const int N = 1e6 + 5;
 vector<int> vis(N);
 vector<int> rep(N);
 vector<int> g[2 * N];
@@ -38,12 +38,8 @@ void solve () {
         char a, b;
         int x, y;
         cin >> a >> x >> b >> y;
-        if (a == '+') sx = 1;
-        if (a == '-') sx = -1;
-
-        if (b == '+') sy = 1;
-        if (b == '-') sy = -1;
-        cout << a << " " << x << " " << b << " " << y << endl;
+        sx = (a == '+' ? -1 : 1);
+        sy = (b == '+' ? -1 : 1);
 
         g[2 * x + sx].push_back(2 * y + !sy); // (a -> ~b) 
         g[2 * y + sy].push_back(2 * x + !sx); // (b -> ~a)
@@ -52,27 +48,38 @@ void solve () {
     }
 
     vector<int> stc;
-    for (int i=0; i <= n; i++) {
+    for (int i=1; i <= m; i++) {
         if (!vis[i]) dfs(i, stc);
     }
 
-    vis.assign(n + 1, 0);
+    vis.assign(2 * m + 1, 0);
     int group = 1;
     while ((int)stc.size()) {
         int u = stc.back();
+        cout << "U -> " << u << endl;
         stc.pop_back();
-        if (!vis[u]) dfst(u, group);
-        group++;
+        if (!vis[u]) dfst(u, group++);
     }
 
-    vector<char> resp;
-    for (int i=1; i <= n; i++) {
-        if (rep[2 * i] == rep[2 * i + 1]) {
-            cout << "i -> " << i << endl;
+    for (int i=1; i <= 2 * m; i++) {
+        cout << rep[i] << " ";
+    }
+    cout << endl;
+
+    vector<char> resp(m, '-');
+    for (int i=1; i <= 2 * m; i += 2) {
+        /* cout << "I -> " << i << endl; */
+        /* cout << "rep[i] -> " << rep[i] << endl; */
+        /* cout << "resp[i + 1] -> " << rep[i + 1] << endl; */
+        if ((rep[i] == rep[i + 1]) && rep[i]) {
             cout << "IMPOSSIBLE" << endl;
             return;
         }
+        resp[i/2] = (rep[i] < rep[i + 1] ? '+' : '-');
     }
+
+    for (auto cara: resp) cout << cara << " ";
+    cout << endl;
 }
 
 signed main() {
