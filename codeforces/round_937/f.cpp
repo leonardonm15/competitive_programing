@@ -9,11 +9,15 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
  
+/* int tc = 0; */
 void solve () {
+    /* tc++; */
     int a, b, c; cin >> a >> b >> c;
     int h = 0;
 
-    if ((b > 0 && c == 0) || c <= a || c == 0) {
+    /* if (tc == 1770) cout << a << "$" << b << "$" << c << endl; */
+
+    if ((b > 0 && c == 0) || c < a || c == 0) {
         cout << - 1 << endl;
         return;
     }
@@ -24,14 +28,14 @@ void solve () {
     }
  
     if (a > 0 && c >= 2) {
-        if (c&1) {
-            if (b > 0 && ((b%c) == c - 1 || b%c == 0)) h++;
-            c--;
-            a--;
-        }
     }
  
     while (c > 1) {
+        if (c&1) {
+            if (((b%c) == c - 1 || b%c == 0)) h++;
+            c--;
+            a--;
+        }
         a -= c / 2;
         c >>= 1;
         h++;
