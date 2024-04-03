@@ -8,42 +8,31 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
- 
-/* int tc = 0; */
 void solve () {
-    /* tc++; */
     int a, b, c; cin >> a >> b >> c;
-    int h = 0;
 
-    /* if (tc == 1770) cout << a << "$" << b << "$" << c << endl; */
-
-    if ((b > 0 && c == 0) || c < a || c == 0) {
+    if (a + 1 != c) {
         cout << - 1 << endl;
         return;
     }
- 
-    if (c > 0) {
-        h += (b / c);
-        h += b % c ? 1 : 0;
+
+    if (a + b + c == 1) {
+        cout << 0 << endl;
+        return;
     }
- 
-    if (a > 0 && c >= 2) {
-    }
- 
-    while (c > 1) {
-        if (c&1) {
-            if (((b%c) == c - 1 || b%c == 0)) h++;
-            c--;
-            a--;
+
+    int curr = 1, next = 0, res = 1;
+    for (int i=0; i < a + b; i++) {
+        if (!curr) {
+            swap(next, curr);
+            res++;
         }
-        a -= c / 2;
-        c >>= 1;
-        h++;
+        curr--;
+        next++;
+        if (i < a) {next++;}
     }
- 
-    if (a == 0) cout << h << endl;
-    else cout << - 1 << endl;
- 
+
+    cout << res << endl;
 }
  
 signed main() {
