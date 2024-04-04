@@ -3,25 +3,22 @@
 using namespace std;
 
 #define endl '\n' 
-#define int long long
+//#define int long long
 
 // ----------    GRIND MENTALITY    ---------     
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
 void solve () {
-    int n; cin >> n;
+    int n, k; cin >> n >> k;
     vector<int> arr(n);
-    vector<int> dp(n);
     for (int i=0; i < n; i++) cin >> arr[i];
+    vector<int> dp(n);
     for (int i=1; i < n; i++) {
-        int j1 = 1e18 + 5;
-        int j2 = 1e18 + 5;
-        if (i - 1 >= 0) j1 = dp[i - 1] + abs(arr[i] - arr[i - 1]);
-        if (i - 2 >= 0) j2 = dp[i - 2] + abs(arr[i] - arr[i - 2]);
-        dp[i] += min(j1, j2);
+        for (int j=i - 1; j >= max(0, i - k); j--) {
+            dp[i] = dp[i - j] + abs(arr[i] - arr[i - j]);
+        }
     }
-
 
     cout << dp[n - 1] << endl;
 }
