@@ -13,14 +13,17 @@ void solve () {
     int n; cin >> n;
     vector<int> arr(n);
     for (int i=0; i < n; i++) cin >> arr[i];
-    // zaabaabz
-    int resp = 0;
-    for (int i=0; i < n; i++) {
-        int k = i;
-        int counter = 0;
-        for (int j = i + 1; j < n; j++) {
-
-        }
+    sort(arr.begin(), arr.end());
+    if (arr[n - 1] == arr[0]) {
+        cout << - 1 << endl;
+    } else {
+        int it = 0;
+        while (arr[it] == arr[0]) it++;
+        cout << it << " " << n - it << endl;
+        for(int i=0; i < it; i++) cout << arr[i] << " ";
+        cout << endl;
+        for (int i=it; i < n; i++) cout << arr[i] << " ";
+        cout << endl;
     }
 }
 
