@@ -92,16 +92,16 @@ void solve () {
         st[num]++;
     }
     vector<int> st2 = st;
-    /* st[0]++; */
-    /* st2[0]++; */
+    st[0]++;
+    st2[0]++;
     int resp = 0;
     vector<int> conv = convolution(st, st2);
     int m; cin >> m;
     for (int i=1; i <= m; i++) {
         int num; cin >> num;
-        resp += conv[num];
+        if (conv[num]) resp++;
     }
-    cout << resp - 1 << endl;
+    cout << resp << endl;
 }
 
 signed main() {
