@@ -9,7 +9,9 @@ using namespace std;
 // /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
 // ----------    GRIND MENTALITY    ---------     
 
+/* int tc = 0; */
 void solve () {
+    /* tc++; */
     int n, m, k; cin >> n >> m >> k;
     map<int, int> fa;
     map<int, int> fb;
@@ -20,6 +22,13 @@ void solve () {
         cin >> b[i];
         fb[b[i]]++;
     }
+
+    /* if (tc == 537) { */
+    /*     cout << n << "$" << m << "$" << k << "$"; */
+    /*     for (int i=0; i < n; i++) cout << a[i] << "#"; */
+    /*     for (int i=0; i < m; i++) cout << b[i] << "&"; */
+    /*     cout << endl; */
+    /* } */
 
     int resp = 0;
     int score = 0;
@@ -34,10 +43,14 @@ void solve () {
 
     while (r < n) {
         if (score >= k) resp++;
+        /* cout << "--------------" << endl; */
+        /* cout << "l -> " << l << endl; */
+        /* cout << "r -> " << r << endl; */
+        /* cout << "score -> " << score << endl; */
         if (r == n - 1) break;
         if (r < n - 1) {
             fa[a[l]]--;
-            if (fb[a[l]] > 0 && fa[a[l]] == 0) score--;
+            if (fb[a[l]] > 0 && fa[a[l]] < fb[a[l]]) score--;
             l++;
             r++;
             fa[a[r]]++;
