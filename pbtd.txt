@@ -1,5 +1,0 @@
-towers cses
-g2 do tp
-knpasack 2
-questão circulo merge queens
-contest interna, todas que eu conseguir fazer
