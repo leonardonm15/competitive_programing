@@ -88,6 +88,8 @@ vector<long long> convolution(vector<long long> &a, vector<long long> &b) {
 const int maxn = 2e5 + 5;
 vector<int> resp(maxn);
 void solve () {
+    // PROBLEMA DO BEECROWD
+    // https://www.beecrowd.com.br/repository/UOJ_3341.html
     int n, m, q; cin >> n >> m >> q;
 
     vector<int> d1(1e5 + 5);
