@@ -30,6 +30,7 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 set noshiftround
+set undofile
 
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
 
