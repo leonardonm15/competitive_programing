@@ -13,8 +13,10 @@ void solve () {
     int n, c, k; cin >> n >> c >> k;
     /* if (k >= ((n / c) - 1)) */ 
 
+    /* cout << "now -> " << (n - ((n + c - 1) / c)) << endl; */
+    /* cout << "Old -> " << n - ((n + 1) / c) << endl; */
     /* cout << "div -> " << (n / c) << endl; */
-    if (k == n || n == 1 || c == 1 || k >= (n - ((n + 1) / c))) cout << "NO" << endl;
+    if (n == 1 || c == 1 || k >= (n - ((n + c - 1) / c))) cout << "NO" << endl;
     else cout << "YES" << endl;
     // pinta quantos quiser 
     // pinta pouco mas
