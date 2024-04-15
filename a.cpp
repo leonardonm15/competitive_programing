@@ -10,19 +10,19 @@ using namespace std;
 // ----------    GRIND MENTALITY    ---------     
 
 void solve () {
-    string a, b; cin >> a >> b;
-    bool flag = false;
-    for (int i=0; i < a.size(); i++) {
-        if (!flag && a[i] != b[i]) {
-            if (a[i] < b[i]) swap(b[i], a[i]);
-            flag = true;
-            continue;
+    vector<int> v(26);
+    string s; cin >> s;
+    int n = s.size(), res = 0;
+    for(int i = 0; i < n; i++){
+        if(v[s[i] - 'A'] > 0){
+            res++;
         }
-        if (flag && b[i] < a[i]) swap(a[i], b[i]);
+        else{
+            res += 2;
+            v[s[i] - 'A']++;
+        }
     }
-
-    cout << a << endl;
-    cout << b << endl;
+    cout << res << endl;
 }
 
 signed main() {
