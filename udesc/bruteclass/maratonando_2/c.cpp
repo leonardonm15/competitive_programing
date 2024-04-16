@@ -16,7 +16,7 @@ void solve () {
     for (int i=0; i < n; i++) cin >> arr[i];
 
     reverse(arr.begin(), arr.end());
-    int resp = 0;
+    int resp = n;
     for (int i=0; i < n; i++) {
         if (!f[arr[i]]) f[arr[i]]++;
         else {
@@ -25,8 +25,7 @@ void solve () {
         }
     }
 
-    if (resp == 0) cout << 0 << endl;
-    else cout << n - resp << endl;
+    cout << n - resp << endl;
 }
 
 signed main() {
