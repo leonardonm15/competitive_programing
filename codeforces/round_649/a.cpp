@@ -8,29 +8,21 @@ using namespace std;
 void solve () {
     int n, k; cin >> n >> k;
     vector<int> arr(n);
-    vector<int> pos;
+    for (int i=0; i < n; i++) cin >> arr[i];
+    int u = -1, v = -1;
+    int ans = -1, sum = 0;
+
     for (int i=0; i < n; i++) {
-        int num; cin >> num;
-        if ((num % k) == 0) {
-            pos.push_back(i);
+        sum = (sum + arr[i]) % k;
+        if (sum) ans = max(ans, i + 1);
+        if (u != -1 && sum != u) ans = max(ans, i + 1 - v);
+        if (u == -1 && sum) {
+            u = sum;
+            v = i + 1;
         }
     }
 
-    if (!pos.size()) {
-        cout << n << endl;
-    } else if (pos.size() == arr.size()) {
-        cout << -1 << endl;
-    } else if (pos.size() == 1) {
-        cout << max((n - 1) - pos[0] - 1, pos[0]) << endl;
-    } else {
-        int resp = 0;
-        for (int i=1; i < (int)pos.size() - 1; i++) {
-            resp = max(resp, pos[i] - pos[i - 1] - 1);
-        }
-
-        cout << (resp ? resp : -1) << endl;
-    }
-
+    cout << ans << endl;
 }
 
 signed main() {
