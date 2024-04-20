@@ -9,14 +9,14 @@ const int MOD = 1e9 + 7;
 int resp = 0;
 int k;
 
-void calc(int c, vector<int>& v) {
+void calc(int c, int lc, vector<int>& v) {
     if (c == k) {
         resp++;
         resp %= MOD;
     }
     for (auto cara: v) {
-        if (c + cara <= k) {
-            calc(c + cara, v);
+        if (c + cara <= k && cara >= lc) {
+            calc(c + cara, cara, v);
         }
     }
 }
@@ -26,6 +26,11 @@ void solve () {
     vector<int> arr(n);
     for (int i=0; i < n; i++) cin >> arr[i];
 
+    for (int i=0; i < n; i++) {
+        calc(arr[i], arr[i], arr);
+    }
+
+    cout << resp << endl;
 }
 
 signed main() {
