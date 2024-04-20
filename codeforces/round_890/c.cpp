@@ -3,25 +3,25 @@
 using namespace std;
 
 #define endl '\n' 
-//#define int long long
+#define int long long
 
-// ----------    GRIND MENTALITY    ---------     
-// /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
-// ----------    GRIND MENTALITY    ---------     
+
+int dp() {
+    // cada cara pode se maximizar direto ou maximizar o proximo cara e dps se maximizar
+}
 
 void solve () {
-    int n; cin >> n;
-    vector<int> arr(n);
+    // recebe o array, sorta os caras
+    // dps de sortar, pra cada maior cara eu chamo a função da dp
+    // tem que resetar o array chama recursivo e vai diminuindo o k
+    int n, k; cin >> n >> k;
     for (int i=0; i < n; i++) cin >> arr[i];
-    // zaabaabz
-    int resp = 0;
-    for (int i=0; i < n; i++) {
-        int k = i;
-        int counter = 0;
-        for (int j = i + 1; j < n; j++) {
 
-        }
+    for (int i=1; i < n - 1; i++) {
+
     }
+    vector<int> aux = arr;
+
 }
 
 signed main() {
