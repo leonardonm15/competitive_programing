@@ -4,24 +4,49 @@ using namespace std;
 
 #define endl '\n' 
 #define int long long
+const int NINF = -1e14;
 
-
-int dp() {
-    // cada cara pode se maximizar direto ou maximizar o proximo cara e dps se maximizar
+int check(int i, int mid, vector<int>& v) {
+    if (v[i] >= mid) return 0;
+    if (i <= v.size() - 2 && v[i] < mid) {
+        return mid - v[i] + check(i + 1, max(1ll, mid - 1), v);
+    } else return NINF;
 }
 
 void solve () {
-    // recebe o array, sorta os caras
-    // dps de sortar, pra cada maior cara eu chamo a função da dp
-    // tem que resetar o array chama recursivo e vai diminuindo o k
+    // faz a bb e pra cada cara bruta se da pra fazer aquele numero
     int n, k; cin >> n >> k;
-    for (int i=0; i < n; i++) cin >> arr[i];
+    vector<int> arr(n);
+    int ans = 0;
 
-    for (int i=1; i < n - 1; i++) {
-
+    for (int i=0; i < n; i++) {
+        cin >> arr[i];
+        ans = max(ans, arr[i]);
     }
-    vector<int> aux = arr;
 
+    int l = ans + 1;
+    int r = 1e16;
+    while(l <= r) {
+        // se eu consigo deixar todos os caras com um valor x
+        // eu consigo deixar 1 cara com o valor x + 1
+        vector<int> v = arr;
+        int mid = (l + r) >> 1;
+        int add = 0;
+        bool did = false;
+        for (int i=0; i < n - 1; i++) {
+            add = check(i, mid, v);
+            if (add <= k && add >= 0) did = true;
+        }
+
+        if (did) {
+            l = mid + 1;
+            ans = max(ans, mid);
+        } else {
+            r = mid - 1;
+        }
+    }
+
+    cout << ans << endl;
 }
 
 signed main() {
