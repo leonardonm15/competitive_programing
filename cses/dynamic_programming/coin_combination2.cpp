@@ -1,50 +1,31 @@
-
 #include <bits/stdc++.h>
 
 using namespace std;
 
 #define endl '\n' 
 #define int long long
+const int N = 100;
+const int MOD = 1e9 + 7;
+int resp = 0;
+int k;
 
-// ----------    GRIND MENTALITY    ---------     
-// /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
-// ----------    GRIND MENTALITY    ---------     
-
-const int maxx = 1e6 + 5;
-const int mod = 1e9 + 7;
-
-void solve () {
-    int n, k; cin >> n >> k;
-    vector<vector<int>> dp(n + 1, vector<int>(maxx));
-    vector<int> coins(n);
-
-    for (int i=0; i < n; i++) {
-        cin >> coins[i];
-        dp[coins[i]][coins[i]]++;
+void calc(int c, vector<int>& v) {
+    if (c == k) {
+        resp++;
+        resp %= MOD;
     }
-
-    sort(coins.begin(), coins.end());
-
-    // 
-    for (int i=0; i <= n; i++) {
-        for (int j=0; j < maxx; j++) {
-            if (dp[i][j]) {
-                for (auto c: coins) if (j + c <= k && c >= i) {
-                    dp[c][j + c] = dp[i][j];
-                    dp[c][j + c] %= mod;
-                }
-            }
+    for (auto cara: v) {
+        if (c + cara <= k) {
+            calc(c + cara, v);
         }
     }
+}
 
-    int resp = 0;
-    for (int i=0; i <= n; i++) {
-        if (dp[i][k] > 0) cout << "dp[" << i << "][k] -> " << dp[i][k] << endl;
-        resp += dp[i][k];
-        resp %= mod;
-    }
+void solve () {
+    int n; cin >> n >> k;
+    vector<int> arr(n);
+    for (int i=0; i < n; i++) cin >> arr[i];
 
-    cout << resp << endl;
 }
 
 signed main() {
