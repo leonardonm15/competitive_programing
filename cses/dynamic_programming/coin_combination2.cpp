@@ -4,31 +4,29 @@ using namespace std;
 
 #define endl '\n' 
 #define int long long
-const int N = 100;
 const int MOD = 1e9 + 7;
-int resp = 0;
-int k;
-
-void calc(int c, int lc, vector<int>& v) {
-    if (c == k) {
-        resp++;
-        resp %= MOD;
-    }
-    for (auto cara: v) {
-        if (c + cara <= k && cara >= lc) {
-            calc(c + cara, cara, v);
-        }
-    }
-}
 
 void solve () {
     int n; cin >> n >> k;
     vector<int> arr(n);
-    for (int i=0; i < n; i++) cin >> arr[i];
-
+    vector<int> dp(3e6);
     for (int i=0; i < n; i++) {
-        calc(arr[i], arr[i], arr);
+        int num; cin >> num;
+        arr[i] = num;
+        dp[num]++;
     }
+
+    for (int i=1; i <= k; i++) {
+        if (dp[i] == 0) continue;
+        for (auto cara: arr) {
+            dp[i + cara] += dp[i];
+            dp[i + cara] %= d
+        }
+    }
+
+    /* for (int i=0; i < n; i++) { */
+    /*     calc(arr[i], arr[i], arr); */
+    /* } */
 
     cout << resp << endl;
 }

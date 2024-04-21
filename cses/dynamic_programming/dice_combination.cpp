@@ -9,8 +9,10 @@ const int MOD = 1e9 + 7;
 vector<int> dp(1e6 + 10);
 
 int calc(int num) {
-    /* dp[num]++; */
     for (int i=1; i <= 6; i++) {
+        if (num == i) {
+            
+        }
         if (num - i >= 0) {
             if (dp[num - i] > 0) {
                 dp[num] += dp[num - i];
