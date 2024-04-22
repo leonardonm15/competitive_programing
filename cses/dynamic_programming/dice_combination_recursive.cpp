@@ -4,28 +4,26 @@ using namespace std;
 
 #define endl '\n' 
 #define int long long
+const int N = 2e6;
 const int MOD = 1e9 + 7;
+vector<int> dp(N, 0);
 
-vector<int> arr;
+int calc(int n) {
+    if (dp[n] > 0) return dp[n];
+    for (int i=1; i <= 6; i++) {
+        if (n - i >= 0) dp[n] += calc(n - i);
+        dp[n] %= MOD;
+    }
 
-int calc(int n, int lc) {
-    if (n == 0) return 1;
-    
-    for (auto cara: 
+    return dp[n];
 }
 
 void solve () {
-    int n, k; cin >> n >> k;
-    vector<int> arr(n);
-    for (int i=0; i < n; i++) {
-        int num; cin >> num;
-        arr.push_back(num);
-    }
-
-    int resp = 0;
-
-    cout << calc(k, ) << endl;
-
+    int n; cin >> n;
+    dp[1] = 1;
+    dp[0] = 1;
+    calc(n);
+    cout << dp[n] << endl;
 }
 
 signed main() {
