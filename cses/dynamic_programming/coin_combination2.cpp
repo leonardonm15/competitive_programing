@@ -6,26 +6,22 @@ using namespace std;
 #define int long long
 const int MOD = 1e9 + 7;
 
-vector<int> arr;
-
-int calc(int n, int lc) {
-    if (n == 0) return 1;
-    
-    for (auto cara: 
-}
-
 void solve () {
     int n, k; cin >> n >> k;
     vector<int> arr(n);
-    for (int i=0; i < n; i++) {
-        int num; cin >> num;
-        arr.push_back(num);
+    vector<int> dp(1e6 + 5);
+    dp[0] = 1;
+    for (int i=0; i < n; i++) cin >> arr[i];
+    for (auto coin: arr) {
+        for (int i=0; i <= k; i++) {
+            if (dp[i] >= 1 && i + coin <= k) {
+                dp[i + coin] += dp[i];
+                dp[i + coin] %= MOD;
+            }
+        }
     }
 
-    int resp = 0;
-
-    cout << calc(k, ) << endl;
-
+    cout << dp[k] << endl;
 }
 
 signed main() {

@@ -46,7 +46,8 @@ void solve () {
     cin >> s;
     /* cout << "s -> " << s << endl; */
     for (int i=1; i <= n; i++) {
-        if (s[i - 1] == 'W') dp[i].first++;
+        if (s[i - 1] == 'W')  dp[i].first++;
+        }
         else dp[i].second++;
     }
 
