@@ -17,17 +17,21 @@ bool check(int mid, vector<int>& arr) {
         }
         else sum += arr[i];
     }
-    if (dm >= 3) return false;
-    else return true;
+
+    return dm <3;
 }
 
 void solve () {
     int n; cin >> n;
     vector<int> arr(n);
     for (int i=0; i < n; i++) cin >> arr[i];
-    int l = 1;
-    int r = 1e14;
-    int ans = 0;
+
+    int l = 1; int r = 1e14; int ans = 0;
+    /* oi leo voce é nuito legal que teclado engraçado ele é pequeninho as teclass */
+    /* oi leo sabia que eu sou o goat que isso po que teclado bizarro kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk ai ai ai que tortinho */ 
+    /*     ai aiai */ 
+    /*     aiaiaia */
+    /*     aiaiai */
     while(l <= r) {
         int mid = (l + r) >> 1;
         if (check(mid, arr)) {

@@ -21,7 +21,7 @@ void solve () {
                 dp[p + 1].emplace((cara + num) % n);
                 dp[p + 1].emplace(((cara - num) + n) % n);
             }
-            if (c == '0') dp[p + 1].emplace(abs(cara + num) % n);
+            if (c == '0') dp[p + 1].emplace((cara + num) % n);
             if (c == '1') dp[p + 1].emplace(((cara - num) + n) % n);
         }
         p++;
