@@ -8,8 +8,9 @@ using namespace std;
 void solve () {
     int n; cin >> n;
     vector<int> arr(n);
-    for (int i=0; i < n; i++) 
+    for (int i=0; i < n; i++) cin >> arr[i];
 
+    cout << arr[n - 1] << endl;
 }
 
 signed main() {
