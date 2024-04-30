@@ -8,19 +8,14 @@ using namespace std;
 void solve () {
     int n; cin >> n;
     string s; cin >> s;
-
     pair<int, int> amm;
     for (int i=0; i < n; i++) {
         if (s[i] == 'U') amm.second++;
         else amm.first++;
     }
 
-    if (n == 2) {
-        cout << "NO" << endl;
-        return;
-    }
-
-    cout << (amm.second > amm.first ? "YES" : "NO") << endl;
+    if (amm.second&1) cout << "YES" << endl;
+    else cout << "NO" << endl;
 }
 
 signed main() {
