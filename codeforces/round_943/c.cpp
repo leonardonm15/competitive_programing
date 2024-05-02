@@ -11,18 +11,13 @@ void solve () {
     for (int i=0; i < n - 1; i++) cin >> arr[i];
 
     vector<int> resp;
-    int add = 0;
-    resp.push_back(arr[0]);
+    resp.push_back(arr[0] + 501);
     for (int i=0; i < n - 1; i++) {
-        if ((resp[i] + arr[i]) % resp[i] == 0) {
-            add++;
-        }
-        resp.push_back(resp[i] + arr[i] + add);
+        resp.push_back(resp[i] + arr[i]);
     }
     
     for (auto cara: resp) cout << cara << " ";
     cout << endl;
-
 }
 
 signed main() {
