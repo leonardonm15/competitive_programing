@@ -5,24 +5,25 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-// ----------    GRIND MENTALITY    ---------     
-// /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
-// ----------    GRIND MENTALITY    ---------     
+bool check(int mid, int p, vector<int>& arr) {
+    int a = 0;
+    int n = arr.size();
+    for (int i=0; i < n; i++) {
+        a += mid / arr[i];
+    }
+    return a >= p;
+}
 
 void solve () {
     int n, k; cin >> n >> k;
     vector<int> arr(n);
     for (int i=0; i < n; i++) cin >> arr[i];
     int l = 1;
-    int r = 1e9 + 1;
+    int r = 1e18 + 1;
     int resp = 1;
     while (l <= r) {
         int mid = (l + r) >> 1;
-        int a = 0;
-        for (int i=0; i < n; i++) {
-            a += mid / arr[i];
-        }
-        if (a >= k) {
+        if (check(mid, k, arr)) {
             resp = mid;
             r = mid - 1;
         } else {

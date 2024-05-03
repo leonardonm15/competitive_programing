@@ -5,13 +5,14 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-struct 
-
-
-
 void solve () {
-    int n, q; cin >> n >> q;
-
+    int n; cin >> n;
+    cout << 1 << " " << 1 << endl;
+    cout << 1 << " " << 2 << endl;
+    
+    for (int i=n; i >= 3; i--) cout << i << " " << i << endl;
+    
+    cout << endl;
 }
 
 signed main() {
