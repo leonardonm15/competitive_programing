@@ -7,20 +7,23 @@ using namespace std;
 
 const int N = 1e5 + 5;
 vector<int> adj[N];
-vector<int> vis(N);
 vector<pair<int, int>> tin(N);
 vector<int> dp(N, 0);
 
-void dfs(int u) {
-    vis[u]++;
-    int mxc = 0;
+int dfs(int u) {
+    if (!adj[u].size()) return 0;
+    if (dp[u] > 0) return dp[u];
+
+    int ans = 0;
     for (auto v: adj[u]) {
-        if (!vis[v]) dfs(v);
-        mxc = max(mxc, dp[v]);
+        ans = max(ans, dfs(v));
     }
 
-    dp[u] += mxc;
-    return;
+    cout << "----------" << endl;
+    cout << "U -> " << u << endl;
+    cout << "dp[u] -> " << dp[u] << endl;
+
+    return dp[u] += (ans + 1);
 }
 
 void solve () {
@@ -37,12 +40,17 @@ void solve () {
 
     sort(tin.begin(), tin.begin() + n);
     int resp = 0;
-    for (int i=0; i < n; i++) {
+    for (int i=1; i <= n; i++) {
         if (!tin[i].first) {
-            dfs(i);
-            resp = max(resp, dp[i]);
+            dfs(tin[i].second);
+            resp = max(resp, dp[tin[i].second]);
         }
     }
+
+    /* cout << "caras -> "; */
+    /* for (int i=1; i <= n; i++) cout << dp[i] << " "; */
+    /* cout << endl; */
+
     cout << resp << endl;
 }
 
