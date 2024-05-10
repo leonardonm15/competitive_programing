@@ -15,12 +15,15 @@ vector<node> nodes;
 vector<vector<int>> dp(N, vector<int> (1 << 10, -1));
 
 int calc(int u, int pcs) {
-    pcs |= (1 << nodes[u].p);
     if (dp[u][pcs] != -1) return dp[u][pcs];
-    if (!adj[u].size()) return dp[u][pcs] = nodes[u].w;
+    if (!adj[u].size() && pcs == (1 << nodes[u].p)) return dp[u][pcs] = nodes[u].w;
+    else if (!adj[u].size() && pcs != (1 << nodes[u].p)) return dp[u][pcs];
 
     for (auto v : adj[u]) {
-        dp[u][pcs] = max({dp[u][pcs], calc(v, pcs), calc(v, pcs ^ (1 << nodes[u].p))}) + nodes[u].w;
+        int a = calc(v, pcs);
+        int b = calc(v, pcs ^ (1 << nodes[u].p));
+        if (a == - 1 && b == -1) dp[u][pcs] = -1;
+        else dp[u][pcs] = max(dp[u][pcs], max(a, b) + nodes[u].w);
     }
 
     return dp[u][pcs];
@@ -52,7 +55,7 @@ void solve () {
         }
     }
 
-    for (int i = 0; i < (int)nodes.size(); i++) calc(i, 0);
+    for (int i = 0; i < (int)nodes.size(); i++) calc(i, (1 << n) - 1);
 
     int resp = -1;
     for (int i=0; i < (int)nodes.size(); i++) {
