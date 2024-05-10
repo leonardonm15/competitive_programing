@@ -4,7 +4,6 @@ using namespace std;
 
 #define endl '\n' 
 #define int long long
-const double EPS = 1e-9
 
 void solve () {
     int n, k, q; cin >> n >> k >> q;
@@ -45,12 +44,13 @@ void solve () {
         if (a[idx] == d) resp.push_back(b[idx]);
         else if (idx == 0) {
             int dist = d - a[idx];
-            int tm = floor(dist / vels[idx] + EPS);
+            int tm = floor(dist / vels[idx]);
             resp.push_back(tm);
         }
         else {
             int dist = d - a[idx];
-            int tm = floor((dist / vels[idx])+EPS);
+            const double EPS = 1e-9;
+            int tm = (int)(dist / vels[idx]);
             /* cout << "dist -> " << dist << endl; */
             /* cout << "vels[idx] -> " << vels[idx] << endl; */
             /* cout << "tm -> " << tm << endl; */
@@ -58,8 +58,8 @@ void solve () {
         }
     }
 
-    for (auto cara: resp) cout << cara << " ";
-    cout << endl;
+    /* for (auto cara: resp) cout << cara << " "; */
+    /* cout << endl; */
 }
 
 signed main() {
