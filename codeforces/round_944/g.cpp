@@ -6,39 +6,26 @@ using namespace std;
 #define int long long
 
 void solve () {
-    int n; cin >> n;
-    vector<int> arr(n);
-    vector<int> sarr;
-    map<int, vector<int>> map;
-
-    for (int i=0; i < n; i++) {
-        cin >> arr[i];
-        sarr.push_back(arr[i]);
+    int n;
+    cin >> n;
+    vector<int> a(n);
+    map<int, priority_queue<int>> mp;
+    for(int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+        mp[a[i]>>2].push(-a[i]);
     }
-
-    sort(sarr.begin(), sarr.end());
-
-    for (auto cara: arr) {
-        cout << bitset<5>(cara) << endl;
+    for(int i = 0; i < n; i++)
+    {
+        cout << -mp[a[i]>>2].top() << " ";
+        mp[a[i]>>2].pop();
     }
-
-    for (int i=0; i < n; i++) {
-        if (sarr[i] == arr[i]) continue;
-        int msk = arr[i];
-        msk = (msk & ~(1 << 0));
-        msk = (msk & ~(1 << 1));
-
-        while (!(msk & (1 << 2))) {
-            map[arr[i]].push_back(msk);
-            msk <<= 1;
-        }
-    }
-
-
+    cout << endl;
 }
 
+
 signed main() {
-    /* ios_base::sync_with_stdio(0);cin.tie(0); */
+    ios_base::sync_with_stdio(0);cin.tie(0);
     int TC = 1;
     if (TC){
         cin >> TC;
