@@ -2,32 +2,25 @@
 using namespace std;
 
 #define endl '\n' 
-#define int long long
+/* #define int long long */
 
 struct node {
     int l, r, p, w;
+    node() {
+        w = -1;
+        l = -1;
+        r = -1;
+        p = -1;
+    }
 };
 
 const int N = 1e3 + 5;
+const int S = 86401;
+
 int n;
 vector<int> adj[N];
-vector<node> nodes;
-vector<vector<int>> dp(N, vector<int> (1 << 10, -1));
-
-int calc(int u, int pcs) {
-    if (dp[u][pcs] != -1) return dp[u][pcs];
-    if (!adj[u].size() && pcs == (1 << nodes[u].p)) return dp[u][pcs] = nodes[u].w;
-    else if (!adj[u].size() && pcs != (1 << nodes[u].p)) return dp[u][pcs];
-
-    for (auto v : adj[u]) {
-        int a = calc(v, pcs);
-        int b = calc(v, pcs ^ (1 << nodes[u].p));
-        if (a == - 1 && b == -1) dp[u][pcs] = -1;
-        else dp[u][pcs] = max(dp[u][pcs], max(a, b) + nodes[u].w);
-    }
-
-    return dp[u][pcs];
-}
+vector<vector<node>> nodes(S);
+vector<vector<int>> dp(S, vector<int> (1 << 10, -1));
 
 void solve () {
 	cin >> n;
@@ -35,30 +28,29 @@ void solve () {
         int k; cin >> k;
         for (int j=0; j < k; j++) {
             int c, f, w; cin >> c >> f >> w;
-            node v;
+            node v = node();
             v.l = c;
             v.r = f;
             v.p = i;
             v.w = w;
-            nodes.push_back(v);
+            nodes[c].push_back(v);
         }
     }
 
-    vector<int> top(nodes.size());
-    for (int i=0; i < (int)nodes.size(); i++) {
-        for (int j=0; j < (int)nodes.size(); j++) {
-            node &a = nodes[i];
-            node &b = nodes[j];
-            if (a.r <= b.l) {
-                adj[i].push_back(j);
+    dp[0][0] = 0;
+    for (int i=1; i < S; i++) {
+        for (int msk=0; msk <= (1 << 10) - 1; msk++) {
+            dp[i][msk] = max(dp[i - 1][msk], dp[i][msk]);
+            if (dp[i][msk] == -1) continue;
+            for (auto nd: nodes[i]) {
+                node k = nd;
+                dp[k.r][msk | (1 << k.p)] = max(dp[i][msk] + k.w, dp[k.r][msk | (1 << k.p)]);
             }
         }
     }
 
-    for (int i = 0; i < (int)nodes.size(); i++) calc(i, (1 << n) - 1);
-
     int resp = -1;
-    for (int i=0; i < (int)nodes.size(); i++) {
+    for (int i=1; i < S; i++) {
         resp = max(resp, dp[i][(1 << n) - 1]);
     }
 
