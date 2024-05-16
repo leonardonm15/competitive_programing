@@ -4,7 +4,7 @@ using namespace std;
 
 #define endl '\n' 
 #define int long long
-const double EPS = 1e-9
+const double EPS = 1e-6;
 
 void solve () {
     int n, k, q; cin >> n >> k >> q;
@@ -14,15 +14,6 @@ void solve () {
 
     for (int i=0; i < k; i++) cin >> a[i + 1];
     for (int i=0; i < k; i++) cin >> b[i + 1];
-
-    for (int i=1; i <= k; i++) {
-        /* vels.push_back((a[i] - a[i - 1]) / b[i]); */
-        vels.push_back(static_cast<double>(a[i] - a[i - 1]) / (b[i] - b[i - 1]));
-    }
-
-    /* cout << "vels -> "; */
-    /* for (auto cara: vels) cout << cara << " "; */
-    /* cout << endl; */
 
     vector<int> resp;
     while(q--) {
@@ -45,16 +36,13 @@ void solve () {
         if (a[idx] == d) resp.push_back(b[idx]);
         else if (idx == 0) {
             int dist = d - a[idx];
-            int tm = floor(dist / vels[idx] + EPS);
+            int tm = (dist * (a[idx + 1] / b[idx + 1]));
             resp.push_back(tm);
         }
         else {
             int dist = d - a[idx];
-            int tm = floor((dist / vels[idx])+EPS);
-            /* cout << "dist -> " << dist << endl; */
-            /* cout << "vels[idx] -> " << vels[idx] << endl; */
-            /* cout << "tm -> " << tm << endl; */
-            resp.push_back(b[idx] + tm);
+            int tm = (dist * (a[idx + 1] - a[idx])) / (b[idx + 1] - b[idx]);
+            resp.push_back(b[idx - 1] + tm);
         }
     }
 
