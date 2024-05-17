@@ -39,33 +39,32 @@ void dfs(int u, int p, int d) {
     }
 }
 
-int intersect(int a, int lab, int u, int luv) {
+int intersect(int a, int dlab, int u, int dluv) {
+    /* cout << "a -> " << a << endl; */
+    /* cout << "dlab -> " << dlab << endl; */
+    /* cout << "u -> " << u << endl; */
+    /* cout << "dlub -> " << dluv << endl; */
     int lau = lca(a, u);
-    if (deph[lau] < deph[lab]) return 0;
-    int d = deph[lau] - deph[lab];
-    return d;
+    return max(0ll, deph[lau] - max(dlab, dluv) + 1);
 }
 
 int query(int a, int b, int u, int v) {
     int lab = lca(a, b);
     int luv = lca(u, v);
-    /* cout << "lab -> " << lab << endl; */
-    /* cout << "luv -> " << luv << endl; */
     int x, y, z, w;
 
-    // inter a - lab com u - luv
-    w = intersect(a, lab, u, luv);
+    // inter a - dlab com u - dluv
+    w = intersect(a, deph[lab], u, deph[luv]);
 
-    // int a - lab com v - luv
-    x = intersect(a, lab, v, luv);
-    if (w > 0 && x > 0) x--;
+    // int a - dlab com v - dluv
+    x = intersect(a, deph[lab], v, deph[luv] + 1);
 
-    // int b - lab com u - luv
-    y = intersect(b, lab, u, luv);
+    // int b - dlab com u - dluv
+    y = intersect(b, deph[lab] + 1, u, deph[luv]);
 
-    // int b - lab com v - luv
-    z = intersect(b, lab, v, luv);
-    if (y > 0 && z > 0) z--;
+    // int b - dlab com v - dluv
+    z = intersect(b, deph[lab] + 1, v, deph[luv] + 1);
+
     return x + y + z + w;
 }
 
