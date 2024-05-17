@@ -7,13 +7,13 @@ using namespace std;
 
 const int N = 1e5 + 5;
 vector<int> adj[N];
-vector<int> up[20][N];
-vector<int> st[20][N];
+int up[20][N];
+int st[20][N];
 vector<int> pais(N);
 vector<int> deph(N);
 
 int lca(int a, int b) {
-    if (deph[a] > depth[b]) swap(a, b);
+    if (deph[a] > deph[b]) swap(a, b);
     int diff = a - b;
     for (int i=19; i >= 0; i--) {
         if (diff&(1 << i)) b = up[i][b];
@@ -33,23 +33,44 @@ int lca(int a, int b) {
 
 void dfs(int u, int p, int d) {
     pais[u] = p;
-    depth[u] = d;
-    for (auto v: adj[u]) if (v  != p) {
+    deph[u] = d;
+    for (auto v: adj[u]) if (v != p) {
         dfs(v, u, d + 1);
     }
 }
 
-int intersect(int a, int b, int u, int v) {
+int intersect(int a, int lab, int u, int luv) {
+    int lau = lca(a, u);
+    /* cout << "lau -> " << lau << endl; */
+    /* cout << "lab -> " << lab << endl; */
+
+    if (deph[lau] < deph[lab]) return 0;
+    int d = deph[lau] - deph[lab];
+    return d + 1;
+}
+
+int query(int a, int b, int u, int v) {
     int lab = lca(a, b);
     int luv = lca(u, v);
+    /* cout << "lab -> " << lab << endl; */
+    int resp = 0;
 
-    if (deph[lab] > deph[luv]) swap(lab, luv);
+    // inter a - lab com u - luv
+    resp += intersect(a, lab, u, luv);
+    /* cout << "resp -> " << resp << endl; */
 
-    /* int dav = deph[lab] - deph[luv]; */
-    /* for (int i=19; i >= 0; i--) { */
-    /*     if (dav&(1 << i)) luv = up[i][luv]; */
-    /* } */
+    // int a - lab com v - luv
+    resp += intersect(a, lab, v, luv);
+    /* cout << "resp -> " << resp << endl; */
 
+    // int b - lab com u - luv
+    resp += intersect(b, lab, u, luv);
+    /* cout << "resp -> " << resp << endl; */
+
+    // int b - lab com v - luv
+    resp += intersect(b, lab, v, luv);
+    /* cout << "resp -> " << resp << endl; */
+    return resp;
 }
 
 void calc(int n) {
@@ -63,22 +84,24 @@ void calc(int n) {
 
 void solve () {
     int n, q; cin >> n >> q;
-    dfs(1, 1);
-    calc(n);
-    for (int i=0; i < n; i++) {
+    for (int i=0; i < n - 1; i++) {
         int u, v; cin >> u >> v;
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
 
+    dfs(1, 1, 1);
+    calc(n);
+
     while (q--) {
         int a, b, c, d; cin >> a >> b >> c >> d;
+        cout << query(a, b, c, d) << endl;
     }
 }
 
 signed main() {
-    ios_base::sync_with_stdio(0);cin.tie(0);
-    int TC = 1;
+    /* ios_base::sync_with_stdio(0);cin.tie(0); */
+    int TC = 0;
     if (TC){
         cin >> TC;
         while (TC--) solve();
