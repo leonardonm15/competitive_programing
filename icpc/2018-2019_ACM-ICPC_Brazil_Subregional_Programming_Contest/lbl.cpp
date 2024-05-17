@@ -14,7 +14,7 @@ vector<int> deph(N);
 
 int lca(int a, int b) {
     if (deph[a] > deph[b]) swap(a, b);
-    int diff = a - b;
+    int diff = deph[b] - deph[a];
     for (int i=19; i >= 0; i--) {
         if (diff&(1 << i)) b = up[i][b];
     }
@@ -41,36 +41,32 @@ void dfs(int u, int p, int d) {
 
 int intersect(int a, int lab, int u, int luv) {
     int lau = lca(a, u);
-    /* cout << "lau -> " << lau << endl; */
-    /* cout << "lab -> " << lab << endl; */
-
     if (deph[lau] < deph[lab]) return 0;
     int d = deph[lau] - deph[lab];
-    return d + 1;
+    return d;
 }
 
 int query(int a, int b, int u, int v) {
     int lab = lca(a, b);
     int luv = lca(u, v);
     /* cout << "lab -> " << lab << endl; */
-    int resp = 0;
+    /* cout << "luv -> " << luv << endl; */
+    int x, y, z, w;
 
     // inter a - lab com u - luv
-    resp += intersect(a, lab, u, luv);
-    /* cout << "resp -> " << resp << endl; */
+    w = intersect(a, lab, u, luv);
 
     // int a - lab com v - luv
-    resp += intersect(a, lab, v, luv);
-    /* cout << "resp -> " << resp << endl; */
+    x = intersect(a, lab, v, luv);
+    if (w > 0 && x > 0) x--;
 
     // int b - lab com u - luv
-    resp += intersect(b, lab, u, luv);
-    /* cout << "resp -> " << resp << endl; */
+    y = intersect(b, lab, u, luv);
 
     // int b - lab com v - luv
-    resp += intersect(b, lab, v, luv);
-    /* cout << "resp -> " << resp << endl; */
-    return resp;
+    z = intersect(b, lab, v, luv);
+    if (y > 0 && z > 0) z--;
+    return x + y + z + w;
 }
 
 void calc(int n) {
@@ -100,7 +96,7 @@ void solve () {
 }
 
 signed main() {
-    /* ios_base::sync_with_stdio(0);cin.tie(0); */
+    ios_base::sync_with_stdio(0);cin.tie(0);
     int TC = 0;
     if (TC){
         cin >> TC;
