@@ -55,7 +55,6 @@ void solve () {
     }
 
     cout << resp << endl;
-
 }
 
 signed main() {
