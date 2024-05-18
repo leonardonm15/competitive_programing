@@ -102,16 +102,15 @@ void solve () {
     }
 
     sort(e.begin(), e.end());
-    cout << "----- opa ----" << endl;
     for (auto [w, a, b]: e) {
         if (unite(a, b, w)) sum += w;
     }
-    cout << "-------" << endl;
     
     // calcula binary lifting da mst
     dfs_depth(1, 1, 1, 0);
     bl(n);
     
+    /* cout << "sum -> " << sum << endl; */
     for (auto [w, u, v]: edg) {
         int k = sum;
         int luv = lca(u, v);
