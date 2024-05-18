@@ -9,7 +9,6 @@ using namespace std;
 const int N = 2e5 + 5;
 vector<pii> adj[N];
 vector<pii> mst[N];
-/* int pesos[N]; */
 vector<tuple<int, int, int>> edg;
 int pai[N];
 int sz[N];
@@ -19,7 +18,7 @@ int st[20][N];
 
 void bl(int n) {
     for (int exp=1; exp < 20; exp++) {
-        for (int node = 1; i <= n; node++) {
+        for (int node = 1; node <= n; node++) {
             up[exp][node] = up[exp - 1][up[exp - 1][node]];
             st[exp][node] = max(st[exp - 1][node], st[exp - 1][up[exp - 1][node]]);
         }
@@ -28,26 +27,26 @@ void bl(int n) {
 
 int query(int a, int d) {
     int resp = 0;
-    for (int i=19; i > 0; i--) {
-        if (d & (1 << i)) r{
-            resp += st[i][a];
+    for (int i=19; i >= 0; i--) {
+        if (d & (1 << i)) {
+            resp = max(resp, st[i][a]);
             a = up[i][a];
         }
     }
 
-    return a;
+    return resp;
 }
 
 int lca(int a, int b) {
     if (depth[a] > depth[b]) swap(a, b);
     int d = depth[b] - depth[a];
-    for (int i=19; i > 0; i--) {
+    for (int i=19; i >= 0; i--) {
         if (d & (1 << i)) b = up[i][b];
     }
 
-    if (a == b) return a;
+    if (a == b) return 0;
 
-    for (int i=19; i > 0; i--) {
+    for (int i=19; i >= 0; i--) {
         if (up[i][a] != up[i][b]) {
             a = up[i][a];
             b = up[i][b];
@@ -57,26 +56,29 @@ int lca(int a, int b) {
     return up[0][a];
 }
 
-int dfs_depth(int u, int p, int d) {
+void dfs_depth(int u, int p, int d, int wa) {
     depth[u] = d;
+    up[0][u] = p;
+    st[0][u] = wa;
     for (auto [v, w]: mst[u]) if (v != p) {
-        dfs_depth(v, u, d + 1);
+        dfs_depth(v, u, d + 1, w);
     }
 }
 
 int find_pai(int a) {
-    if (pai[a] = a) return a;
+    if (pai[a] == a) return a;
     else return find_pai(pai[a]);
 }
 
 bool unite(int a, int b, int w) {
     a = find_pai(a);
     b = find_pai(b);
-    if (a == b) false;
+    if (a == b) return false;
     if (sz[b] > sz[a]) swap(b, a);
 
-    mst[a].push_back(b, w);
-    mst[b].push_back(a, w);
+    mst[a].push_back({b, w});
+    mst[b].push_back({a, w});
+    cout << a << " " << b << " " << w << endl;
     sz[a] += sz[b];
     pai[b] = a;
     return true;
@@ -100,25 +102,30 @@ void solve () {
     }
 
     sort(e.begin(), e.end());
-    for (auto [w, a, b]: edg) if (unite(a, b, w)) sum += w;
+    cout << "----- opa ----" << endl;
+    for (auto [w, a, b]: e) {
+        if (unite(a, b, w)) sum += w;
+    }
+    cout << "-------" << endl;
     
     // calcula binary lifting da mst
-    dfs_depth(1, 1, 1);
+    dfs_depth(1, 1, 1, 0);
     bl(n);
-
+    
     for (auto [w, u, v]: edg) {
-        int resp = sum;
+        int k = sum;
         int luv = lca(u, v);
         k += w;
-        // k -= max(u - luv, v - luv);
-        k -= max(
+        int q = max(query(u, max(0ll, depth[u] - depth[luv])), query(v, max(0ll, depth[v] - depth[luv])));
+        k -= q;
+        cout << k << endl;
     }
 
 }
 
 signed main() {
     ios_base::sync_with_stdio(0);cin.tie(0);
-    int TC = 1;
+    int TC = 0;
     if (TC){
         cin >> TC;
         while (TC--) solve();
