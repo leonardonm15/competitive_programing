@@ -21,7 +21,6 @@ void bl(int n) {
         for (int node = 1; node <= n; node++) {
             up[exp][node] = up[exp - 1][up[exp - 1][node]];
             st[exp][node] = max(st[exp - 1][node], st[exp - 1][up[exp - 1][node]]);
-            /* cout << "st[exp][node] -> " << st[exp][node] << endl; */
         }
     }
 }
@@ -45,7 +44,7 @@ int lca(int a, int b) {
         if (d & (1 << i)) b = up[i][b];
     }
 
-    if (a == b) return 0;
+    if (a == b) return a;
 
     for (int i=19; i >= 0; i--) {
         if (up[i][a] != up[i][b]) {
@@ -71,19 +70,23 @@ int find_pai(int a) {
     else return find_pai(pai[a]);
 }
 
-bool unite(int a, int b, int w) {
+bool unite(int a, int b) {
     a = find_pai(a);
     b = find_pai(b);
     if (a == b) return false;
     if (sz[b] > sz[a]) swap(b, a);
 
-    mst[a].push_back({b, w});
-    mst[b].push_back({a, w});
-    /* cout << a << " " << b << " " << w << endl; */
     sz[a] += sz[b];
     pai[b] = a;
     return true;
 }   
+
+void set_dsu(int n) {
+    for (int i=0; i <= n; i++) {
+        pai[i] = i;
+        sz[i] = 1;
+    }
+}
 
 void solve () {
     int n, m; cin >> n >> m;
@@ -92,41 +95,34 @@ void solve () {
 
     for (int i=0; i < m; i++) {
         int a, b, w; cin >> a >> b >> w;
-        pai[a] = a;
-        pai[b] = b;
-        sz[a] = 1;
-        sz[b] = 1;
         adj[a].push_back({b, w});
         adj[b].push_back({a, w});
         edg.push_back({w, a, b});
         e.push_back({w, a, b});
     }
 
+    set_dsu(n);
     sort(e.begin(), e.end());
     for (auto [w, a, b]: e) {
-        if (unite(a, b, w)) sum += w;
+        if (unite(a, b)) {
+            mst[a].push_back({b, w});
+            mst[b].push_back({a, w});
+            sum += w;
+        }
     }
-    
+
     // calcula binary lifting da mst
     dfs_depth(1, 1, 1, 0);
     bl(n);
-    
-    /* cout << "sum -> " << sum << endl; */
+
     for (auto [w, u, v]: edg) {
         int k = sum;
         int luv = lca(u, v);
-        /* int c = max(abs(depth[u] - depth[luv]), abs(depth[v] - depth[luv])); */
-        /* /1* cout << "c -> " << c << endl; *1/ */
-        if (luv == 0) {
-            cout << sum << endl;
-            continue;
-        }
         k += w;
-        int q = max(query(u, max(0ll, depth[u] - depth[luv] + 1)), query(v, max(0ll, depth[v] - depth[luv] + 1)));
+        int q = max(query(u, max(0ll, depth[u] - depth[luv])), query(v, max(0ll, depth[v] - depth[luv])));
         k -= q;
         cout << max(sum, k) << endl;
     }
-
 }
 
 signed main() {
