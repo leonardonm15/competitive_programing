@@ -21,6 +21,7 @@ void bl(int n) {
         for (int node = 1; node <= n; node++) {
             up[exp][node] = up[exp - 1][up[exp - 1][node]];
             st[exp][node] = max(st[exp - 1][node], st[exp - 1][up[exp - 1][node]]);
+            /* cout << "st[exp][node] -> " << st[exp][node] << endl; */
         }
     }
 }
@@ -78,7 +79,7 @@ bool unite(int a, int b, int w) {
 
     mst[a].push_back({b, w});
     mst[b].push_back({a, w});
-    cout << a << " " << b << " " << w << endl;
+    /* cout << a << " " << b << " " << w << endl; */
     sz[a] += sz[b];
     pai[b] = a;
     return true;
@@ -114,10 +115,16 @@ void solve () {
     for (auto [w, u, v]: edg) {
         int k = sum;
         int luv = lca(u, v);
+        /* int c = max(abs(depth[u] - depth[luv]), abs(depth[v] - depth[luv])); */
+        /* /1* cout << "c -> " << c << endl; *1/ */
+        if (luv == 0) {
+            cout << sum << endl;
+            continue;
+        }
         k += w;
-        int q = max(query(u, max(0ll, depth[u] - depth[luv])), query(v, max(0ll, depth[v] - depth[luv])));
+        int q = max(query(u, max(0ll, depth[u] - depth[luv] + 1)), query(v, max(0ll, depth[v] - depth[luv] + 1)));
         k -= q;
-        cout << k << endl;
+        cout << max(sum, k) << endl;
     }
 
 }
