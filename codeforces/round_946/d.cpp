@@ -9,7 +9,6 @@ void solve () {
     int v; cin >> v;
     string r; cin >> r;
     int n = 0, s = 0, e = 0, w = 0;
-
     for (auto c: r) {
         if (c == 'N') n++;
         if (c == 'S') s++;
@@ -17,10 +16,6 @@ void solve () {
         if (c == 'W') w++;
     }
 
-    /* cout << "N -> " << n << endl; */
-    /* cout << "s -> " << s << endl; */
-    /* cout << "e -> " << e << endl; */
-    /* cout << "w -> " << w << endl; */
     bool h1 = true;
     if (n > 0 || s > 0) h1 = (abs(n - s)%2 == 0 ? true : false);
 
@@ -30,7 +25,6 @@ void solve () {
     int k = n + s + e + w;
     bool flag = true;
 
-
     if (k == 2 && (((n == 1) && (s == 1)) || ((e == 1) && (w == 1)))) flag = false;
 
     if (h1 && h2 && flag) {
@@ -39,10 +33,6 @@ void solve () {
         int ame = e/2;
         int amw = w/2;
 
-        /* cout << "amn -> " << amn << endl; */
-        /* cout << "ams -> " << ams << endl; */
-        /* cout << "ame -> " << ame << endl; */
-        /* cout << "amw -> " << amw << endl; */
         string resp;
         for (int i=0; i < (int)r.size(); i++) {
             if (r[i] == 'N') {
