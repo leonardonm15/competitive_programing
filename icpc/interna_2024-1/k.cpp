@@ -56,12 +56,12 @@ int bpow(int a, int exp) {
 mat step = {
     {0, 1},
     {1, 1}
-}
+};
 
 mat fib = {
     {0},
     {1}
-}
+};
 
 void solve () {
     int n; cin >> n;
