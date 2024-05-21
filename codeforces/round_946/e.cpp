@@ -12,23 +12,16 @@ using namespace std;
 //                                  _o_ _o_
 //                                      
     
+const int N = 50 + 5;
+
 void solve () {
     int n, x; cin >> n >> x;
-    vector<pair<int, int>> op(50 + 5);
-    op[0] = {0, 0};
+    vector<vector<int>> dp(N, vector<int>(N));
     for (int i=1; i <= n; i++) {
-        int a, b; cin >> a >> b; // custo felicidade
-        op[i] = {a, b};
+        // pra um cara só
     }
+            
     
-    map<int, int> dp;
-    dp[0] = 0;
-    for (int i=1; i <= n; i++) {
-        // minha felicidade que eu ganho =0; :( :3 :D ;_; ;-; '-' :) :c >:(
-        if (op[
-        op[i] = max(op[
-    }
-
     /* dado um mes x qual a melhor felicidade que eu consigo */
     
 }
