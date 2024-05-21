@@ -6,33 +6,29 @@ using namespace std;
 #define int long long
 #define pii pair<int, int>
 
-const int N = 3e5 + 5;
-vector<pair<int, int>> adj[N];
-int vis[N];
-vector<int> dp(N, 1e18);
-int n, m, k;
-const int N = 3e5 + 5;
 const int INF = 1e18;
+const int N = 3e5 + 5;
+vector<pii> adj[N];
+int vis[N];
+int n, m, k;
 
-vector<pair<int, int>> adj[N];
-
-vector<int> dijkstra(int s) {
-    vector<int> dist(N, INF);
-    using T = pair<int, int>;
-    priority_queue<T, vector<T>, greater<>> pq;
-    dist[s] = 1e18;
-    pq.emplace(dist[s], s);
-
-    while (!pq.empty()) {
-        auto [d, u] = pq.top();
-        pq.pop();
-        if (d != dist[u]) {
-            continue;
-        }
-        for (auto [w, v] : adj[u]) {
-            if (dist[v] > d + w) {
-                dist[v] = d + w;
-                pq.emplace(dist[v], v);
+vector<int> bfs01(int s, int mid) {
+    vector<int> dist(n + 5, INF);
+    deque<int> q;
+    dist[s] = 0;
+    q.emplace_back(s);
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop_front();
+        for (auto [v, w] : adj[u]) {
+            w = w > mid;
+            if (dist[u] + w < dist[v]) {
+                dist[v] = dist[u] + w;
+                if (w == 0) {
+                    q.push_front(v);
+                } else {
+                    q.push_back(v);
+                }
             }
         }
     }
@@ -40,19 +36,20 @@ vector<int> dijkstra(int s) {
 }
 
 int check(int mid) {
-    int resp = dfs(1, 0, mid);
-    return resp <= k;
+    vector<int> dists = bfs01(1, mid);
+    /* cout << "----------------" << endl; */
+    /* cout << "mid -> " << mid << endl; */
+    /* cout << "dists[n] -> " << dists[n] << endl; */
+    return dists[n] <= k;
 }
 
 void solve () {
     cin >> n >> m >> k;
-    priority_queue<pii, vector<pii>, greater<int>> pq;
 
     for (int i=0; i < m; i++) {
         int u, v, w; cin >> u >> v >> w;
         adj[v].push_back({u, w});
         adj[u].push_back({v, w});
-        pq.emplace({w, 
     }
 
     int l = 0;
@@ -64,11 +61,6 @@ void solve () {
             ans = mid;
             r = mid - 1;
         } else l = mid + 1;
-
-        for (int i=0; i <= n; i++) {
-            vis[i] = 0;
-            dp[i] = 1e18;
-        }
     }
 
     cout << ans << endl;
