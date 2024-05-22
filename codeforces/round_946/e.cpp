@@ -13,17 +13,28 @@ using namespace std;
 //                                      
     
 const int N = 50 + 5;
+const int F = N * 1e3;
+const int NINF = -1 * 1e14;
+vector<vector<int>> dp(N, vector<int>(F, NINF));
 
 void solve () {
     int n, x; cin >> n >> x;
-    vector<vector<int>> dp(N, vector<int>(N));
+    dp[0][0] = 0;
     for (int i=1; i <= n; i++) {
-        // pra um cara só
+        int c, f; cin >> c >> f;
+        for (int j=0; j < F; j++) {
+            if ((i > 1 && c > 0) && j - f >= 0 && (dp[i - 1][j - f] + (x - c) >= 0)) dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - f] + (x - c));
+            else dp[i][j] = dp[i - 1][j];
+        }
+
     }
-            
-    
-    /* dado um mes x qual a melhor felicidade que eu consigo */
-    
+
+    int resp = 0;
+    for (int i=0; i < F; i++) {
+        if (dp[n][i] >= 0) resp = i;
+    }
+
+    cout << "resp -> " << resp << endl;
 }
 
 signed main() {
