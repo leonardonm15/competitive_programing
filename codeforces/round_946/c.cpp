@@ -6,42 +6,27 @@ using namespace std;
 #define int long long
 
 void solve () {
-   map<pair<int, int>, int> mp; // numero, quantidade de vezes por q trio
-   int n; cin >> n;
-   int arr[n];
-   for (int i=0; i < n; i++) cin >> arr[i];
+    map<tuple<int, int, int, int>, int> mp; // numero, quantidade de vezes por q trio
+    int n; cin >> n;
+    vector<int> arr(n);
 
-   map<int, int> amm;
-   int triples = 0;
-   int resp = 0;
-   for (int i=0; i < n; i++) {
-        if (i <= 2) amm[arr[i]]++;
-        else {
-            if (i > 2) {
-                amm[arr[i - 3]]--;
-                amm[arr[i]]++;
-            }
+    for (int i=0; i < n; i++) cin >> arr[i];
 
-            if (amm[arr[i]] == 3) {
-                continue;
-            }
-            
-            for (int k=0; k <= 2; k++) {
-                for (int j=0; j <= 2; j++) {
-                    if (k != j && arr[i - k] != arr[i - j]) {
-                         // tem que ser igual nos idx i e j
-                         pair<int, int> p = {arr[i - k], amm[arr[i - k]]};
-                         int v = mp[p];
-                    } else if (k != j && arr[i - k] == arr[i - j]) {
+    int resp = 0;
+    int triples = 0;
+    for (int i=1; i < n - 1; i++) {
+        int a, b, c;
+        a = arr[i - 1];
+        b = arr[i];
+        c = arr[i + 1];
+        
+        resp += map[{a, b, 0, 1}] + map[{a, c, 0, 2}] + map[{b, c, 1, 2}];
 
-                    }
-                }
-            }
-            
-
-            triples++;
-        }
-   }
+        map[{a, b, 0, 1}]++;
+        map[{a, c, 0, 2}]++;
+        map[{b, c, 1, 2}]++;
+        triples++;
+    }
 }
 
 signed main() {
