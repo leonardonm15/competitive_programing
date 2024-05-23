@@ -6,27 +6,35 @@ using namespace std;
 #define int long long
 
 void solve () {
-    map<tuple<int, int, int, int>, int> mp; // numero, quantidade de vezes por q trio
     int n; cin >> n;
+    map<tuple<int, int, int, int>, pair<int, map<int, int>>> map; // {a, b} -> {q, {c} -> k}
     vector<int> arr(n);
 
     for (int i=0; i < n; i++) cin >> arr[i];
 
     int resp = 0;
-    int triples = 0;
+    /* int triples = 0; */
     for (int i=1; i < n - 1; i++) {
         int a, b, c;
         a = arr[i - 1];
         b = arr[i];
         c = arr[i + 1];
-        
-        resp += map[{a, b, 0, 1}] + map[{a, c, 0, 2}] + map[{b, c, 1, 2}];
 
-        map[{a, b, 0, 1}]++;
-        map[{a, c, 0, 2}]++;
-        map[{b, c, 1, 2}]++;
-        triples++;
+        resp += map[{a, b, 0, 1}].first - map[{a, b, 0, 1}].second[c];
+        resp += map[{a, c, 0, 2}].first - map[{a, c, 0, 2}].second[b];
+        resp += map[{b, c, 1, 2}].first - map[{b,  c, 1, 2}].second[a];
+
+        map[{a, b, 0, 1}].first++;
+        map[{a, b, 0, 1}].second[c]++;
+
+        map[{a, c, 0, 2}].first++;
+        map[{a, c, 0, 2}].second[b]++;
+
+        map[{b, c, 1, 2}].first++;
+        map[{b, c, 1, 2}].second[a]++;
     }
+
+    cout << resp << endl;
 }
 
 signed main() {
