@@ -40,8 +40,6 @@ void dfs(int u, int p, bool is_big) {
     for (int i=1; i < adj[u].size(); i++) {
         if (adj[u][i] != p) {
             dfs(adj[u][i], u, 0);
-            /* add(adj[u][i], u); */
-            /* remove(adj[u][i], u); */
         }
     }
 
