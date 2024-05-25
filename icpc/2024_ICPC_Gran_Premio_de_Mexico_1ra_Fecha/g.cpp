@@ -7,22 +7,14 @@ using namespace std;
 
 void solve () {
     int n; cin >> n;
-    vector<int> arr(n);
-    int h = 0;
+    set<int> set;
+
     for (int i=0; i < n; i++) {
-        cin >> arr[i];
-        h ^= arr[i];
+        int num; cin >> num;
+        set.emplace(num);
     }
-    sort(arr.begin(), arr.end());
 
-    cout << "H -> " << h << endl;
-
-    int d = 0;
-    if (n > 1) for (int i=1; i < n; i++) {
-        cout << "arr[i] - arr[i - 1] -> " << arr[i] - arr[i - 1] << endl;
-        d ^= (arr[i] - arr[i - 1]);
-    } else d = arr[0];
-
+    cout << (set.size()&1 ? "Alicius" : "Bobius") << endl;
 }
 
 signed main() {
