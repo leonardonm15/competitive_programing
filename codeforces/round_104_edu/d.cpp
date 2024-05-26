@@ -1,52 +1,31 @@
 #include <bits/stdc++.h>
-
+ 
 using namespace std;
-
+ 
 #define endl '\n' 
 #define int long long
-
-const int N = 1e6;
-int memo[N];
-
-void calc() {
-    for (int a=2; (int)(a * a) <= N; a++) {
-
-        // obrigatorios 
+#define buliano bool
+ 
+int calc(int N) {
+    int resp = 0;
+    for (int a=1; (int)(a * a) <= 2 * N + 1; a+=2) {
         int aa = a * a;
         int b = (aa - 1) / 2;
-        int c = b + 1;
-        c *= c;
-
-        // formula errada
-        int cerr = aa - b;
-        cerr *= cerr;
-
-        // formula certa
-        int ccer = aa + (b * b);
-
-        /* cout << "---------------" << endl; */
-        /* cout << "c -> " << c << endl; */
-        /* cout << "cerr -> " << cerr << endl; */
-        /* cout << "ccerr -> " << ccer << endl; */
-
-        if (cerr == ccer && cerr == c) memo[a] = memo[a - 1] + 1;
-        else memo[a] = memo[a - 1];
-
+        int k2 = aa - b;
+ 
+        if (k2 <= N) resp++;
     }
-
+    
+    return resp;
 }
-
+ 
 void solve () {
     int n; cin >> n;
-    int a = 1;
-    while ((a * a) <= n) a++;
-    cout << memo[a] << endl;
-
+    cout << calc(n) - 1 << endl;
 }
-
+ 
 signed main() {
     ios_base::sync_with_stdio(0);cin.tie(0);
-    calc();
     int TC = 1;
     if (TC){
         cin >> TC;
