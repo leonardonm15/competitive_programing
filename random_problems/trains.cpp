@@ -4,6 +4,11 @@ using namespace std;
 
 #define endl '\n' 
 #define int long long
+const int C = 500; //
+const int S = 86400 // numero de segundos em um dia
+                    //
+
+vector<vector<vector<int>>>> adj(C, vector<int>(S)); // {cidade{segundos{eventos}}}
 
 void solve () {
     int n, m; cin >> n >> m; // cidades arestas
