@@ -1,34 +1,33 @@
 #include <bits/stdc++.h>
 
+#define int long long
+#define endl '\n'
 using namespace std;
 
-#define endl '\n' 
-#define int long long
-
-void solve () {
+void solve() {
     int n; cin >> n;
-    set<int> set;
-
+    vector<int> arr;
+    arr.push_back(0);
     for (int i=0; i < n; i++) {
         int num; cin >> num;
-        set.emplace(num);
+        arr.push_back(num);
+    }
+    sort(arr.begin(), arr.end());
+    arr.erase(unique(arr.begin(), arr.end()), arr.end());
+
+    for (int i=1; i < arr.size(); i++) {
+        int x = arr[i] - arr[i - 1];
+        if (x > 1) {
+            cout << (i&1 ? "Alicius" : "Bobius") << endl;
+            return;
+        }
     }
 
-    int k = set.size();
-
-    for (auto c: set) {
-        
-    }
+    cout << (arr.size()&1 ? "Alicius" : "Bobius") << endl;
 }
 
 signed main() {
-    ios_base::sync_with_stdio(0);cin.tie(0);
-    int TC = 0;
-    if (TC){
-        cin >> TC;
-        while (TC--) solve();
-    } else {
-        solve();
-    }
+    cin.tie(0)->sync_with_stdio(0);
+    solve();
     return 0;
 }
