@@ -6,19 +6,14 @@ using namespace std;
 #define int long long
 
 void solve () {
-    int n; cin >> n;
-    set<int> set;
+    int n, m; cin >> n >> m; // cidades arestas
+    vector<tuple<int, int, int, int>> inp;
 
     for (int i=0; i < n; i++) {
-        int num; cin >> num;
-        set.emplace(num);
+        int o, s, d, e; cin >> o >> s >> d >> e;
+        inp.push_back({o, d, s, e});
     }
 
-    int k = set.size();
-
-    for (auto c: set) {
-        
-    }
 }
 
 signed main() {

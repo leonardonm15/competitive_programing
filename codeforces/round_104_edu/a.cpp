@@ -7,23 +7,14 @@ using namespace std;
 
 void solve () {
     int n; cin >> n;
-    set<int> set;
-
-    for (int i=0; i < n; i++) {
-        int num; cin >> num;
-        set.emplace(num);
-    }
-
-    int k = set.size();
-
-    for (auto c: set) {
-        
-    }
+    vector<int> arr(n);
+    for (int i=0; i < n; i++) cin >> arr[i];
+    cout << n - count(arr.begin(), arr.end(), *min_element(arr.begin(), arr.end())) << endl;
 }
 
 signed main() {
     ios_base::sync_with_stdio(0);cin.tie(0);
-    int TC = 0;
+    int TC = 1;
     if (TC){
         cin >> TC;
         while (TC--) solve();
