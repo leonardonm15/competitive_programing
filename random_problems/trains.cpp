@@ -8,17 +8,27 @@ const int C = 500; //
 const int S = 86400 // numero de segundos em um dia
                     //
 
-vector<vector<vector<int>>>> adj(C, vector<int>(S)); // {cidade{segundos{eventos}}}
+vector<int> adj[C]; // {cidade{segundos{eventos}}}
+int am_c[C]; // ammout saidas por cidade
+vector<int> vis
 
 void solve () {
     int n, m; cin >> n >> m; // cidades arestas
+    int o_tot = m;
     vector<tuple<int, int, int, int>> inp;
 
     for (int i=0; i < n; i++) {
-        int o, s, d, e; cin >> o >> s >> d >> e;
-        inp.push_back({o, d, s, e});
+        int o, s, d, e; cin >> o >> s >> d >> e; // origem destino start finish
+        adj[o].push_back(d);
+        am[o]++;
+        inp.push_back({s, f, o, d});
     }
 
+    sort(inp.begin(), inp.end());
+
+    for (auto [s, f, o, d]: inp) {
+        
+    }
 }
 
 signed main() {

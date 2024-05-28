@@ -5,11 +5,6 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-// ----------    GRIND MENTALITY    ---------     
-// /* ESCREVE TODAS AS SUAS IDEIAS E TESTA */
-// ----------    GRIND MENTALITY    ---------     
-//
-
 typedef complex<double> cd;
 typedef vector<cd> poly;
 const double PI = acos(-1);
