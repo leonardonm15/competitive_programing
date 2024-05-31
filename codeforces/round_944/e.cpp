@@ -4,50 +4,25 @@ using namespace std;
 
 #define endl '\n' 
 #define int long long
-const double EPS = 1e-6;
 
 void solve () {
-    int n, k, q; cin >> n >> k >> q;
-    vector<int> a(k + 1);
-    vector<int> b(k + 1);
-    vector<double> vels;
-
-    for (int i=0; i < k; i++) cin >> a[i + 1];
-    for (int i=0; i < k; i++) cin >> b[i + 1];
-
-    vector<int> resp;
-    while(q--) {
-        int d; cin >> d;
-        int l = 0;
-        int r = k;
-        int idx = 0;
-
-        while (l <= r) {
-            int mid = (l + r) >> 1;
-            if (a[mid] > d) {
-                r = mid - 1;
-            } else {
-                idx = mid;
-                l = mid + 1;
-            }
-            /* cout << "mid -> " << mid << endl; */
-        }
-
-        if (a[idx] == d) resp.push_back(b[idx]);
-        else if (idx == 0) {
-            int dist = d - a[idx];
-            int tm = (dist * (a[idx + 1] / b[idx + 1]));
-            resp.push_back(tm);
-        }
-        else {
-            int dist = d - a[idx];
-            int tm = (dist * (a[idx + 1] - a[idx])) / (b[idx + 1] - b[idx]);
-            resp.push_back(b[idx - 1] + tm);
-        }
+  int n, k, q;
+  cin >> n >> k >> q;
+  vector<int> a(k+1), b(k+1);
+  for (int i = 1; i <= k; ++i) cin >> a[i];
+  for (int i = 1; i <= k; ++i) cin >> b[i];
+  while (q--) {
+    int d;
+    cin >> d;
+    if (d == 0) {
+      cout << 0 << ' ';
+      continue;
     }
-
-    for (auto cara: resp) cout << cara << " ";
-    cout << endl;
+    int r = lower_bound(a.begin(), a.end(), d) - a.begin(),
+        l = r-1;
+    cout << b[l] + (((d-a[l])*(b[r]-b[l]))/(a[r]-a[l])) << ' ';
+  }
+  cout << '\n';
 }
 
 signed main() {
