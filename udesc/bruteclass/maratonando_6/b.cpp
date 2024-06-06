@@ -36,7 +36,6 @@ void solve () {
         auto [pos, vida] = bomba[i];
         int diff = pos - lc;
         qa += (k * diff);
-        // cout << pos << " " << vida << " " << qa << endl;
         if (vida > qa) {
             cout << "NO" << endl;
             return;

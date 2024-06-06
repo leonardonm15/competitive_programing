@@ -20,9 +20,11 @@ void solve() {
         if (s[i] == '0') {
             if (amm.second > 0) amm.second--;
             else resp++;
+            // if (amm.first) amm.first--;
         } else {
             if (amm.first) amm.first--;
             else resp++;
+            // if (amm.second) amm.second--;
         }
 
     }
