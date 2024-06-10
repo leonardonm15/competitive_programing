@@ -8,6 +8,12 @@ using namespace std;
 
 int n, m;
 
+bool org(vector<tuple<int, int, int>> a, vector<tuple<int, int, int>> b) {
+    auto [num1, i1, j1] = a[0];
+    auto [num2, i2, j2] = b[0];
+    return (num1 < num2);
+}
+
 void organize(mat& a) {
     int row = 0;
     for (int i = 0; i < n; i++) {
@@ -23,21 +29,19 @@ void organize(mat& a) {
 
 
     for (int i = 0; i < n; i++) {
-        vector<tuple<int, int, int>> c(m);
+        vector<tuple<int, int, int>> c;
         bool flag = false;
         for (int j = 0; j < m; j++) {
             auto [val, r, col] = a[row][j];
-            if (val == 1) flag = true;
-            c[j] = a[i][col];
+            auto [atual, r2, col2] = a[i][j];
+            if (atual == 1) flag = true;
+            c.push_back(a[i][col]);
         }
+
         if (!flag) swap(a[i], c);
     }
 
-    cout << "a ------------------- a" << endl;
-    for (auto c: a) {
-        for (auto [cara, x, y]: c) cout << cara << " ";
-        cout << endl;
-    }
+    sort(a.begin(), a.end(), org);
 }
 
 void solve () {
@@ -66,23 +70,16 @@ void solve () {
     organize(a);
     organize(b);
 
-    /* bool win = true; */
-    /* for (int i = 0; i < n; i++) { */
-    /*     for (int j = 0; j < m; j++) { */
-    /*         auto [n1, i1, j1] = a[i][j]; */
-    /*         auto [n2, i2, j2] = b[i][j]; */
-    /*         if (n1 != n2) win = false; */
-    /*     } */
-    /* } */
+    bool win = true;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            auto [n1, i1, j1] = a[i][j];
+            auto [n2, i2, j2] = b[i][j];
+            if (n1 != n2) win = false;
+        }
+    }
 
-
-    /* cout << "b ------------------- b" << endl; */
-    /* for (auto c: b) { */
-    /*     for (auto [cara, x, y]: c) cout << cara << " "; */
-    /*     cout << endl; */
-    /* } */
-
-    /* cout << (win ? "YES" : "NO") << endl; */
+    cout << (win ? "YES" : "NO") << endl;
 }
 
 signed main() {
