@@ -6,56 +6,24 @@ using namespace std;
 #define int long long
 
 void solve () {
-    int h, n; cin >> h >> n;
-    map<int, int> damage;
-    vector<int> a(n);
-    vector<int> c(n);
-    map<int, int> life;
-    int mxci = 0; // max c de i
+    int a, b, c, q; cin >> a >> b >> c >> q;
+    cout << a << " " << b << " " << c << endl;
 
-    for (int i = 0; i < n; i++) cin >> a[i];
-    for (int i = 0; i < n; i++) {
-        cin >> c[i];
-        damage[c[i]] += a[i];
-        mxci = max(mxci, c[i]);
-    }
-
-    int dm = 0;
-    for (auto [time, dam]: damage) {
-        cout << time << " " << dam << endl;
-        cout << "dm -> " << dm << endl;
-        dm += (mxci / time) * dam;
-    }
-
-    cout << "dm -> " << dm << endl;
-
-    int initial_time = 1;
-    if (h >= dm) {
-        initial_time = (h / dm) * mxci;
-        h -= (h / dm) * dm;
-    }
-
-    for (auto [time, dam]: damage) {
-        int sum = 0;
-        int i = (initial_time / time) + time;
-        while (sum < h) {
-            life[i] += dam;
-            sum += dam;
-            i += time;
-        }
-    }
-
-    int sum = 0;
     int resp = 0;
-    for (auto [mom, dam]: life) {
-        sum += dam;
-        if (sum >= h) {
-            resp = mom;
-            break;
+    for (int i = 1; i <= a; i++) {
+        for (int j = 1; j <= b; j++) {
+            for (int k = 1; k <= c; k++) {
+                int sum = 0;
+                if ((i * j * k) == q) {
+                    /* int u = (a + (i - 1)) / i; */
+                    /* int v = (b + (j - 1)) / j; */
+                    /* int w = (c + (k - 1)) / k; */
+                }
+            }
         }
     }
 
-    cout << resp + 1 << endl;
+    cout << resp << endl;
 }
 
 signed main() {
