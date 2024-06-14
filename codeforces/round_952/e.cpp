@@ -7,16 +7,18 @@ using namespace std;
 
 void solve () {
     int a, b, c, q; cin >> a >> b >> c >> q;
-    cout << a << " " << b << " " << c << endl;
     int resp = 0;
     int vol = a * b * c;
 
     for (int i = 1; i <= a; i++) {
         for (int j = 1; j <= b; j++) {
             int k = q / (i * j);
-            if (k > c) continue;
-            if ((i * j * k) == q) {
-                cout << i << " " << j << " " << k << endl;
+            if ((i * j * k) == q && k <= c) {
+                /* cout << "--------------" << endl; */
+                // cout << "ijk -> " << i * j * k << endl;
+                int uai = ((a - i) + 1) * ((b - j) + 1) * ((c - k) + 1);
+                resp = max(resp, uai);
+                // cout << i << " " << j << " " << k << endl;
             }
         }
     }
