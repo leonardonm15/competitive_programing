@@ -8,17 +8,15 @@ using namespace std;
 void solve () {
     int a, b, c, q; cin >> a >> b >> c >> q;
     cout << a << " " << b << " " << c << endl;
-
     int resp = 0;
+    int vol = a * b * c;
+
     for (int i = 1; i <= a; i++) {
         for (int j = 1; j <= b; j++) {
-            for (int k = 1; k <= c; k++) {
-                int sum = 0;
-                if ((i * j * k) == q) {
-                    /* int u = (a + (i - 1)) / i; */
-                    /* int v = (b + (j - 1)) / j; */
-                    /* int w = (c + (k - 1)) / k; */
-                }
+            int k = q / (i * j);
+            if (k > c) continue;
+            if ((i * j * k) == q) {
+                cout << i << " " << j << " " << k << endl;
             }
         }
     }
