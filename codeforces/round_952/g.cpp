@@ -5,11 +5,30 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-void solve () {
-    int l, r, k; cin >> l >> r >> k;
-    for (int i = 10; i < ; i++) {
+const int MOD = 1e9 + 7;
+
+int bpow(int a, int k) {
+    int b = 1;
+    while (k) {
+        if (k&1) {
+            b *= a;
+            b %= MOD;
+        }
+        a *= a;
+        a %= MOD;
+        k >>= 1;
     }
 
+    return b;
+}
+
+void solve () {
+    int l, r, k; cin >> l >> r >> k;
+
+    int a = bpow((9 / k) + 1, l);
+    int b = bpow((9 / k) + 1, r);
+
+    cout << b - a << endl;
 }
 
 signed main() {
