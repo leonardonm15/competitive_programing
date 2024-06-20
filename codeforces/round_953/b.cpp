@@ -7,25 +7,11 @@ using namespace std;
 
 void solve () {
     int n, a, b; cin >> n >> a >> b;
-    int base = a * n;
 
-    if (b < a) {
-        cout << base << endl;
-        return;
-    }
-
-    int l = 1;
-    int r = min(n, b);
-    int resp = base;
-
-    while (l <= r) {
-        int mid = (l + r) >> 1;
-        if (check(mid, resp)) {
-            // pega esse k chutado, faz a soma até ele e soma
-
-        } else {
-        }
-    }
+    b = max(b, a);
+    t = min(b - a, n);
+    int ans = 1 * (b + b - t + 1) * t / 2 + 1 * a * (n - t);
+    cout << ans << endl;
 }
 
 signed main() {
