@@ -10,8 +10,10 @@ void solve () {
     vector<int> arr(n);
     for (int i = 0; i < n; i++) cin >> arr[i];
 
-    int resp = 1e14;
-    for (int i = 0; i < n; i++) resp = min(resp, arr[i]);
+    int resp = 1e12;
+    for (int i = 1; i < n; i++) {
+        resp = min(resp, max(arr[i], arr[i - 1]));
+    }
     
     cout << resp - 1 << endl;
 }
