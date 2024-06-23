@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
 #define endl '\n' 
@@ -8,19 +9,6 @@ int tc = 0;
 void solve () {
     tc++;
     int x, y; cin >> x >> y;
-    if (tc == 108) {
-        cout << x << "#" << y << endl;
-    }
-    if (y > x) swap(x, y);
-    
-    if (y == 0) {
-        for (int i = 0; i <= 33; i++) {
-            if (x & (1 << i)) {
-                cout << (1 << i) << endl;
-                return;
-            }
-        }
-    }
 
     for (int i = 0; i <= 33; i++) {
         int k = (1 << i);
@@ -28,11 +16,6 @@ void solve () {
         int b = (y & k);
         if (a != b) {
             cout << k << endl;
-            return;
-        }
-
-        if (k > x || k > y) {
-            cout << k * 2 << endl;
             return;
         }
     }
