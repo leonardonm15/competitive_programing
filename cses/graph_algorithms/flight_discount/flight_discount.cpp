@@ -61,14 +61,7 @@ void solve() {
  
     ndjks(1);
 
-    /* cout << "ndist -> "; */
-    /* for (int i = 0; i <= n; i++) cout << ndist[i] << " "; */
-    /* cout << endl; */
-
 	djks(1);
- 
-    /* for (int i = 0; i <= n; i++) cout << dist[i] << " "; */
-    /* cout << endl; */
  
     cout << dist[n] << endl;
 }
