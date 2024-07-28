@@ -15,13 +15,13 @@ void solve () {
     int resp = 0;
     for (int a = 1; a <= n; a++) {
         for (int b = 1; b * a <= n; b++) {
-
             int c = x - (a + b);
             if (c <= 0) continue;
             
             int l = 1;
             int r = c;
             int ans = 0;
+
             while (l <= r) {
                 int mid = (l + r) >> 1;
                 int val = eq(a, b, mid);
@@ -32,6 +32,7 @@ void solve () {
                     r = mid - 1;
                 }
             }
+
             resp += ans;
         }
     }

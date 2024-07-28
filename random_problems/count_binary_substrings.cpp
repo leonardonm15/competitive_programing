@@ -5,27 +5,27 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-const int MOD = 1e9 + 7;
-
 void solve () {
     string s; cin >> s;
     int n = s.size();
 
     int resp = 0;
-    map<int, int> map;
-    map[0] = 1;
+    vector<int> sz;
 
-    int soma = 0;
-    for (int i = 1; i <= n; i++) {
-        int k = s[i - 1] - '0';
-        if (k) soma++;
-        else soma--;
-        
-        resp += (n - i + 1) * map[soma];
-        resp %= MOD;
+    int now = 1;
+    for (int i = 1; i < n; i++) {
+        if (s[i] == s[i - 1]) {
+            now++;
+        } else {
+            sz.push_back(now);
+            now = 1;
+        }
+    }
 
-        map[soma] += i + 1;
-        map[soma] %= MOD;
+    sz.push_back(now);
+
+    for (int i = 1; i < (int)sz.size(); i++) {
+        resp += min(sz[i], sz[i - 1]);
     }
 
     cout << resp << endl;

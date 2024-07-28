@@ -101,13 +101,6 @@ void solve () {
     dfs(1, 1, 1e18, 0);
     binary_lifting(n);
 
-    /* for (int i = 0; i <= n; i++) { */
-    /*     for (int j = 0; j <= 19; j++) { */
-    /*         cout << st[i][j] << " "; */
-    /*     } */
-    /*     cout << endl; */
-    /* } */
-
     int q; cin >> q;
     while (q--) {
         int a, b; cin >> a >> b;
