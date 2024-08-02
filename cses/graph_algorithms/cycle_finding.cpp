@@ -15,26 +15,26 @@ vector<pii> adj[N];
 vector<tiii> edg;
 vector<int> path;
 vector<int> resp;
-vector<pii> sources(N);
+vector<pii> sources;
 int vis[N];
 int dist[N];
+int pai[N];
 bool flag = false;
 bool evil = false;
 
-void dfs(int u, int root) {
+void dfs(int u, int root, int price) {
     path.push_back(u);
-    cout << "u -> " << u << endl;
-    if (u == root && vis[u] && !evil) {
+    if (u == root && price < 0 && !evil) {
         evil = true;
         resp = path;
         return;
     }
 
-    if (vis[u]++) return;
+    if (vis[u]) return;
 
     vis[u]++;
     for (auto [w, v]: adj[u]) {
-        if (dist[v] == -INF) dfs(v, root);
+        dfs(v, root, price + w);
     }
 
     path.pop_back();
@@ -42,7 +42,7 @@ void dfs(int u, int root) {
 
 void bellman_ford(int n) {
 
-    for (int i = 1; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         for (auto [w, u, v]: edg) {
             if (dist[u] < INF && dist[u] + w < dist[v]) {
                 dist[v] = dist[u] + w;
@@ -50,12 +50,16 @@ void bellman_ford(int n) {
         }
     }
 
-    for (int i = 1; i < n; i++) {
-        for (auto [w, u, v]: edg) {
-            if (dist[u] < INF && dist[u] + w < dist[v]) {
-                dist[v] = -INF;
-                cout << " inf -> " << v << endl;
-            }
+    /* cout << "dist -> "; */
+    /* for (int i = 1; i <= n; i++) { */
+    /*     cout << dist[i] << " "; */
+    /* } */
+    /* cout << endl; */
+
+    for (auto [w, u, v]: edg) {
+        if (dist[u] < INF && dist[u] + w < dist[v]) {
+            dist[v] = -INF;
+            pai[v] = u;
         }
     }
 }
@@ -63,24 +67,34 @@ void bellman_ford(int n) {
 void solve () {
     int n, m; cin >> n >> m;
 
+    sources.resize(n);
+
+    bool opa = false;
     for (int i = 0; i < m; i++) {
         int u, v, w; cin >> u >> v >> w;
+        if (u == v && w < 0 && !opa) {
+            opa = true;
+            cout << "YES" << endl;
+            cout << u << " " << v << endl;
+        }
         sources[v - 1].first++;
         edg.push_back({w, u, v});
         adj[u].push_back({w, v});
     }
+
+    if (opa) return;
 
     for (int i = 1; i <= n; i++) {
         dist[i] = INF;
         sources[i - 1].second = i;
     }
 
-    sort(sources.begin(), sources.begin() + n);
+    sort(sources.begin(), sources.end());
 
-    // se nao tem nenhuma source
+    dist[sources[0].second] = 0;
+
     for (auto [am, node]: sources) {
         if (!am) {
-            cout << "node -> " << node << endl;
             dist[node] = 0;
         }
     }
@@ -89,7 +103,11 @@ void solve () {
 
     for (int i = 1; i <= n; i++) {
         if (dist[i] == -INF) {
-            dfs(i, i);
+            dfs(i, pai[i], 0);
+            if (resp.size() == 0) {
+                for (int i = 1; i <= n; i++) vis[i] = 0;
+                continue;
+            }
             cout << "YES" << endl;
             for (auto c: resp) cout << c << " ";
             cout << endl;
