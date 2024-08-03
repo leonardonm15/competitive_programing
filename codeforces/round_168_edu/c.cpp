@@ -11,10 +11,16 @@ void solve () {
 
     int sum = 0;
 
-    for (auto c: s) {
+    for (int i = 1; i < n; i += 2) {
+        int c = s[i];
         if (c == '(') sum++;
         else if (c == ')') sum--;
+        if (sum < 0) {
+            s[i - 1] = '(';
+        }
     }
+
+    cout << s << endl;
 
 }
 
