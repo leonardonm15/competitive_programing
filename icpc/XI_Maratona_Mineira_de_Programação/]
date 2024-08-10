@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define int long long
+#define endl '\n'
+
+struct SegTree {
+    int merge(int a, int b) { return a + b; }
+
+    inline int lc (int p) { return p * 2; }
+    inline int rc (int p) { return p * 2 + 1; }
+
+    const int neutral = 0;
+    int n;
+    vector<int> t;
+
+    void build(int p, int l, int r, const vector<int>& v) {
+        if (l == r)  {
+            t[p] = v[l];
+        } else {
+            int mid = (l + r) / 2;
+            build(lc(p), l, mid, v);
+            build(rc(p), mid + 1, r, v);
+            t[p] = merge(t[lc(p)], t[rc(p)]);
+        }
+    }
+
+    void build(const vector<int> &v) {
+        n = (int) v.size();
+        t.assign(n * 4, neutral);
+        build(1, 0, n - 1, v);
+    }
+
+
+    void update (int p, int l, int r, int L, int R, int val) {
+        if (l > R || r < L) return;
+        if (l >= L && r <= R) t[p] += val;
+        int mid = (l + r) >> 1;
+        update(lc(p), l, mid, L, R, val);
+        update(rc(p), mid + 1, r, L, R, val);
+        merge(lc(p), rc(p));
+    }
+
+    int query(int p, int l, int r, int i, int k) {
+        if (l == r) return t[p] + k;
+        else {
+            int mid = (l + r) >> 1;
+            if (i < mid) query(lc(p), l, mid, i, k + t[p]);
+            else query(rc(p), mid + 1, r, i, k + t[p]);
+            return merge(
+        }
+    }
+}
+
+void solve() {
+    int n; cin >> n;
+}
+
+signed main() {
+    solve();
+    return 0;
+}
