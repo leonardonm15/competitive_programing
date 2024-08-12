@@ -8,20 +8,23 @@ using namespace std;
 void solve () {
     int n; cin >> n;
     string s; cin >> s;
+    vector<int> stack;
 
-    int sum = 0;
-
-    for (int i = 1; i < n; i += 2) {
-        int c = s[i];
-        if (c == '(') sum++;
-        else if (c == ')') sum--;
-        if (sum < 0) {
-            s[i - 1] = '(';
+    int resp = 0;
+    for (int i = 0; i < (int)s.size(); i++) {
+        if (s[i] == '(') {
+            stack.push_back(i + 1);
+        } else {
+            if (stack.size()) {
+                resp += (i + 1) - stack.back();
+                stack.pop_back();
+            } else {
+                stack.push_back(i + 1);
+            }
         }
     }
 
-    cout << s << endl;
-
+    cout << resp << endl;
 }
 
 signed main() {
