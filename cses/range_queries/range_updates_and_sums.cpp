@@ -11,14 +11,36 @@ struct SegLazy {
     vector<int> lreplace;
     vector<int> lsoma;
 
-    void 
-    void build(const vector<int>& vec) {
+    int merge (int u, int v) { return u + v; }
+
+    int lc (int u) { return 2 * u; }
+    int rc (int u) { return 2 * u + 1; }
+
+
+    void update_soma(int u, int l, int r, int x) {
+        push(u);
+    }
+    void update_soma(int l, int r, int x) {
+
+    }
+
+    void build (int u, int l, int r, const vector<int>& vec) {
+        if (l == r) {
+            seg[u] = vec[l];
+            return;
+        }
+
+        int mid = (l + r) >> 1;
+        build(lc(u), l, mid, vec);
+        build(rc(u), mid + 1, r, vec);
+        seg[u] = merge(lc(u), rc(u));
+    }
+    void build (const vector<int>& vec) {
         n = vec.size();
         seg.resize(4 * n);
         lreplace(4 * n);
         lsoma(4 * n);
-
-        build(0, 
+        build(1, 0, n - 1, vec);
     }
 }
 
