@@ -5,63 +5,102 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-pair<int, int> mvs[4] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+vector<string> vec;
+vector<char> f(4);
 
-vector<vector<vector<int>>> arr = { { {}, {}, {}, {} },
-                                    { {}, {}, {}, {} },
-                                    { {}, {}, {}, {} },
-                                    { {}, {}, {}, {} }
-                                  };
-int vis[4][4];
-
-void dfs(int a, int b, int ta, int tb) {
-    vis[a][b]++;
-    for (auto c: arr[a][b]) {
-    
-    }
-
+void normalize(string &s) {
+    if ((int) s[1] < (int) s[0]) swap(s[1], s[0]);
 }
 
+bool inrange(int a, int n) {
+    if (a >= 0 && a < n) return true;
+    else return false;
+}
+
+int min_path(string su, bool left, map<string, vector<int>> &where, int u, int v) {
+    int resp = 1e18;
+    for (int i = 0; i < 4; i++) {
+        
+        string l;
+        if (left) {
+            l += su[0];
+            l += f[i];
+        } else {
+            l += f[i];
+            l += su[1];
+        }
+
+        if (f[i] == su[0] || l == su) continue;
+
+        normalize(l);
+        int sz = where[l].size();
+
+        if (sz) {
+            vector<int> &arr = where[l];
+
+            int lbi = lower_bound(arr.begin(), arr.end(), v) - arr.begin();
+            int upbi = upper_bound(arr.begin(), arr.end(), v) - arr.begin();
+            lbi--;
+
+            int ansl = 1e18; // resp lower_bound
+            int ansu = 1e18; // resp upper_bound
+
+            if (l == vec[v]) {
+                ansl = abs(u - v);
+                ansu = abs(u - v);
+            } else {
+                if (inrange(lbi, sz)) ansl = abs(u - arr[lbi]) + abs(arr[lbi] - v);
+                if (inrange(upbi, sz)) ansu = abs(u - arr[upbi]) + abs(arr[upbi] - v);
+            }
+
+            resp = min({resp, ansl, ansu});
+        }
+    }
+
+    return resp;
+}
+
+int tc = 0;
 void solve () {
     int n, q; cin >> n >> q;
-    vector<string> vec;
 
-    vector<int> f(26);
-    f['B' - 'A'] = 0;
-    f['G' - 'A'] = 1;
-    f['R' - 'A'] = 2;
-    f['Y' - 'A'] = 3;
+    map<string, vector<int>> where;
+
+
+    f[0] = 'B';
+    f[1] = 'G';
+    f[2] = 'R';
+    f[3] = 'Y';
 
 
     for (int i = 0; i < n; i++) {
         string s; cin >> s;
-        if (f[s[1] - 'A'] < f[s[0] - 'A']) swap(s[0], s[1]);
+        normalize(s);
         vec.push_back(s);
-        arr[f[s[0] - 'A']][f[s[1] - 'A']].push_back(i + 1);
-    }
-
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            cout << i << j << " -> ";
-            for (auto c: arr[i][j]) cout << c << " ";
-            cout << endl;
-        }
+        where[s].push_back(i);
     }
 
     while (q--) {
+        tc++;
         int u, v; cin >> u >> v;
         u--; v--;
         string su = vec[u];
         string sv = vec[v];
+        int resp = 1e18;
 
-        dfs(f[su[0] - 'A'], f[su[1] - 'A'], f[sv[0] - 'A'], f[sv[1] - 'A']);
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                vis[i][j] = 4;
-            }
+        if (su == sv) {
+            cout << abs(u - v) << endl;
+            continue;
         }
+
+        int right_letter = min_path(su, false, where, u, v);
+        int left_letter = min_path(su, true, where, u, v);
+        resp = min(right_letter, left_letter);
+
+        cout << (resp == (int)1e18 ? -1 : resp) << endl;
     }
 
+    vec.clear();
 }
 
 signed main() {
