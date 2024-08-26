@@ -60,12 +60,10 @@ int min_path(string su, bool left, map<string, vector<int>> &where, int u, int v
     return resp;
 }
 
-int tc = 0;
 void solve () {
     int n, q; cin >> n >> q;
 
     map<string, vector<int>> where;
-
 
     f[0] = 'B';
     f[1] = 'G';
@@ -81,11 +79,12 @@ void solve () {
     }
 
     while (q--) {
-        tc++;
         int u, v; cin >> u >> v;
         u--; v--;
+
         string su = vec[u];
         string sv = vec[v];
+
         int resp = 1e18;
 
         if (su == sv) {
@@ -97,7 +96,7 @@ void solve () {
         int left_letter = min_path(su, true, where, u, v);
         resp = min(right_letter, left_letter);
 
-        cout << (resp == (int)1e18 ? -1 : resp) << endl;
+        cout << (resp == (int) 1e18 ? -1 : resp) << endl;
     }
 
     vec.clear();
