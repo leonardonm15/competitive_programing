@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 
-using namespacestd;
+using namespace std;
 
 #define endl '\n'
 // #define int long long
@@ -26,8 +26,13 @@ void solve() {
     sort(zeros.rbegin(), zeros.rend());
     sort(uns.rbegin(), uns.rend());
     
-    while (uns.back().second < zeros.back().first) uns.pop_back();
+    // pegando as interceções de 1 com 1
+    while (uns.back().second < zeros.back().first) {
 
+        uns.pop_back();
+    }
+
+    // pegando todas as interceções de 0 com 1
     int t = 0;
     while (uns.size() != 0) { 
         auto [L, R] = uns.back();
