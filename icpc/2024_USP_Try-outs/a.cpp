@@ -19,58 +19,44 @@ void solve () {
 
     sort(arr.begin(), arr.end());
 
+    int k = 1e7;
     for (int i = 1; i <= n; i++) {
         auto [t, d, o, idx] = arr[i - 1];
-        if (o) {
-            time[t] = i;
-        } else {
-            queue.push({t, d, idx});
-        }
+        time[t] = i + (o ? k : 0);
     }
 
     vector<int> resp;
 
-    /* cout << "tl -> "; */
-    /* for (int i = 1; i <= 12; i++) cout << time[i] << " "; */
+    /* cout << "time -> "; */
+    /* for (int i = 1; i <= 10; i++) cout << time[i] << " "; */
     /* cout << endl; */
 
+    int ef = -1;
+    int evento_atual = 0;
+    for (int t = 1; t <= 3 * k; t++) {
+        if (t == ef + 1) {
+            ef = -1;
+            evento_atual = 0;
+        }
 
-    int t = 1;
-    while (t <= (int)3e7 + 5) {
-        if (time[t] == 0 && !queue.empty()) {
+        if (time[t] < k && time[t] > 0) {
+            auto[_, d, o, idx] = arr[time[t] - 1];
+            queue.push({_, d, idx});
+        }
+
+        if (!evento_atual && queue.size()) {
             auto [_, d, idx] = queue.front();
             queue.pop();
-            int tf = t + d - 1;
-            /* cout << "--------------------" << endl; */
-            /* cout << "d -> " << d << endl; */
-            /* cout << "t -> " << _ << endl; */
-            /* cout << "tf -> "<< tf << endl; */
-            while (t <= tf) {
-                /* cout << "t -> " << t << endl; */
-                if (time[t]) {
-                    resp.push_back(idx);
-                    break;
-                }
-                t++;
-            }
-        } else if (time[t]) {
-            int inicio = t;
-            auto [_, d, o, idx] = arr[time[t] - 1];
-            int tf = t + d - 1;
-            while (t <= tf) {
-                /* cout << "--------------------" << endl; */
-                /* cout << "d -> " << d << endl; */
-                /* cout << "o -> " << o << endl; */
-                /* cout << "t -> " << t << endl; */
-                /* cout << "tf -> "<< tf << endl; */
-                /* cout << "inicio -> " << inicio << endl; */
-                if (time[t] && t != inicio) {
-                    resp.push_back(idx);
-                    break;
-                }
-                t++;
-            }
-        } else t++;
+            evento_atual = idx;
+            ef = t + d - 1;
+        }
+
+        if (time[t] > k) {
+            auto[_, d, o, idx] = arr[time[t] - k - 1];
+            if (evento_atual) resp.push_back(evento_atual);
+            ef = t + d - 1;
+            evento_atual = idx;
+        }
 
     }
 
@@ -81,7 +67,7 @@ void solve () {
 }
 
 signed main() {
-    /* ios_base::sync_with_stdio(0);cin.tie(0); */
+    ios_base::sync_with_stdio(0);cin.tie(0);
     int TC = 0;
     if (TC){
         cin >> TC;
