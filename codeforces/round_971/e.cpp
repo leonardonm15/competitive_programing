@@ -5,39 +5,53 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-int resp = 1e18;
-int check(int mid, int base, int nk) {
-    int p1 = ((1 + mid) * mid) / 2;
-    int p2 = nk - p1;
-    p1 -= base;
-    cout << "------------------" << endl;
-    cout << "Mid -> " << mid << endl;
-    cout << "p1 -> " << p1 << endl;
-    cout << "p2 -> " << p2 << endl;
-    resp = min(resp, abs(p1 - p2));
-    return abs(p1 - p2);
+int gauss(int i, int f) {
+    return ((i + f) * (f - i + 1)) / 2;
 }
 
 void solve () {
     int n, k; cin >> n >> k;
 
-    int base = (k * (k - 1)) / 2; // começo da pa
-    int total = ((1 + n + k) * (n + k)) / 2;
-
     int l = k;
     int r = n + k;
-    int i = 10;
-    while (i--) {
-        int step = (l + r) / 3;
-        int mid1 = min(n + k, l + step);
-        int mid2 = max(k, r - step);
-        cout << "----------------------------" << endl;
-        if (check(mid1, base, total) <= check(mid2, base, total)) r = mid2;
-        else l = mid1;
+    int ans = 1e18;
+
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+
+        int lp = gauss(k, mid);
+        int rp = gauss(mid + 1, n + k - 1);
+
+        /* cout << "-----------------" << endl; */
+        /* cout << "Mid -> " << mid << endl; */
+        /* cout << "lp -> " << lp << endl; */
+        /* cout << "rp -> " << rp << endl; */
+
+        if (lp - rp < 0) {
+            ans = mid;
+            l = mid + 1;
+        } else if (lp - rp > 0) {
+            r = mid - 1;
+        } else {
+            ans = mid;
+            break;
+        }
     }
 
-    cout << resp << endl;
-    /* cout << l << endl; */
+
+    /* cout << "gauss(6, 7) -> " << gauss(6, 7) << endl; */
+    /* cout << "n + k -> " << n + k << endl; */
+    int q1 = abs(gauss(k, ans) - gauss(ans + 1, n + k - 1));
+    int q2 = abs(gauss(k, ans + 1) - gauss(ans + 2, n + k - 1));
+    int q3 = abs(gauss(k, ans - 1) - gauss(ans, n + k - 1));
+
+    /* cout << "----------------------" << endl; */
+    /* cout << "ans -> " << ans << endl; */
+    /* cout << "q1 -> " << q1 << endl; */
+    /* cout << "q2 -> " << q2 << endl; */
+    /* cout << "q3 -> " << q3 << endl; */
+    
+    cout << min({q1, q2, q3}) << endl;
 }
 
 signed main() {

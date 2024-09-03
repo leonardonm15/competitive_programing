@@ -10,6 +10,7 @@ void solve () {
 
     int p1 = (((x/k) + (x%k > 0 ? 1 : 0)) * 2) - 1;
     int p2 = ((y/k) + (y%k > 0 ? 1 : 0)) * 2;
+
     cout << max(p1, p2) << endl;
 }
 
