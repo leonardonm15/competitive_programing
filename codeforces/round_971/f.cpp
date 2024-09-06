@@ -20,12 +20,14 @@ void solve () {
         arr[i] = num;
     }
 
-
     while (q--) {
         int l, r; cin >> l >> r;
         l--; r--;
+        int shift = (l + 1) / n;
+        int steps = (l + 1) % n;
+        int start_point = (-shift + 
 
-        int 
+        int falta = (l + 1) % n;
     }
 }
 
