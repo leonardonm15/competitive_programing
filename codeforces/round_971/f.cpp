@@ -15,7 +15,7 @@ void solve () {
     pref.push_back(sum);
     for (int i = 0; i < n; i++) {
         int num; cin >> num;
-        int sum += num;
+        sum += num;
         pref.push_back(num);
         arr[i] = num;
     }
@@ -24,8 +24,16 @@ void solve () {
     while (q--) {
         int l, r; cin >> l >> r;
         l--; r--;
+        int shift = (l + 1) / n;
+        int inicio = (l + 1) % n;
 
-        int 
+
+        // 1 2 3 4 5
+        // 2 3 4 5 1
+        // 3 4 5 1 2
+        // 4 5 1 2 3
+        // 5 1 2 3 4
+        // 1 2 3 4 5
     }
 }
 
