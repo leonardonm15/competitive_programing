@@ -18,6 +18,10 @@ int check(int mid, vector<int> arr) {
     }
 
 
+    /* cout << "arr -> "; */
+    /* for (auto c: arr) cout << c << " "; */
+    /* cout << endl; */
+
     if (arr[n - 1] > mid) return -INF;
 
     int resto = 0; 
@@ -44,12 +48,8 @@ int check(int mid, vector<int> arr) {
     /* if (arr[n - 1]> mid) return -INF; */
     /* sort(arr.begin(), arr.end()); */
 
-    cout << "resto -> " << resto << endl;
-    cout << "arr -> ";
-    for (auto c: arr) cout << c << " ";
-    cout << endl;
+    /* cout << "resto -> " << resto << endl; */
 
-    if (resto > mid) return -INF;
     return arr[n - 1] - minimo;
 }
 
@@ -60,8 +60,8 @@ void solve() {
     
     if (arr[0] > arr[n - 1]) {
         int k = ((arr[0] + arr[n - 1]) + 1);
-        arr[0] = (arr[0] + arr[n - 1]) - (k / 2);
-        arr[n - 1] = k / 2;
+        arr[n - 1] = (arr[0] + arr[n - 1]) - (k / 2);
+        arr[0] = k / 2;
     }
 
     int l = 0;
@@ -70,11 +70,11 @@ void solve() {
 
     while (l <= r) {
         int mid = (l + r) >> 1;
-        cout << "--------------------" << endl;
-        cout << "mid -> " << mid << endl;
+        /* cout << "--------------------" << endl; */
+        /* cout << "mid -> " << mid << endl; */
         int k = check(mid, arr);
         if (k > -INF) {
-            cout << "k -> " << k << endl;
+            /* cout << "k -> " << k << endl; */
             ans = min(ans, k);
             r = mid - 1;
         } else {
