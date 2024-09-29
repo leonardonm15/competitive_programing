@@ -5,47 +5,64 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-void solve () {
-    int n; cin >> n;
-    vector<int> vec(n);
+const int INF = 1e18;
 
-    int mx = 0;
-    for (int i = 0; i < n; i++) {
-        cin >> vec[i];
-        mx = max(mx, vec[i]);
+int check(int mid, vector<int> arr) {
+    int n = arr.size();
+    for (int i = 0; i < n - 1; i++) {
+        if (arr[i] > mid) {
+            int k = arr[i] - mid;
+            arr[i + 1] += k;
+            arr[i] -= k;
+        }
     }
 
-    int l = 1;
+    if (arr[n - 1] > mid) return -INF;
+
+    int minimo = arr[0];
+    int resto = 0; 
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += arr[i];
+        if (arr[i] >= minimo) {
+            int k = arr[i] - minimo;
+            arr[i] -= k;
+            resto += k;
+        } else if (arr[i] + resto >= minimo) {
+            int k = (arr[i] + resto) - minimo; // quanto essa porra + resto > minimo
+            arr[i] = minimo;
+            resto = k;
+        } else {
+            int k = sum / (i + 1);
+            resto = sum % (i + 1);
+            minimo = k;
+        }
+    }
+
+    return mid - minimo;
+}
+
+void solve() {
+    int n; cin >> n;
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    
+    int l = 0;
     int r = 1e12;
     int ans = 1e18;
 
-    for (int k = 1; k <= mx; k++) {
-        vector<int> arr = vec;
-        int resto = 0;
-
-        for (int i = 0; i < n; i++) {
-            if (arr[i] >= k) {
-                resto += arr[i] - k;
-                arr[i] = k;
-            } else {
-                int a = min(resto, k - arr[i]);
-                arr[i] += a;
-                resto -= a;
-            }
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+        int k = check(mid, arr);
+        if (k > -INF) {
+            ans = min(ans, k);
+            r = mid - 1;
+        } else {
+            l = mid + 1;
         }
-
-        if (resto > 0) arr[n - 1] += resto;
-        int minimo = 1e18;
-        int maximo = 0;
-
-        for (auto c: arr) {
-            minimo = min(minimo, c);
-            maximo = max(maximo, c);
-        }
-
-        cout << "k - " << k << " -> " << maximo - minimo << endl;
     }
 
+    cout << ans << endl;
 }
 
 signed main() {
