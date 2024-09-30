@@ -18,6 +18,7 @@ int horse[N];
 
 void clear_tc(int n) {
     for (int i = 0; i <= n; i++) {
+        horse[i] = 0;
         adj[i].clear();
         dist[0][i] = INF;
         dist[1][i] = INF;
@@ -28,31 +29,32 @@ void clear_tc(int n) {
 
 void djks(int root, int dist[2][N]) {
     dist[horse[root]][root] = 0;
-    priority_queue<tii> pq; // distancia atual, nodo, estou montado ?
+    priority_queue<tii, vector<tii>, greater<tii>> pq; // distancia atual, nodo, estou montado ?
     pq.push({dist[horse[root]][root], root, horse[root]});
     
     while (!pq.empty()) {
         auto [d, u, montado] = pq.top();
 
+        pq.pop();
+
         if (!montado && horse[u]) {
-            dist[1][u] = d;
+            if (d < dist[1][u]) dist[1][u] = d;
+            else continue;
             montado = 1;
         }
 
-        pq.pop();
 
         if (dist[montado][u] < d) continue;
 
         for (auto [v, w]: adj[u]) {
 
-            if (dist[montado][v] > d + w) {
-                int k = d + (montado ? w / 2 : w);
+            int k = d + (montado ? w / 2 : w);
+            if (dist[montado][v] > k) {
                 dist[montado][v] = k;
                 pq.push({k, v, montado});
             }
         }
     }
-
 }
 
 void solve () {
@@ -80,32 +82,34 @@ void solve () {
     djks(1, dist);
     djks(n, ndist);
 
-    cout << "dist -> ";
-    for (int i = 1; i <= n; i++) { cout << dist[0][i] << " "; }
-    cout << endl;
-    for (int i = 1; i <= n; i++) { cout << dist[1][i] << " "; }
-    cout << endl;
+    /* cout << "dist -> "; */
+    /* for (int i = 1; i <= n; i++) { cout << dist[0][i] << " "; } */
+    /* cout << endl; */
+    /* for (int i = 1; i <= n; i++) { cout << dist[1][i] << " "; } */
+    /* cout << endl; */
 
-    cout << "-----------" << endl;
+    /* cout << "-----------" << endl; */
 
-    cout << "ndist -> ";
-    for (int i = 1; i <= n; i++) cout << ndist[0][i] << " ";
-    cout << endl;
-    for (int i = 1; i <= n; i++) cout << ndist[1][i] << " ";
-    cout << endl;
+    /* cout << "ndist -> "; */
+    /* for (int i = 1; i <= n; i++) cout << ndist[0][i] << " "; */
+    /* cout << endl; */
+    /* for (int i = 1; i <= n; i++) cout << ndist[1][i] << " "; */
+    /* cout << endl; */
 
-    if (dist[0][n] == INF && dist[1][n] == INF) {
-        cout << -1 << endl;
-        clear_tc(n);
-        return;
-    } 
+    int resp = INF;
+    for (int i = 1; i <= n; i++) {
+        int d = INF;
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                d = min(d, max(dist[j][i], ndist[k][i]));
+            }
+        }
 
-    /* int resp = 1e18; */
-    /* for (int i = 1; i <= n; i++) { */
-    /*     int d = dist[1][i] */
-    /*     min(resp, */ 
-    /* } */
-    
+        resp = min(resp, d);
+    }
+
+    cout << (resp == INF ? -1 : resp) << endl;
+    clear_tc(n);
 }
 
 signed main() {

@@ -17,17 +17,12 @@ int check(int mid, vector<int> arr) {
         }
     }
 
-
-    /* cout << "arr -> "; */
-    /* for (auto c: arr) cout << c << " "; */
-    /* cout << endl; */
-
     if (arr[n - 1] > mid) return -INF;
 
-    int resto = 0; 
     int minimo = arr[0];
+    int resto = 0; 
     int sum = 0;
-    for (int i = 0; i < n - 1; i++) {
+    for (int i = 0; i < n; i++) {
         sum += arr[i];
         if (arr[i] >= minimo) {
             int k = arr[i] - minimo;
@@ -36,7 +31,7 @@ int check(int mid, vector<int> arr) {
         } else if (arr[i] + resto >= minimo) {
             int k = (arr[i] + resto) - minimo; // quanto essa porra + resto > minimo
             arr[i] = minimo;
-            resto -= k;
+            resto = k;
         } else {
             int k = sum / (i + 1);
             resto = sum % (i + 1);
@@ -44,13 +39,7 @@ int check(int mid, vector<int> arr) {
         }
     }
 
-
-    /* if (arr[n - 1]> mid) return -INF; */
-    /* sort(arr.begin(), arr.end()); */
-
-    /* cout << "resto -> " << resto << endl; */
-
-    return arr[n - 1] - minimo;
+    return mid - minimo;
 }
 
 void solve() {
@@ -58,23 +47,14 @@ void solve() {
     vector<int> arr(n);
     for (int i = 0; i < n; i++) cin >> arr[i];
     
-    if (arr[0] > arr[n - 1]) {
-        int k = ((arr[0] + arr[n - 1]) + 1);
-        arr[n - 1] = (arr[0] + arr[n - 1]) - (k / 2);
-        arr[0] = k / 2;
-    }
-
     int l = 0;
     int r = 1e12;
     int ans = 1e18;
 
     while (l <= r) {
         int mid = (l + r) >> 1;
-        /* cout << "--------------------" << endl; */
-        /* cout << "mid -> " << mid << endl; */
         int k = check(mid, arr);
         if (k > -INF) {
-            /* cout << "k -> " << k << endl; */
             ans = min(ans, k);
             r = mid - 1;
         } else {
@@ -96,3 +76,4 @@ signed main() {
     }
     return 0;
 }
+
