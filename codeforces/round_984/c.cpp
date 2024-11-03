@@ -41,7 +41,6 @@ void solve () {
         char v; cin >> v;
         i--;
  
- 
         if (good[i] != 1e9 && s[i] != v) {
             int p = i;
             goodam--;
@@ -54,10 +53,16 @@ void solve () {
             }
         }
 
+        if (s[i] == v) {
+            cout << (goodam ? "YES" : "NO") << endl;
+            continue;
+        }
+
         s[i] = v;
- 
+
         if (v == '1') {
             if (s[i] == '1' && s[i + 1] == '1' && s[i + 2] == '0' && s[i + 3] == '0') {
+                goodam++;
                 good[i] = 0;
                 good[i + 1] = 1;
                 good[i + 2] = 2;
@@ -72,18 +77,18 @@ void solve () {
  
         } else {
             if (i >= 2 && s[i] == '0' && s[i + 1] == '0' && s[i - 1] == '1' && s[i - 2] == '1') {
+                goodam++;
                 good[i - 2] = 0;
                 good[i - 1] = 1;
                 good[i] = 2;
                 good[i + 1] = 3;
-                goodam++;
  
             } else if (i >= 3 && s[i] == '0' && s[i - 1] == '0' && s[i - 2] == '1' && s[i - 3] == '1') {
+                goodam++;
                 good[i - 3] = 0;
                 good[i - 2] = 1;
                 good[i - 1] = 2;
                 good[i] = 3;
-                goodam++;
             }
         }
  
