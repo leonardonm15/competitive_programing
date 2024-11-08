@@ -108,7 +108,6 @@ void solve() {
         factorize(c.first, g++);
     }
     
-
     int counter = 1;
     int resposta = 0;
     int idx_mr = 0;
@@ -120,12 +119,6 @@ void solve() {
                 resposta = vg;
              }
         }
-
-        /* cout << i << " -> "; */
-        /* for (auto [f, g]: multiplos_do_primo[i]) { */
-        /*     cout << "(" << f  << "," << g << ")" << " "; */
-        /* } */
-        /* cout << endl; */
     }
 
     cout << "vis -> ";
