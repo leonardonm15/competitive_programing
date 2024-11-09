@@ -65,11 +65,11 @@ void solve () {
         if (greatest != 0) {
             int b = possibles[greatest].size();
             for (auto f: factor[possibles[greatest][b - 1].first]) {
-                freq[f] = 0;
+                if (freq[f] == greatest) freq[f] = 0;
             }
 
             for (auto f: factor[arr[i].first]) {
-                freq[f] = greatest;
+                if (freq[f] == 0) freq[f] = greatest;
             }
 
             possibles[greatest].push_back(arr[i]);
