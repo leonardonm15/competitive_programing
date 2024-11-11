@@ -108,7 +108,6 @@ void solve() {
         factorize(c.first, g++);
     }
     
-
     int counter = 1;
     int resposta = 0;
     int idx_mr = 0;
