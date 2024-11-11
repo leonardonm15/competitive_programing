@@ -119,12 +119,6 @@ void solve() {
                 resposta = vg;
              }
         }
-
-        /* cout << i << " -> "; */
-        /* for (auto [f, g]: multiplos_do_primo[i]) { */
-        /*     cout << "(" << f  << "," << g << ")" << " "; */
-        /* } */
-        /* cout << endl; */
     }
 
     cout << "vis -> ";
