@@ -5,19 +5,13 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
-
 vector<int> bits_counter(int x) {
-    cout << "---------------------" << endl;
-    cout << "x -> " << x << endl;
     vector<int> bits(60);
     bits[0] = (x + 1) / 2;
     int i = 1;
     while ((1 << i) <= x) {
         int d = (1 << i);
         int v = (x >> (i + 1));
-        cout << "-----" << endl;
-        cout << "d -> " << d << endl;
-        cout << "v -> " << v << endl;
         bits[i] = d * v + (x & (1 << i) ? d : 0);
         i++;
     }
