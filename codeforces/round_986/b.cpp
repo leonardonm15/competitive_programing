@@ -19,42 +19,50 @@ void solve () {
         return;
     }
 
+    int R = n - 1;
     int l = 0;
-    int r = n;
-    int ans = 0;
+    int r = n - 1;
+    int ans = -2;
+
+    if (b > 0) ans = -1;
+
     while (l <= r) {
-        int mid = (l + r) >> 1;
-        int limite = ((mid - 1) * b + c); // 0 é usar tudo N é usar nada indexado em 1
-        int tenho = (limite / b);
-        int buracos = limite - tenho;
-
-        int resto = r - (mid - 1);
-
-        if (mid == 0) {
-            ans = n;
-            r = mid + 1;
+        int i = (l + r) >> 1;
+        
+        if (b >= (1e18 / i)) {
+            r = i - 1;
+            if (ans == r) break;
             continue;
         }
 
-        if (mid == n) {
-             // faz a conta fazendo operação em ninguem
-             //
+        int ge = b * i + c; // greates element
+        int rs = R - i; // right side
+        int elements = ge / b;
+        int misses = ge - elements + 1;
 
-            if (
-        }
+        cout << "------------------" << endl;
+        cout << "i -> " << i << endl;
+        cout << "greatest_element -> " << ge << endl;
+        cout << "rigt side -> " << rs << endl;
+        cout << "elements -> " << elements << endl;
+        cout << "Misses -> " << misses << endl;
+        cout << "r -> " << r << endl;
 
-
-        if (resto > buracos) {
-            r = mid + 1;
-        } else if (resto < buracos) {
-            r = mid - 1;
+        if (misses > rs) {
+            r = i - 1;
+            if (ans == r) break;
+        } else if (misses < rs) {
+            l = i + 1;
+            ans = i;
         } else {
-            ans = resto;
+            ans = i;
             break;
         }
-
     }
 
+    cout << "ans -> " << ans << endl;
+    if (ans == -2) cout << -1 << endl;
+    else cout << R - ans << endl;
 }
 
 signed main() {
