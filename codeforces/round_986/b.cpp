@@ -9,13 +9,6 @@ const int INF = 1e18;
 
 void solve () {
     int n, b, c; cin >> n >> b >> c;
-    vector<string> d = {"laranja", "preto", "azul", "amarelo", "vermelho", "roxo"};
-    sort(d.begin(), d.end());
-
-    cout << "d -> ";
-    for (auto c: d) cout << c << " ";
-    cout << endl;
-    return;
     
     if (b == 0 && c + 2 >= n) {
         if (c >= n) cout << n << endl;
@@ -30,7 +23,7 @@ void solve () {
 
     int R = n;
     int l = 0;
-    int r = n;
+    int r = (n / b + 1);
     int ans = -1;
 
     /* if (b > 0) ans = -1; */
@@ -38,16 +31,11 @@ void solve () {
     while (l <= r) {
         int i = (l + r) >> 1;
         
-        if ((i - 1) >= INF / b) {
-            r = i - 1;
-            /* if (ans == r) break; */
-            continue;
-        }
-
         int ge = b * (i - 1) + c; // greatest element
         int rs = R - i; // right side
-        int elements = ge / b;
-        int misses = ge - elements + 1;
+        int elements = (i - 1);
+        int misses = ge - elements;
+        /* if (misses > 0) misses++; */
 
         if (i == 0) {
             ge = 0;
@@ -55,13 +43,12 @@ void solve () {
             misses = 0;
         }
 
-/*         cout << "------------------" << endl; */
-/*         cout << "i -> " << i << endl; */
-/*         cout << "greatest_element -> " << ge << endl; */
-/*         cout << "rigt side -> " << rs << endl; */
-/*         cout << "elements -> " << elements << endl; */
-/*         cout << "Misses -> " << misses << endl; */
-/*         cout << "r -> " << r << endl; */
+        /* cout << "------------------" << endl; */
+        /* cout << "i -> " << i << endl; */
+        /* cout << "greatest_element -> " << ge << endl; */
+        /* cout << "rigt side -> " << rs << endl; */
+        /* cout << "elements -> " << elements << endl; */
+        /* cout << "miss -> " << misses << endl; */
 
         if (misses > rs) {
             r = i - 1;
@@ -76,7 +63,9 @@ void solve () {
         }
     }
 
-    cout << "foi até qual cara -> " << ans << endl;
+    /* cout << "ans -> " << ans << endl; */
+    if (ans == -1) cout << -1 << endl;
+    else cout << R - ans << endl;
 }
 
 signed main() {
