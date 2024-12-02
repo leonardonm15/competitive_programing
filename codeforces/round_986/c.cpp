@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 
-using namespacestd;
+using namespace std;
 
 #define int long long
 #define endl '\n'
@@ -50,11 +50,25 @@ void solve() {
         prefixo_soma.push_back(soma);
     }
 
+    /* cout << "Pref -> "; */
+    /* for (auto v: pref) cout << v << " "; */
+    /* cout << endl; */
+
+    /* cout << "suf  -> "; */
+    /* for (auto c: suf) cout << c << " "; */
+    /* cout << endl; */
+
+    /* cout << "prefixo_soma -> "; */
+    /* for (auto c: prefixo_soma) cout << c << " "; */
+    /* cout << endl; */
+
     if (pref.back() - m < 0) {
         cout << -1 << endl;
         return;
     }
 
+    // acha o mid sufixo
+    // vai de l + 1 até suf - 1
     int resp = 0;
     vector<pair<int, int>> ranges;
     for (int i = 0; i <= n; i++) {
@@ -86,6 +100,11 @@ void solve() {
 
 
     for (auto [L, R]: ranges) {
+        /* cout << "---------------" << endl; */
+        /* cout << "l -> " << L << endl; */
+        /* cout << "R -> " << R << endl; */
+        /* cout << "v -> " << prefixo_soma[R - 1] - prefixo_soma[L] << endl; */
+
         resp = max(resp, prefixo_soma[R - 1] - prefixo_soma[L]);
     }
 
