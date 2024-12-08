@@ -24,29 +24,19 @@ void solve () {
     }
 
     string k;
-
-    int j = 2;
-    k.push_back('1');
-    for (; j < n; j++) {
+    for (int i = 1; i <= n; i++) {
         k.push_back('1');
-        if (pref[j - 1] == 0 && pref[j] > 0) {
-            cout << "j -> " << j << endl;
-            k.pop_back();
-            for (int i = k.size() - 1; i > k.size() - pref[j]; i--) {
-                k[i] = '0';
+        if (i > 1 && pref[i - 1] == 0 && pref[i] > 0) {
+            for (int j = 1; j <= pref[i]; j++) {
+                k[k.size() - j - 1] = '0';
             }
-            break;
         }
-    }
 
-    cout << "k -> " << k << endl;
-
-    for (int i = j - 1; i <= n; i++) {
-        if (pref[i] == 0 || pref[i] == pref[i - 1]) k.push_back('0');
-        else if (pref[i] > pref[i - 1]) k.push_back('1');
+        if (i > 1 && pref[i] == pref[i - 1]) k[(int) k.size() - 1] = '0';
     }
 
     cout << "! " << k << endl;
+
 }
 
 signed main() {
