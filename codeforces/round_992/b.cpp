@@ -2,12 +2,11 @@
 
 using namespace std;
 
-#define endl '\n' 
+/* #define endl '\n' */ 
 #define int long long
 
 void solve () {
     int n; cin >> n;
-
     int l = 1;
     int q = 1;
     int resp = 1;
