@@ -7,52 +7,42 @@ using namespace std;
 
 void solve () {
     int n, k; cin >> n >> k;
+    k--;
 
-    vector<int> is;
-    vector<int> arr(n);
-    for (int i = 1; i <= n; i++) arr[i - 1] = i;
+    vector<int> resp(n);
 
-    int i = 1;
-    int first = 0;
-    do {
-        int resp = 0;
-        for (int i = 0; i < n; i++) {
-            int soma = 0;
-            int minimo = arr[i];
-            for (int j = i; j < n; j++) {
-                minimo = min(minimo, arr[j]);
-                soma += minimo;
-            }
-            resp += soma;
-        }
-        if (i == 1) first = resp;
-        if (resp == first) {
-            is.push_back(i);
-            cout << "------------" << endl;
-            cout << "I -> " << i << endl;
+    int l = 0;
+    int r = n - 1;
+    int num = 1;
 
-            cout << "arr -> ";
-            for (auto c: arr) cout << c << " ";
-            cout << endl;
+    while (l < r) {
+        int rs = n - num - 1;
+
+        if (rs > 60) {
+            resp[l++] = num;
+            num++;
+            continue;
         }
 
+        if (k & (1ll << rs)) {
+            resp[r--] = num;
+            k -= (1ll << rs);
+        } else {
+            resp[l++] = num;
+        }
 
-        /* cout << "resp -> " << resp << endl; */
-        i++;
+        num++;
+    }
+    
+    resp[l] = num;
 
-    } while (next_permutation(arr.begin(), arr.end()));
+    if (k != 0) {
+        cout << -1 << endl;
+        return;
+    }
 
-
-    /* cout << "Is -> "; */
-    /* for (auto c: is) cout << c << " "; */
-    /* cout << endl; */
-
-    /* cout << "dif -> "; */
-    /* for (int i = 1; i < (int) is.size(); i++) { */
-    /*     cout << is[i] - is[i - 1] << " "; */
-    /* } */
-    /* cout << endl; */
-
+    for (auto c: resp) cout << c << " ";
+    cout << endl;
 }
 
 signed main() {
@@ -64,6 +54,5 @@ signed main() {
     } else {
         solve();
     }
-
     return 0;
 }
