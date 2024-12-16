@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define endl '\n' 
+#define int long long
+
+void solve () {
+    string s; cin >> s;
+
+    reverse(s.begin(), s.end());
+
+    for (auto &c: s) {
+        if (c == 'p') c = 'q';
+        else if (c == 'q') c = 'p';
+    }
+
+    cout << s << endl;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0);cin.tie(0);
+    int TC = 1;
+    if (TC){
+        cin >> TC;
+        while (TC--) solve();
+    } else {
+        solve();
+    }
+    return 0;
+}
