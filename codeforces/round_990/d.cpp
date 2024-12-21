@@ -7,58 +7,48 @@ using namespace std;
 
 void solve () {
     int n; cin >> n;
+
     vector<int> arr(n);
-    vector<pair<int, int>> p(n);
-    
+    vector<pair<int, int>> sarr(n);
+    map<int, vector<int>> mp;
     for (int i = 0; i < n; i++) {
         cin >> arr[i];
-        p[i].first = arr[i];
+        sarr[i].first = arr[i];
+        sarr[i].second = i;
+        mp[arr[i]].push_back(i);
     }
 
-    sort(p.begin(), p.end());
-    p.erase(unique(p.begin(), p.end()), p.end());
-    
-    for (int i = 0; i < (int) p.size(); i++) {
-        p[i].second = i;
-    }
+    sort(sarr.begin(), sarr.end());
 
-    vector<int> narr(n);
-
+    vector<int> a;
+    vector<pair<int, int>> b;
+    int p = 0;
     for (int i = 0; i < n; i++) {
-        int l = 0;
-        int r = p.size() - 1;
-
-        while (l <= r) {
-            int mid = (l + r) >> 1;
-            if (arr[i] > p[mid].first) {
-                l = mid + 1;
-            } else if (arr[i] < p[mid].first) {
-                r = mid - 1;
-            } else {
-                narr[i] = p[mid].second;
-            }
+        if (sarr[p].first == arr[i]) {
+            a.push_back(arr[i]);
+            p++;
+        } else {
+            b.push_back({arr[i], i});
         }
     }
 
-    vector<int> f(2 * p.size() + 1);
+    sort(b.begin(), b.end());
 
-    for (int i = 0; i < n; i++) {
-        f[narr[i]]++;
-    }
-
-    cout << "narr -> ";
-    for (auto c: narr) cout << c << " ";
+    cout << "a -> ";
+    for (auto c: a) cout << c << " ";
     cout << endl;
-    return;
 
-    /* int atual = 0; */
-    /* for (int i = 0; i < n; i++) { */
-    /*     if (f[narr[i]] < */ 
-    /* } */
+    cout << "b -> ";
+    for (auto [f, s]: b) {
+        cout << f << " ";
+        a.push_back(f + 1);
+    }
+    cout << endl;
 
-    /* cout << "p -> "; */
-    /* for (auto [f, s]: p) cout << f << " "; */
-    /* cout << endl; */
+
+    cout << "a -> ";
+    for (auto c: a) cout << c << " ";
+    cout << endl;
 
 }
 

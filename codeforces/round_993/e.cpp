@@ -5,38 +5,52 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
+const int INF = 1e18;
+
 void solve () {
     int k, l1, r1, l2, r2; cin >> k >> l1 >> r1 >> l2 >> r2;
-    // 2 1 2 2 2
-    //
-    // 2 / 1 
-    // 2 / 2
-    // k * n = y
 
     int resp = 0;
-    for (int i = 1; i <= r2; i *= k) {
-        int l = l1;
-        int r = r1;
-        int ans1 = 0;
+    for (int kn = 1; kn * l1 <= r2; kn *= k) {
+        int lx = l1;
+        int rx = r1;
+        int ans = -1;
 
-        while (l <= r) {
-            int mid = (l + r) >> 1;
-            if (mid * i <= r2) {
-                ans1 = mid;
-                l = mid + 1;
+        // menor x no menor Y
+        while (lx <= rx) {
+            int x = (lx + rx) >> 1;
+            if (kn * x >= l2) {
+                ans = x;
+                rx = x - 1;
             } else {
-                r = mid - 1;
+                lx = x + 1;
             }
         }
 
-        l = l1;
-        r = r2;
-        int ans2 = 0;
+        // maior x no maior Y
+        lx = l1;
+        rx = r1;
+        int ans2 = -1;
+        while (lx <= rx) {
+            int x = (lx + rx) >> 1;
+            if (kn * x <= r2) {
+                ans2 = x;
+                lx = x + 1;
+            } else {
+                rx = x - 1;
+            }
+        }
 
-        resp += ans;
+        if (ans == -1 || ans2 == -1) continue;
+        resp += ans2 - (ans - 1);
+
+        /* cout << "------------------" << endl; */
+        /* cout << "kn -> " << kn << endl; */
+        /* cout << ans << " - " << ans2 << endl; */
     }
 
     cout << resp << endl;
+
 }
 
 signed main() {
