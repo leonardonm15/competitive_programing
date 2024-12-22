@@ -24,6 +24,9 @@ void solve () {
     vector<pair<int, int>> b;
     int p = 0;
     for (int i = 0; i < n; i++) {
+        while (p < n && sarr[p].second < i) p++;
+        if (p == n) break;
+
         if (sarr[p].first == arr[i]) {
             a.push_back(arr[i]);
             p++;
