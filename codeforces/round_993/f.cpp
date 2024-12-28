@@ -8,44 +8,49 @@ using namespace std;
 void solve () {
     int n, m, q; cin >> n >> m >> q;
 
-    vector<int> a(n);
-    vector<int> b(m);
+    vector<int> a(n), b(m);
 
-    vector<int> l(n);
-    vector<int> b(m);
-
-
-    int somaa = 0;
+    int sa = 0;
     for (int i = 0; i < n; i++) {
         cin >> a[i];
-        somaa += a[i];
+        sa += a[i];
     }
 
-    int somab = 0;
+    int sb = 0;
     for (int i = 0; i < m; i++) {
         cin >> b[i];
-        somab += b[i];
+        sb += b[i];
     }
 
-    for (int i = 0; i < n; i++) {
-        l[i] = 
+    map<int, int> ma;
+    map<int, int> mb;
+
+    for (int i = 0; i < n; i++) ma[sa - a[i]]++;
+    for (int i = 0; i < m; i++) mb[sb - b[i]]++;
+
+    int st = sa * sb;
+    while (q--) {
+        int want; cin >> want;
+    
+        bool flag = false;
+        for (int i = 1; i * i <= abs(want); i++) {
+            if (want % i == 0) {
+                if (((ma[i] && mb[want/i]) || (ma[-i] && mb[-want/i]) ||
+                    (mb[i] && ma[want/i]) || (mb[-i] && ma[-want/i])) && !flag) {
+                    cout << "YES" << endl;
+                    flag = true;
+                }
+            }
+        }
+
+        if (!flag) cout << "NO" << endl;
+
     }
-
-    /* int soma_grid = 0; */
-
-    /* for (int i = 0; i < n; i++) { */
-    /*     for (int j = 0; j < m; j++) { */
-    /*         grid[i][j] = a[i] * b[j]; */
-    /*         soma_grid += grid[i][j]; */
-    /*     } */
-    /* } */
-
-
 }
 
 signed main() {
     ios_base::sync_with_stdio(0);cin.tie(0);
-    int TC = 1;
+    int TC = 0;
     if (TC){
         cin >> TC;
         while (TC--) solve();
