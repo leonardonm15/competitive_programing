@@ -5,10 +5,8 @@ using namespace std;
 #define endl '\n'
 #define int long long
 
-int tc = 1;
 void solve() {
     int n, m, q; cin >> n >> m >> q;
-
     vector<pair<int, int>> ranges(4);
     ranges[0] = {m, m};
     int am_ranges = 1;
@@ -47,14 +45,6 @@ void solve() {
             }
         }
 
-        /* cout << "----------------------------" << endl; */
-        /* cout << "cut -> " << cut << endl; */
-        /* cout << "ranges_atual -> "; */
-        /* for (int i = 0; i < am_ranges; i++) { */
-        /*     cout << "{ " << ranges[i].first << " " << ranges[i].second << " }" << " - "; */
-        /* } */
-        /* cout << endl; */
-
         int pr = 0;
         int resp = 0;
         sort(ranges.begin(), ranges.begin() + am_ranges);
@@ -70,18 +60,13 @@ void solve() {
             if (l <= pr) {
                 l = pr + 1;
                 k += max(0LL, r - l + 1);
+                pr = max(pr, r);
             }
 
-            /* cout << "k -> " << k << endl; */
             resp += k;
         }
 
         cout << resp << " ";
-        tc++;
-
-        if (tc == 58) {
-            cout << n << "$" << m << "#" << q << "#" << endl;
-        }
     }
     cout << endl;
 
@@ -98,4 +83,3 @@ signed main() {
     }
     return 0;
 }
- 
