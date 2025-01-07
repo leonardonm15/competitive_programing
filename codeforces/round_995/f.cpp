@@ -2,42 +2,95 @@
 
 using namespace std;
 
-#define endl '\n' 
+#define endl '\n'
 #define int long long
 
-const int N = 2e5 + 5;
-
-map<int, int> pos;
-vector<int> cuts;
-set<int> dp[N];
-
-int dfs(int i, int m, int s, int n) {
-    if (i == (int) n) return 0;
-    if (dp[i][s]) return pos[m];
-
-    int now = cuts[i];
-
-    if (now > m) {
-        
-    }
-}
-
-void solve () {
+int tc = 1;
+void solve() {
     int n, m, q; cin >> n >> m >> q;
-    cuts.resize(q);
 
-    map<int, int> pos;
-    pos[m]++;
+    vector<pair<int, int>> ranges(4);
+    ranges[0] = {m, m};
+    int am_ranges = 1;
 
-    for (int i = 0; i < q; i++) cin >> cuts[i];
+    bool has_1 = false;
+    bool has_n = false;
+    while (q--) {
+        int cut; cin >> cut;
+        int rg = am_ranges;
 
+        if (cut == m && am_ranges == 1 && ranges[0].first == m && ranges[0].second == m) {
+            ranges[0] = {1, 1};
+            ranges[1] = {n, n};
+            has_1 = true;
+            has_n = true;
+            am_ranges = 2;
+        } else {
+            for (int i = 0; i < rg; i++) {
+                int &l = ranges[i].first;  // Use referência ao invés de ponteiro
+                int &r = ranges[i].second;
+
+                if (cut < l) {
+                    l = max(1LL, l - 1); // Atualiza diretamente o valor de `l`
+                } else if (cut > r) {
+                    r = min(n, r + 1); // Atualiza diretamente o valor de `r`
+                } else {
+                    if (!has_1) ranges[am_ranges++] = {1, 1};
+                    if (!has_n) ranges[am_ranges++] = {n, n};
+                    has_1 = true;
+                    has_n = true;
+                }
+
+                if (l == 1) has_1 = true;
+                if (r == n) has_n = true;
+
+            }
+        }
+
+        /* cout << "----------------------------" << endl; */
+        /* cout << "cut -> " << cut << endl; */
+        /* cout << "ranges_atual -> "; */
+        /* for (int i = 0; i < am_ranges; i++) { */
+        /*     cout << "{ " << ranges[i].first << " " << ranges[i].second << " }" << " - "; */
+        /* } */
+        /* cout << endl; */
+
+        int pr = 0;
+        int resp = 0;
+        sort(ranges.begin(), ranges.begin() + am_ranges);
+        for (int i = 0; i < am_ranges; i++) {
+            int l = ranges[i].first;
+            int r = ranges[i].second;
+            int k = 0;
+            if (l > pr) {
+                k += r - l + 1;
+                pr = r;
+            }
+
+            if (l <= pr) {
+                l = pr + 1;
+                k += max(0LL, r - l + 1);
+            }
+
+            /* cout << "k -> " << k << endl; */
+            resp += k;
+        }
+
+        cout << resp << " ";
+        tc++;
+
+        if (tc == 58) {
+            cout << n << "$" << m << "#" << q << "#" << endl;
+        }
+    }
+    cout << endl;
 
 }
 
 signed main() {
-    ios_base::sync_with_stdio(0);cin.tie(0);
+    ios_base::sync_with_stdio(0); cin.tie(0);
     int TC = 1;
-    if (TC){
+    if (TC) {
         cin >> TC;
         while (TC--) solve();
     } else {
@@ -45,3 +98,4 @@ signed main() {
     }
     return 0;
 }
+ 
