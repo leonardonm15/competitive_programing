@@ -6,49 +6,55 @@ using namespace std;
 #define int long long
 #define matr vector<vector<int>>
 
-/* bool check(matr& mat, vector<int>& linhas, vector<int>& colunas, int mid, string& path, int n) { */
-/*     pair<int, int> now = {0, 0}; */
-/*     pair<int, int> destination = {n - 1, n - 1}; */
-
-/*     vector<int> vals; */
-/*     for (auto step: path) { */
-/*         int current = 0; */
-/*         now.first */
-/*     } */
-/* } */
-
 void solve () {
     int n, m; cin >> n >> m;
     string path; cin >> path;
-    path.push_back('s');
+    path.push_back('D');
 
     matr mat(n, vector<int>(m));
     vector<int> linha(n), coluna(m);
 
+    int mult = 1;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             cin >> mat[i][j];
             linha[i] += mat[i][j];
             coluna[j] += mat[i][j];
+
+            if (mat[i][j] != 0) mult *= abs(mat[i][j]);
         }
     }
 
-    cout << "----------------" << endl;
+    pair<int, int> now = {0, 0};
+
+    for (auto direction: path) {
+        int l = linha[now.first];
+        int c = coluna[now.second];
+        int i = now.first;
+        int j = now.second;
+
+        if (direction == 'D') {
+            mat[i][j] = -linha[i];
+            coluna[j] -= linha[i];
+            linha[i] = 0;
+            now.first += 1;
+        }
+
+        if (direction == 'R') {
+            mat[i][j] = -coluna[j];
+            linha[i] -= coluna[j];
+            coluna[j] = 0;
+            now.second += 1;
+        }
+    }
+
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-                cout << (linha[i] + coluna[j]) - mat[i][j] << " ";
+        for (int j = 0; j < m; j++) {
+            cout << mat[i][j] << " ";
         }
         cout << endl;
     }
-    return;
 
-    cout << "linha -> ";
-    for (auto l: linha) cout << l << " ";
-    cout << endl;
-
-    cout << "coluna -> ";
-    for (auto c: coluna) cout << c << " ";
-    cout << endl;
 }
 
 signed main() {
