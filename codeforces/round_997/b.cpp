@@ -5,24 +5,32 @@ using namespace std;
 #define endl '\n' 
 #define int long long
 
+vector<string> arr;
+
+bool check(int& a, int& b) {
+    if (arr[a][b] == '1' && a > b) return true;
+    else return false;
+}
+
 void solve () {
     int n; cin >> n;
-    vector<string> arr(n);
+    vector<int> resp(n);
 
-    for (int i = 0; i < n; i++) cin >> arr[i];
-
-    vector<int> q(n);
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (arr[i][j] == '1') q[j]++;
-        }
+        string s; cin >> s;
+        arr.push_back(s);
     }
 
-    cout << "q -> ";
-    for (auto c: q) cout << c << " ";
+
+    for (int i = 0; i < n; i++) resp[i] = i;
+
+    sort(resp.begin(), resp.end(), check);
+    reverse(resp.begin(), resp.end());
+
+    for (auto c: resp) cout << c + 1 << " ";
     cout << endl;
 
-
+    arr.clear();
 }
 
 signed main() {
