@@ -31,11 +31,11 @@ void dfs(int u) {
 int dfs(int u, int p) {
     vis[u]++;
     int acc = 0;
+    if (adj[u].size() == 1) return 1;
     for (auto v: adj[u]) {
         if (!vis[v]) acc += dfs(v, u);
-        if (vis[v] == 5 && v != p) return 1;
     }
-    return min(1ll, acc);
+    return acc;
 }
 
 void solve () {
@@ -66,10 +66,6 @@ void solve () {
     int cut = -1;
     int a = 0;
     while (i < (int) ref.size() && ref[i].first == ref[0].first) vis[ref[i++].second] = 5;
-
-    /* cout << "vis -> "; */
-    /* for (int i = 1; i <= n; i++) cout << vis[i] << " "; */
-    /* cout << endl; */
 
     for (int i = 0; i <= n; i++) {
         if (vis[i] == 5) {
@@ -123,9 +119,6 @@ void solve () {
 
     if (n == 5) resp = 3;
 
-/*     cout << "a -> " << a << endl; */
-/*     cout << "b -> " << b << endl; */
-    
     cout << resp << endl;
 
     for (int i = 0; i <= n; i++) {
