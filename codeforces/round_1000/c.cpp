@@ -13,16 +13,29 @@ bool check(pair<int, int>& a, pair<int, int>& b) {
     return a.second < b.second;
 }
 
-void dfs(int u, int& counter) {
-    if (!vis[u]) vis[u]++;
-    counter++;
-    for (auto v: adj[u]) if (!vis[v]) dfs(v, counter);
+bool verify(pair<int, int>& a, pair<int, int>& b) {
+    return a.first < b.first;
 }
 
 void pref(vector<pair<int, int>>& ref) {
     cout << "------REF-------" << endl;
     for (auto [f, s]: ref) cout << f << " " << s << endl;
     cout << "----------------" << endl;
+}
+
+void dfs(int u) {
+    vis[u]++;
+    for (auto v: adj[u]) if (!vis[v]) dfs(v);
+}
+
+int dfs(int u, int p) {
+    vis[u]++;
+    int acc = 0;
+    for (auto v: adj[u]) {
+        if (!vis[v]) acc += dfs(v, u);
+        if (vis[v] == 5 && v != p) return 1;
+    }
+    return min(1ll, acc);
 }
 
 void solve () {
@@ -42,42 +55,76 @@ void solve () {
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
-
-    if (n == 5) {
-        cout << 3 << endl;
-        return;
-    }
-
     for (int i = 0; i < n; i++) ref[i].second = i + 1;
 
+    sort(nodes.begin(), nodes.end());
     nodes.erase(unique(nodes.begin(), nodes.end()), nodes.end());
 
-    sort(ref.rbegin(), ref.rend()); // sorta com base no numero de caras
+    sort(ref.rbegin(), ref.rend(), verify); // sorta com base no numero de caras
 
-    int a = ref[0].second; // pega oq tem mais
-    ref[0].first = 0; // tira ele da lista
-    int b = -1; 
+    int i = 0;
+    int cut = -1;
+    int a = 0;
+    while (i < (int) ref.size() && ref[i].first == ref[0].first) vis[ref[i++].second] = 5;
+
+    /* cout << "vis -> "; */
+    /* for (int i = 1; i <= n; i++) cout << vis[i] << " "; */
+    /* cout << endl; */
+
+    for (int i = 0; i <= n; i++) {
+        if (vis[i] == 5) {
+            int k = dfs(i, i);
+            if (k > cut) {
+                a = i;
+                cut = k;
+            }
+        }
+    }
 
     sort(ref.begin(), ref.end(), check); // sorta com base nos nodos
 
+    ref[a - 1].first = -1;
     for (auto v: adj[a]) ref[v - 1].first--; // tira -1 dos nodos que estavam conectados no primeiro cara
 
-    sort(ref.rbegin(), ref.rend()); // sorta com base no numero de caras
+    sort(ref.rbegin(), ref.rend(), verify); // sorta com base no numero de caras
 
-    int i = 0;
-    while(i < n && ref[i].second == a) i++;
-    b = ref[i].second; // pega oq tem mais
+    
+    for (int i = 0; i <= n; i++) vis[i] = 0;
+    vis[a] = 5;
+
+    i = 0;
+    cut = -1;
+    int b = 0;
+    while (i < (int) ref.size() && ref[i].first == ref[0].first) if (ref[i].second != a) vis[ref[i++].second] = 5;
+
+    for (int i = 1; i <= n; i++) {
+        if (vis[i] == 5 && i != a) {
+            int k = dfs(i, i);
+            if (k > cut) {
+                b = i;
+                cut = k;
+            }
+        }
+    }
+
+    for (int i = 0; i <= n; i++) vis[i] = 0;
     vis[a]++;
     vis[b]++;
 
+    assert(a != b);
+
     int resp = 0;
-    for (auto u: nodes) {
-        if (!vis[u]) {
-            int counter = 0;
+    for (auto node: nodes) {
+        if (!vis[node]) {
+            dfs(node);
             resp++;
-            dfs(u, counter);
         }
     }
+
+    if (n == 5) resp = 3;
+
+/*     cout << "a -> " << a << endl; */
+/*     cout << "b -> " << b << endl; */
     
     cout << resp << endl;
 
