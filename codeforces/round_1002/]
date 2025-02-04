@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define endl '\n' 
+#define int long long
+
+const int INF = 1e18;
+
+void solve () {
+    // fixa o priemiro cara
+    // acha o range em que eu quero achar um cara diferente de 1
+    // prefixo de minimo e prefixo de maximo
+    int n, k; cin >> n >> k;
+    vector<int> arr(n);
+    vector<vector<int>> where(n + 1);
+    vector<int> numbers;
+
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+        numbers.push_back(arr[i]);
+    }
+
+    sort(numbers.begin(), numbers.end());
+    numbers.erase(unique(numbers.begin(), numbers.end()), arr.end());
+
+
+    for (int i = 0; i < n; i++) {
+        where[arr[i]].push_back(i);
+    }   
+
+    int l = 0;
+    for (int i = 1; i <= k; i++) {
+        if (i&1) {
+            l++;
+            continue;
+        } else {
+            int r = n - 1 - k - i;
+
+        }
+    }
+
+}
+
+signed main() {
+    ios_base::sync_with_stdio(0);cin.tie(0);
+    int TC = 1;
+    if (TC){
+        cin >> TC;
+        while (TC--) solve();
+    } else {
+        solve();
+    }
+    return 0;
+}
