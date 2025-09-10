@@ -4,67 +4,132 @@ using namespace std;
 
 #define endl '\n' 
 #define int long long
+#define pii pair<int, int>
 
-const int N = 1e5 + 5;
+const int N = 2e5 + 5;
+const int INF = 1e9 + 5;
 
-struct merge_sort_tree {
-    /* vector<int> mst[4 * N]; */
-    vector<vector<int>> mst;
+vector<int> pos[N];
 
-    void merge(int p, int pl, int pr) {
-        vector<int> &v3 = mst[p];
-        vector<int> &v1 = mst[pl];
-        vector<int> &v2 = mst[pr];
-        
-        int l1 = 0;
-        int l2 = 0;
-        while (v3.size() != (v1.size() + v2.size())) {
-
-            while (l1 < (int) v1.size() && l2 < (int) v2.size() && v1[l1] <= v2[l2]) v3.push_back(v1[l1++]);
-
-            while (l1 < (int) v1.size() && l2 < (int) v2.size() && v2[l2] < v1[l1]) v3.push_back(v2[l2++]);
-
-            while (l1 == (int) v1.size() && l2 < (int) v2.size()) v3.push_back(v2[l2++]);
-
-            while (l2 == (int) v2.size() && l1 < (int) v1.size()) v3.push_back(v1[l1++]);
+struct SegTree {
+    int merge(int a, int b) { return max(a, b); }
+    const int neutral = 0;
+    inline int lc(int p) { return p * 2; }
+    inline int rc(int p) { return p * 2 + 1; }
+    int n;
+    vector<int> t;
+    void build(int _n) { // pra construir com tamanho, mas vazia
+        n = _n;
+        t.assign(n * 2, neutral);
+    }
+    void build(const vector<int> &v) { // pra construir com vector
+        n = (int)v.size();
+        t.assign(n * 2, neutral);
+        for (int i = 0; i < n; i++) t[i + n] = v[i];
+        for (int i = n - 1; i > 0; i--) t[i] = merge(t[lc(i)], t[rc(i)]);
+    }
+    void build(int *bg, int *en) { // pra construir com array de C
+        build(vector<int>(bg, en));
+    }
+    int query(int l, int r) {
+        int ansl = neutral, ansr = neutral;
+        for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
+            if (l & 1) ansl = merge(ansl, t[l++]);
+            if (r & 1) ansr = merge(t[--r], ansr);
         }
-
-        cout << "v3 -> ";
-        for (auto v: v3) cout << v << " ";
-        cout << endl;
+        return merge(ansl, ansr);
     }
-
-    void build(int n, vector<int>& v) {
-        mst.assign(n * 4, vector<int>());
-        build(1, 0, v.size() - 1, v);
+    void update(int i, int x, bool replace) {
+        i += n;
+        t[i] = replace ? x : merge(t[i], x);
+        for (i >>= 1; i > 0; i >>= 1) t[i] = merge(t[lc(i)], t[rc(i)]);
     }
+    void sumUpdate(int i, int x) { update(i, x, 0); }
+    void setUpdate(int i, int x) { update(i, x, 1); }
+} seg;
 
-    void build(int p, int l, int r, vector<int>& v) {
-        if (l == r) {
-            mst[p].push_back(v[l]);
+int bb(vector<int>& a, int k) {
+    int l = 0;
+    int r = a.size() - 1;
+    int ans = -1;
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+        if (a[mid] > k) {
+            r = mid - 1;
+        } else if (a[mid] < k) {
+            l = mid + 1;
         } else {
-            int mid = (l + r) >> 1;
-            build(2 * p, l, mid, v);
-            build(2 * p + 1, mid + 1, r, v);
-            merge(p, 2 * p, 2 * p + 1);
+            ans = mid;
+            break;
         }
     }
-};
+
+    return ans;
+}
+
+int lb(vector<int>& a, int k) {
+    int l = 0;
+    int r = a.size() - 1;
+    int ans = -1;
+    while (l <= r) {
+        int mid = (l + r) >> 1;
+        if (a[mid] >= k) {
+            r = mid - 1;
+            ans = mid;
+        } else if (a[mid] < k) {
+            l = mid + 1;
+        }
+    }
+
+    return ans;
+}
+
+map<pii, int> dp;
+int calc(int l, int r, vector<int>& arr, SegTree& seg) {
+    if (dp.count({l, r})) return dp[{l, r}];
+    if (l > r) return 0;
+    if (l == r) return 1;
+
+    int mx = seg.query(l, r);
+
+    int fa_al = lb(pos[mx], l); // first apearance after L
+
+    int last_pos = l - 1;
+                   
+    for (int i = fa_al; i < pos[mx].size() && pos[mx][i] <= r; i++) {
+        dp[{l, r}] = max(dp[{l, r}], calc(last_pos + 1, pos[mx][i] - 1, arr, seg) + 1);
+        last_pos = pos[mx][i]; // 5
+    }
+
+    if (last_pos != r) dp[{l, r}] = max(dp[{l, r}], calc(last_pos + 1, r, arr, seg) + 1);
+
+    return dp[{l, r}];
+}
+
 
 void solve () {
     int n; cin >> n;
     vector<int> arr(n);
 
     for (int i = 0; i < n; i++) cin >> arr[i];
+    vector<int> st = arr;
 
-    /* vector<int> a = {2, 4}; */
-    /* vector<int> b = {1, 3, 5, 7}; */
+    sort(st.begin(), st.end());
 
-    /* vector<int> c = merge(a, b); */
-    
-    merge_sort_tree a;
+    st.erase(unique(st.begin(), st.end()), st.end());
 
-    a.build(4 * N, arr);
+    vector<int> v; // compressed vector;
+
+    for (int i = 0; i < n; i++) {
+        int idx = bb(st, arr[i]);
+        v.push_back(idx);
+        pos[idx].push_back(i);
+    }
+
+    SegTree seg;
+    seg.build(v);
+
+    cout << calc(0ll, n - 1, v, seg) << endl;
 }
 
 signed main() {
