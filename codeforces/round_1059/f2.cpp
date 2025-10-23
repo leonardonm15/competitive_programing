@@ -9,6 +9,36 @@ bool inside(int l, int r, int k) {
         return (k >= l && k <= r);
 }
 
+int check(vector<pair<int, int>> &v, vector<int> &arr) {
+    int n = arr.size();
+    vector<int> mex(n + 2);
+
+    for (auto [l, r]: v) {
+        vector<int> mx(n + 2);
+        for (int i = l - 1; i <= r - 1; i++) {
+            mx[arr[i]]++;
+        }
+
+        int mexi = 0;
+        for (int i = 0; i <= n + 1; i++) {
+            if (mx[i] == 0) {
+                mexi = i;
+                break;
+            }
+        }
+
+        mex[mexi]++;
+    }
+
+    for (int i = 0; i <= n + 1; i++) {
+        if (mex[i] == 0) {
+            return i;
+        }
+    }
+
+    return n + 1;
+}
+
 void solve () {
     int n, m; cin >> n >> m;
 
@@ -26,80 +56,89 @@ void solve () {
             remove[r + 1]++;
     }
 
+    /* if (tc == 122) { */
+    /*     cout << n << "$" << m << "%"; */
+    /*     for (auto [l, r]: arr) { */
+    /*         cout << l << "#" << r << "%"; */
+    /*     } */
+    /*     cout << endl; */
+    /* } */
+
+    vector<int> resp(n, -1);
     int now = 0;
+    int r = -1;
     for (int i = 1; i <= n; i++) {
         now -= remove[i];
         now += add[i];
 
         amr[i] = now;
+        if (amr[i] == m) {
+            r = i - 1;
+        }
+
     }
 
-    vector<int> outsiders;
-    for (int i = 1; i <= n; i++) if (!amr[i]) outsiders.push_back(i);
 
-    
-    vector<int> out_of_some_range(n + 2, -1);
+    if (r != -1) {
+        resp[r] = 0;
+        int counter = 1;
+        for (int i = 0; i < n; i++) {
+            if (resp[i] == -1) resp[i] = counter++;
+        }
 
+        for (auto v: resp) cout << v << " ";
+        cout << endl;
+
+        return;
+    } 
+
+
+    vector<int> start(n + 1), end(n + 1);
+    for (int i = 0; i < m; i++) {
+        auto [l, r] = arr[i];
+        start[l]++;
+        end[r]++;
+    }
+
+    int iesc = -1;
     for (int i = 1; i <= n; i++) {
-            for (int j = 0; j < m; j++) {
-                    auto [l, r] = arr[j];
-                    if (!inside(l, r, i)) {
-                            out_of_some_range[i] = j;
-                            break;
-                    }
-            }
+        if (!start[i] || !end[i]) iesc = i;
     }
 
-    int ir = -1;
-    bool outs = false;
-    for (int i = 1; i <= n; i++) {
-            if (amr[i] == m) {
-                    ir = i;
-                    outs = false;
-                    break;
-            }
-            if (amr[i] > ir && out_of_some_range[i] != -1) ir = i;
-            if (amr[i] > ir && outsiders.size()) {
-                    outs = true;
-                    ir = i;
-            }
+    int counter = 0;
+    bool antes = true ^ (iesc == 1);
+    bool depois = true ^ (iesc == n);
+    for (auto [l, r]: arr) {
+        if (inside(l, r, iesc) == 1) {
+            if (inside(l, r, iesc + 1) == 0)  depois = false;
+            if (inside(l, r, iesc - 1) == 0) antes = false;
+        }
     }
 
-    vector<int> resp(n, -1);
+    /* for (int i = 2; i <= n; i++) { */
+    /*     for (auto [l, r]: arr) { */
+    /*         if (inside(l, r, i) == 1) { */
+    /*             if (inside(l, r, i - 1)) ante */
+    /*         } */
+    /*     } */
+    /* } */
 
-    if (amr[ir] == m) {
-            resp[ir - 1] = 0;
-            int counter = 1;
-            for (int i = 0; i < n; i++) if (resp[i] == -1) resp[i] = counter++;
 
-            for (auto v: resp) cout << v << " ";
-            cout << endl;
-            return;
+    if (antes && iesc > -1) {
+        resp[iesc - 1] = counter++;
+        resp[iesc - 2] = counter++;
+    } else if (depois && iesc > -1) {
+        resp[iesc - 1] = counter++;
+        resp[iesc] = counter++;
+    } else {
+        resp[0] = 0;
+        resp[1] = 2;
+        resp[2] = 1;
+
+        counter = 3;
     }
 
-    int isolate_one = -1;
 
-    cout << "amr -> ";
-    for (int i = 1; i <= n; i++) cout << amr[i] << " ";
-    cout << endl;
-
-    if (outs) isolate_one = outsiders[0] - 1;
-    else {
-            cout << "our_of_range -> ";
-            for (auto v: out_of_some_range) cout << v << " ";
-            cout << endl;
-
-            cout << "Ir -> " << ir << endl;
-            isolate_one = arr[out_of_some_range[ir]].first - 1;
-    }
-
-    ir--;
-    cout << "ir -> " << ir << endl;
-    cout << "isolate -> " << isolate_one << endl;
-    resp[ir] = 0;
-    resp[isolate_one] = 1;
-
-    int counter = 2;
     for (int i = 0; i < n; i++) if (resp[i] == -1) resp[i] = counter++;
 
     for (auto v: resp) cout << v << " ";
@@ -107,7 +146,7 @@ void solve () {
 }
 
 signed main() {
-    //ios_base::sync_with_stdio(0);cin.tie(0);
+    ios_base::sync_with_stdio(0);cin.tie(0);
     int TC = 1;
     if (TC){
         cin >> TC;
